@@ -27,6 +27,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //todo 因系统字体、翻转等导致的销毁，使用下面的方法可以关闭全部使用create(this)方式注册的窗体，而不引发泄漏异常
+        //todo 使用create(this, false)方式注册的需要手动处理返回的对象，进行关闭
+        DialogLibCommonUtils.sendCloseEvent(this);
+        DialogLibCustomUtils.sendCloseEvent(this);
+        DialogLibInputUtils.sendCloseEvent(this);
+        DialogLibLoadingUtils.sendCloseEvent(this);
+    }
+
+    @Override
     public void onClick(View v) {
         if (v.equals(binding.text1)) {
             DialogLibCommonUtils.create(this)
