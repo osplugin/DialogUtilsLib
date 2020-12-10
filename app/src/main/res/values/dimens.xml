@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    覆盖此项，下方注释的设置都会改变-->
+    <dimen name="dialog_utils_lib_text_size_normal" >16sp</dimen>
+
+<!--    &lt;!&ndash;标题字体大小，统一设定&ndash;&gt;-->
+<!--    <dimen name="dialog_utils_lib_title_text_size">16sp</dimen>-->
+<!--    &lt;!&ndash;确定 字体大小，统一设定&ndash;&gt;-->
+<!--    <dimen name="dialog_utils_lib_ok_text_size">16sp</dimen>-->
+<!--    &lt;!&ndash;取消 字体大小，统一设定&ndash;&gt;-->
+<!--    <dimen name="dialog_utils_lib_cancel_text_size">16sp</dimen>-->
+<!--    &lt;!&ndash;内容 字体大小，适用于 DialogLibCommonUtils的提示内容区域&ndash;&gt;-->
+<!--    <dimen name="dialog_utils_lib_content_text_size">16sp</dimen>-->
+<!--    &lt;!&ndash;输入框 字体大小，适用于 DialogLibInputUtils 输入区域&ndash;&gt;-->
+<!--    <dimen name="dialog_utils_lib_input_text_size">16sp</dimen>-->
+<!--    &lt;!&ndash;加载框 字体大小，适用于 DialogLibLoadingUtils 提示内容区域&ndash;&gt;-->
+<!--    <dimen name="dialog_utils_lib_loading_text_size">16sp</dimen>-->
+</resources>

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DialogUtilsApp</string>
+
+    <string name="dialog_utils_lib_ok">确定</string>
+    <string name="dialog_utils_lib_cancel">取消</string>
+    <string name="dialog_utils_lib_default_title">提示</string>
+    <string name="dialog_utils_lib_data_processing">数据处理中…</string>
 </resources>

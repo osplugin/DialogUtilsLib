@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DialogUtilsApp</string>
+
+    <string name="dialog_utils_lib_ok">OK</string>
+    <string name="dialog_utils_lib_cancel">Cancel</string>
+    <string name="dialog_utils_lib_default_title">Tip</string>
+    <string name="dialog_utils_lib_data_processing">Data Processing…</string>
 </resources>

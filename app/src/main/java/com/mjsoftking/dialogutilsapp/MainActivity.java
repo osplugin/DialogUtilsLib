@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ActivityMainBinding binding;
 
+    //todo colors、strings、dimens 文件分别展示了覆盖属性，变更对话框的颜色风格，具体属性请前往对应lib下查看
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -10,4 +10,9 @@
 
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色-->
     <color name="dialog_utils_lib_button_split_bg">@color/purple_500</color>
+
+    <!--dialog的 确认 按钮文字的背景色-->
+    <color name="dialog_utils_lib_ok_bg">@color/teal_700</color>
+    <!--dialog的 取消 按钮文字的背景色-->
+    <color name="dialog_utils_lib_cancel_bg">@color/teal_200</color>
 </resources>
