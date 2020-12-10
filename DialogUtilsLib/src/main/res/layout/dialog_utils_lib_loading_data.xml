@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="message"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_utils_lib_loading_content"
+            android:gravity="center"
+            android:minWidth="120dp"
+            android:minHeight="90dp"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDrawable="@drawable/dialog_utils_lib_loading_bg"
+                android:indeterminateOnly="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@{message}"
+                android:textColor="@color/dialog_utils_lib_loading_content_text_fg"
+                android:textSize="@dimen/dialog_utils_lib_loading_text_size" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>
