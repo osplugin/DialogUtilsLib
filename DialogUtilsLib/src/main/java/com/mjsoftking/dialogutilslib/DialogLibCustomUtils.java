@@ -71,7 +71,6 @@ public class DialogLibCustomUtils {
     private boolean noShowOk;
     private boolean noShowCancel;
 
-    private OnBtnOk onBtnOk;
     private OnCustomBtnOk onCustomBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
@@ -111,14 +110,6 @@ public class DialogLibCustomUtils {
 
     private boolean isNoShowCancel() {
         return noShowCancel;
-    }
-
-    private OnBtnOk getOnBtnOk() {
-        if (null == onBtnOk) {
-            onBtnOk = () -> {
-            };
-        }
-        return onBtnOk;
     }
 
     private OnBtnCancel getOnBtnCancel() {
@@ -217,15 +208,6 @@ public class DialogLibCustomUtils {
      */
     public DialogLibCustomUtils noShowCancel() {
         this.noShowCancel = true;
-        return this;
-    }
-
-    /**
-     * 设置确认按钮的事件触发
-     * 只能用在默认dialog的OK按钮触发返回
-     */
-    public DialogLibCustomUtils setOnBtnOk(OnBtnOk onBtnOk) {
-        this.onBtnOk = onBtnOk;
         return this;
     }
 

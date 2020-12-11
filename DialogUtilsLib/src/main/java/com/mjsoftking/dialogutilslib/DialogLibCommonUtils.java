@@ -72,7 +72,6 @@ public class DialogLibCommonUtils {
     private boolean noShowCancel;
 
     private OnBtnOk onBtnOk;
-    private OnCustomBtnOk onCustomBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
 
@@ -142,22 +141,6 @@ public class DialogLibCommonUtils {
             };
         }
         return onBtn;
-    }
-
-    private OnCustomBtnOk getOnCustomBtnOk() {
-        if (null == onCustomBtnOk) {
-            onCustomBtnOk = () -> true;
-        }
-        return onCustomBtnOk;
-    }
-
-    /**
-     * 设置自定义视图触发ok按钮时的响应
-     * 接口返回true关闭对话框，反之不关闭
-     */
-    public DialogLibCommonUtils setOnCustomBtnOk(OnCustomBtnOk onCustomBtnOk) {
-        this.onCustomBtnOk = onCustomBtnOk;
-        return this;
     }
 
     /**
@@ -343,10 +326,6 @@ public class DialogLibCommonUtils {
 
     public interface OnBtnOk {
         void ok();
-    }
-
-    public interface OnCustomBtnOk {
-        boolean ok();
     }
 
     public interface OnBtnCancel {
