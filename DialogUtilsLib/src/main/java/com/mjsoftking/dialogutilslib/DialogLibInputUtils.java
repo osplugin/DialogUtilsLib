@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
@@ -29,32 +30,50 @@ public class DialogLibInputUtils {
 
     private Dialog dialog;
     private final boolean registerEvenBus;
-
-    /**
-     * 创建对象并注册成为观察者
-     */
-    public static DialogLibInputUtils create(Context context) {
-        return create(context, true);
-    }
+    //标签
+    @NonNull
+    private final String tag;
 
     /**
      * 创建对象并根据第二参数决定是否注册成为观察者
      */
     public static DialogLibInputUtils create(Context context, boolean registerEvenBus) {
-        DialogLibInputUtils commonDialogUtils = new DialogLibInputUtils(registerEvenBus);
-        commonDialogUtils.setContext(context);
-        return commonDialogUtils;
+        return create(context, "", registerEvenBus);
+    }
+
+    /**
+     * 创建对象并根据第二参数决定是否注册成为观察者
+     */
+    public static DialogLibInputUtils create(Context context, @NonNull String tag) {
+        return create(context, tag, true);
+    }
+
+    /**
+     * 创建对象并根据第二参数决定是否注册成为观察者
+     */
+    public static DialogLibInputUtils create(Context context, @NonNull String tag, boolean registerEvenBus) {
+        DialogLibInputUtils utils = new DialogLibInputUtils(tag, registerEvenBus);
+        utils.setContext(context);
+        return utils;
     }
 
     /**
      * 发送关闭事件，仅针对成为观察者的窗体有效
      */
     public static void sendCloseEvent(Object obj) {
-        EventBus.getDefault().post(new Event(obj));
+        sendCloseEvent(obj, null);
     }
 
-    private DialogLibInputUtils(boolean registerEvenBus) {
+    /**
+     * 发送关闭事件，仅针对成为观察者的窗体有效
+     */
+    public static void sendCloseEvent(Object obj, String tag) {
+        EventBus.getDefault().post(new DialogLibCommonUtils.Event(obj, tag));
+    }
+
+    private DialogLibInputUtils(@NonNull String tag, boolean registerEvenBus) {
         this.registerEvenBus = registerEvenBus;
+        this.tag = tag;
         if (registerEvenBus) {
             EventBus.getDefault().register(this);
         }
@@ -62,7 +81,14 @@ public class DialogLibInputUtils {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(Event event) {
-        Log.d(getClass().getSimpleName(), "触发者：" + (null == event ? "自身手动关闭" : event.getClassName()));
+        if (null != event) {
+            if (null == event.getTag() || event.getTag().equals(tag)) {
+                Log.d(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+            } else {
+                //tag 校验不符合，不关闭此窗口
+                return;
+            }
+        }
         closeDialog();
     }
 
@@ -361,13 +387,19 @@ public class DialogLibInputUtils {
      */
     public static class Event {
         private String className;
+        private String tag;
 
-        public Event(Object className) {
+        public Event(Object className, String tag) {
             this.className = className.getClass().getName();
+            this.tag = tag;
         }
 
         public String getClassName() {
             return className;
+        }
+
+        public String getTag() {
+            return tag;
         }
     }
 
