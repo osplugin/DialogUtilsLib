@@ -329,10 +329,6 @@ public class DialogLibCustomUtils {
         }
     }
 
-    public interface OnBtnOk {
-        void ok();
-    }
-
     public interface OnCustomBtnOk {
         boolean ok();
     }
