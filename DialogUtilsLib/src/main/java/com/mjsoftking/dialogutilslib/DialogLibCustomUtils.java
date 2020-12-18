@@ -33,6 +33,13 @@ public class DialogLibCustomUtils {
     private final String tag;
 
     /**
+     * 创建对象并注册成为观察者
+     */
+    public static DialogLibCustomUtils create(Context context) {
+        return create(context, true);
+    }
+
+    /**
      * 创建对象并根据第二参数决定是否注册成为观察者
      */
     public static DialogLibCustomUtils create(Context context, boolean registerEvenBus) {
