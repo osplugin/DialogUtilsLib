@@ -21,10 +21,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 加载等待框工具类
  */
 public class DialogLibLoadingUtils {
+    private final static String TAG = DialogLibLoadingUtils.class.getSimpleName();
+    private final static Map<String, DialogLibLoadingUtils> MAP = new HashMap<>();
 
     private Dialog dialog;
     private final boolean registerEvenBus;
@@ -89,7 +94,7 @@ public class DialogLibLoadingUtils {
     public void event(Event event) {
         if (null != event) {
             if (null == event.getTag() || event.getTag().equals(tag)) {
-                Log.d(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
             } else {
                 //tag 校验不符合，不关闭此窗口
                 return;
@@ -99,8 +104,12 @@ public class DialogLibLoadingUtils {
     }
 
     private Context context;
+    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+    private String alias;
     private String message;
     private Integer timeout;
+    //显示前触发，可以先调用show显示，根据此事件去做事情
+    private OnLoading onLoading;
 
     private Context getContext() {
         return context;
@@ -123,6 +132,36 @@ public class DialogLibLoadingUtils {
             timeout = 500;
         }
         return timeout;
+    }
+
+    private String getAlias() {
+        return alias;
+    }
+
+    private OnLoading getOnLoading() {
+        if (null == onLoading) {
+            onLoading = () -> {
+            };
+        }
+        return onLoading;
+    }
+
+    /**
+     * 显示前触发，可以先调用show显示，根据此事件去做事情
+     */
+    public DialogLibLoadingUtils setOnLoading(OnLoading onLoading) {
+        this.onLoading = onLoading;
+        return this;
+    }
+
+    /**
+     * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+     * <p>
+     * null、空字符串 无效
+     */
+    public DialogLibLoadingUtils setAlias(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     /**
@@ -167,7 +206,18 @@ public class DialogLibLoadingUtils {
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
     public DialogLibLoadingUtils show() {
+        if (!TextUtils.isEmpty(getAlias())) {
+            DialogLibLoadingUtils obj = MAP.get(getAlias());
+            if (null != obj) {
+                Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                return obj;
+            }
+        }
+
         try {
+            //show前先触发，可以在此事件开始任务，配合别名，可以避免快速点击时触发2次任务的问题
+            getOnLoading().loading();
+
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogLoadingStyle);
             binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_loading_data, null, false);
             binding.setMessage(getMessage());
@@ -185,6 +235,11 @@ public class DialogLibLoadingUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.put(getAlias(), this);
+        }
+
         return this;
     }
 
@@ -218,6 +273,14 @@ public class DialogLibLoadingUtils {
             }
         } catch (Exception e) {
         }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.remove(getAlias());
+        }
+    }
+
+    public interface OnLoading {
+        void loading();
     }
 
     /**

@@ -42,6 +42,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.equals(binding.text1)) {
             DialogLibCommonUtils.create(this)
                     .setMessage("普通对话框")
+                    .setAlias("text1")
+                    .noShowCancel()
+                    .show();
+            //故意产生2次
+            DialogLibCommonUtils.create(this)
+                    .setMessage("普通对话框")
+                    .setAlias("text1")
                     .noShowCancel()
                     .show();
         } else if (v.equals(binding.text2)) {
@@ -49,10 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
             DialogLibCustomUtils.create(this)
                     .noShowCancel()
+                    .setAlias("text2")
                     .show(imageView);
         } else if (v.equals(binding.text3)) {
             DialogLibInputUtils.create(this)
                     .setMessage("输入信息")
+                    .setAlias("text3")
                     .setOnBtnOk(str -> {
                         Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
                         return true;
@@ -61,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.equals(binding.text4)) {
             DialogLibLoadingUtils.create(this)
                     .setTimeoutClose(2000)
+                    .setAlias("text4")
+                    .setOnLoading(() -> {
+                        Toast.makeText(MainActivity.this, "我是显示对话框前触发的", Toast.LENGTH_SHORT).show();
+                    })
                     .show();
         }
     }

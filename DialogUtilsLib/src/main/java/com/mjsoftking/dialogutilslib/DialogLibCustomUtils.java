@@ -21,10 +21,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 自定义弹窗提示工具类
  */
 public class DialogLibCustomUtils {
+    private final static String TAG = DialogLibCustomUtils.class.getSimpleName();
+    private final static Map<String, DialogLibCustomUtils> MAP = new HashMap<>();
 
     private Dialog dialog;
     private final boolean registerEvenBus;
@@ -88,7 +93,7 @@ public class DialogLibCustomUtils {
     public void event(Event event) {
         if (null != event) {
             if (null == event.getTag() || event.getTag().equals(tag)) {
-                Log.d(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
             } else {
                 //tag 校验不符合，不关闭此窗口
                 return;
@@ -98,6 +103,8 @@ public class DialogLibCustomUtils {
     }
 
     private Context context;
+    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+    private String alias;
     private String title;
     private String okDesc;
     private String cancelDesc;
@@ -166,6 +173,20 @@ public class DialogLibCustomUtils {
             onCustomBtnOk = () -> true;
         }
         return onCustomBtnOk;
+    }
+
+    private String getAlias() {
+        return alias;
+    }
+
+    /**
+     * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+     * <p>
+     * null、空字符串 无效
+     */
+    public DialogLibCustomUtils setAlias(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     /**
@@ -265,41 +286,58 @@ public class DialogLibCustomUtils {
      * 需要手动控制dialog关闭
      */
     public DialogLibCustomUtils show(View view) {
-        dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
-        //ContentView
-        DialogUtilsLibCustomViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_custom_view, null, false);
-        binding.contentGroup.removeAllViews();
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        view.setLayoutParams(params);
-        binding.contentGroup.addView(view);
-        binding.setOkDesc(getOkDesc());
-        binding.setCancelDesc(getCancelDesc());
-        binding.setNoShowOk(isNoShowOk());
-        binding.setNoShowCancel(isNoShowCancel());
-        binding.setClick(v -> {
-            try {
-                //任何按钮都会触发
-                getOnBtn().btn();
-                if (v.getId() == R.id.btnOk) {
-                    //ok按钮位置触发
-                    if (getOnCustomBtnOk().ok()) {
-                        closeDialog();
-                    }
-                } else if (v.getId() == R.id.btnCancel) {
-                    closeDialog();
-                    //cancel按钮位置触发
-                    getOnBtnCancel().cancel();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (!TextUtils.isEmpty(getAlias())) {
+            DialogLibCustomUtils obj = MAP.get(getAlias());
+            if (null != obj) {
+                Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                return obj;
             }
-        });
-        binding.setTitle(getTitle());
-        dialog.setContentView(binding.getRoot());
-        //2个按钮都不显示时，则允许点击其他位置关闭
-        dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
-        dialog.show();
-        setDialogWidth(dialog);
+        }
+
+        try {
+            dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
+            //ContentView
+            DialogUtilsLibCustomViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_custom_view, null, false);
+            binding.contentGroup.removeAllViews();
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            view.setLayoutParams(params);
+            binding.contentGroup.addView(view);
+            binding.setOkDesc(getOkDesc());
+            binding.setCancelDesc(getCancelDesc());
+            binding.setNoShowOk(isNoShowOk());
+            binding.setNoShowCancel(isNoShowCancel());
+            binding.setClick(v -> {
+                try {
+                    //任何按钮都会触发
+                    getOnBtn().btn();
+                    if (v.getId() == R.id.btnOk) {
+                        //ok按钮位置触发
+                        if (getOnCustomBtnOk().ok()) {
+                            closeDialog();
+                        }
+                    } else if (v.getId() == R.id.btnCancel) {
+                        closeDialog();
+                        //cancel按钮位置触发
+                        getOnBtnCancel().cancel();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            binding.setTitle(getTitle());
+            dialog.setContentView(binding.getRoot());
+            //2个按钮都不显示时，则允许点击其他位置关闭
+            dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
+            dialog.show();
+            setDialogWidth(dialog);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.put(getAlias(), this);
+        }
+
         return this;
     }
 
@@ -326,6 +364,10 @@ public class DialogLibCustomUtils {
                 dialog.dismiss();
             }
         } catch (Exception e) {
+        }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.remove(getAlias());
         }
     }
 

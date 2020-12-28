@@ -23,10 +23,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 输入型弹窗提示工具类
  */
 public class DialogLibInputUtils {
+    private final static String TAG = DialogLibInputUtils.class.getSimpleName();
+    private final static Map<String, DialogLibInputUtils> MAP = new HashMap<>();
 
     private Dialog dialog;
     private final boolean registerEvenBus;
@@ -90,7 +95,7 @@ public class DialogLibInputUtils {
     public void event(Event event) {
         if (null != event) {
             if (null == event.getTag() || event.getTag().equals(tag)) {
-                Log.d(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
             } else {
                 //tag 校验不符合，不关闭此窗口
                 return;
@@ -100,6 +105,8 @@ public class DialogLibInputUtils {
     }
 
     private Context context;
+    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+    private String alias;
     private String title;
     private String message;
     private String okDesc;
@@ -172,6 +179,20 @@ public class DialogLibInputUtils {
 
     private Integer getLength() {
         return length;
+    }
+
+    private String getAlias() {
+        return alias;
+    }
+
+    /**
+     * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+     * <p>
+     * null、空字符串 无效
+     */
+    public DialogLibInputUtils setAlias(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     /**
@@ -301,19 +322,27 @@ public class DialogLibInputUtils {
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
     public DialogLibInputUtils show() {
+        if (!TextUtils.isEmpty(getAlias())) {
+            DialogLibInputUtils obj = MAP.get(getAlias());
+            if (null != obj) {
+                Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                return obj;
+            }
+        }
+
         try {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
 
             DialogUtilsLibTipInputBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip_input, null, false);
             binding.setClick(v -> {
                 try {
-                    if(v.getId() == R.id.btnOk){
+                    if (v.getId() == R.id.btnOk) {
                         //ok按钮位置触发
                         if (getOnBtnOk().ok(binding.getMessage())) {
                             //关闭对话框
                             closeDialog();
                         }
-                    } else if(v.getId() == R.id.btnCancel){
+                    } else if (v.getId() == R.id.btnCancel) {
                         //关闭对话框
                         closeDialog();
                         //cancel按钮位置触发
@@ -347,6 +376,11 @@ public class DialogLibInputUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.put(getAlias(), this);
+        }
+
         return this;
     }
 
@@ -374,6 +408,10 @@ public class DialogLibInputUtils {
             }
         } catch (Exception e) {
         }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.remove(getAlias());
+        }
     }
 
 
@@ -383,10 +421,6 @@ public class DialogLibInputUtils {
 
     public interface OnBtnCancel {
         void cancel();
-    }
-
-    public interface OnBtn {
-        void btn();
     }
 
     /**

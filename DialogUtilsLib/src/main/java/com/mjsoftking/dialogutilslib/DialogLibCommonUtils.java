@@ -20,10 +20,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 常规弹窗提示工具类
  */
 public class DialogLibCommonUtils {
+    private final static String TAG = DialogLibCommonUtils.class.getSimpleName();
+    private final static Map<String, DialogLibCommonUtils> MAP = new HashMap<>();
 
     private Dialog dialog;
     private final boolean registerEvenBus;
@@ -87,7 +92,7 @@ public class DialogLibCommonUtils {
     public void event(Event event) {
         if (null != event) {
             if (null == event.getTag() || event.getTag().equals(tag)) {
-                Log.d(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
             } else {
                 //tag 校验不符合，不关闭此窗口
                 return;
@@ -97,6 +102,8 @@ public class DialogLibCommonUtils {
     }
 
     private Context context;
+    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+    private String alias;
     private String title;
     private String message;
     private String okDesc;
@@ -174,6 +181,20 @@ public class DialogLibCommonUtils {
             };
         }
         return onBtn;
+    }
+
+    private String getAlias() {
+        return alias;
+    }
+
+    /**
+     * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+     * <p>
+     * null、空字符串 无效
+     */
+    public DialogLibCommonUtils setAlias(String alias) {
+        this.alias = alias;
+        return this;
     }
 
     /**
@@ -288,6 +309,14 @@ public class DialogLibCommonUtils {
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
     public DialogLibCommonUtils show() {
+        if (!TextUtils.isEmpty(getAlias())) {
+            DialogLibCommonUtils obj = MAP.get(getAlias());
+            if (null != obj) {
+                Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                return obj;
+            }
+        }
+
         try {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
 
@@ -328,6 +357,11 @@ public class DialogLibCommonUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.put(getAlias(), this);
+        }
+
         return this;
     }
 
@@ -354,6 +388,10 @@ public class DialogLibCommonUtils {
                 dialog.dismiss();
             }
         } catch (Exception e) {
+        }
+
+        if (!TextUtils.isEmpty(getAlias())) {
+            MAP.remove(getAlias());
         }
     }
 
