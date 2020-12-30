@@ -325,6 +325,8 @@ public class DialogLibInputUtils {
         if (!TextUtils.isEmpty(getAlias())) {
             DialogLibInputUtils obj = MAP.get(getAlias());
             if (null != obj) {
+                //此时关闭自己，并移除注册，但不解除MAP缓存
+                this.closeDialog(false);
                 Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
                 return obj;
             }
@@ -399,6 +401,10 @@ public class DialogLibInputUtils {
     }
 
     public void closeDialog() {
+        closeDialog(true);
+    }
+
+    private void closeDialog(boolean remove) {
         if (registerEvenBus) {
             EventBus.getDefault().unregister(this);
         }
@@ -409,11 +415,10 @@ public class DialogLibInputUtils {
         } catch (Exception e) {
         }
 
-        if (!TextUtils.isEmpty(getAlias())) {
+        if (!TextUtils.isEmpty(getAlias()) && remove) {
             MAP.remove(getAlias());
         }
     }
-
 
     public interface OnBtnOk {
         boolean ok(String text);
