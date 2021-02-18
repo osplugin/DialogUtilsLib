@@ -2,6 +2,7 @@ package com.mjsoftking.dialogutilslib;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -396,8 +397,22 @@ public class DialogLibInputUtils {
         WindowManager.LayoutParams p = dialog.getWindow().getAttributes();
         Point size = new Point();
         d.getSize(size);
-        p.width = (int) (size.x * 0.85);
+        p.width = (int) (size.x * dialogWidthFactor());
         dialog.getWindow().setAttributes(p);
+    }
+
+    private float dialogWidthFactor() {
+        Configuration mConfiguration = context.getResources().getConfiguration();
+        int ori = mConfiguration.orientation; //获取屏幕方向
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            //横屏
+            return context.getResources().getDimension(R.dimen.dialog_utils_lib_landscape_width_factor);
+        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
+            //竖屏
+            return context.getResources().getDimension(R.dimen.dialog_utils_lib_portrait_width_factor);
+        } else {
+            return context.getResources().getDimension(R.dimen.dialog_utils_lib_portrait_width_factor);
+        }
     }
 
     public void closeDialog() {

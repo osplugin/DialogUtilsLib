@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="dialog_utils_lib_text_size_normal">14sp</dimen>
 
     <!--标题字体大小，统一设定-->
@@ -14,4 +14,10 @@
     <dimen name="dialog_utils_lib_input_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
     <!--加载框 字体大小，适用于 DialogLibLoadingUtils 提示内容区域-->
     <dimen name="dialog_utils_lib_loading_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
+
+
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，竖屏时的系数，单位固定为px，其他单位会导致实际值变大-->
+    <dimen name="dialog_utils_lib_portrait_width_factor" tools:ignore="PxUsage">0.85px</dimen>
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，横屏时的系数，单位固定为px，其他单位会导致实际值变大-->
+    <dimen name="dialog_utils_lib_landscape_width_factor" tools:ignore="PxUsage">0.50px</dimen>
 </resources>
