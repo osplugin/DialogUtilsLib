@@ -16,8 +16,8 @@
     <dimen name="dialog_utils_lib_loading_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
 
 
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，竖屏时的系数，单位固定为px，其他单位会导致实际值变大-->
-    <dimen name="dialog_utils_lib_portrait_width_factor" tools:ignore="PxUsage">0.85px</dimen>
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，横屏时的系数，单位固定为px，其他单位会导致实际值变大-->
-    <dimen name="dialog_utils_lib_landscape_width_factor" tools:ignore="PxUsage">0.50px</dimen>
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数-->
+    <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.85</item>
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数-->
+    <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.5</item>
 </resources>

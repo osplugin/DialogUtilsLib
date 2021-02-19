@@ -15,4 +15,10 @@
 <!--    <dimen name="dialog_utils_lib_input_text_size">16sp</dimen>-->
 <!--    &lt;!&ndash;加载框 字体大小，适用于 DialogLibLoadingUtils 提示内容区域&ndash;&gt;-->
 <!--    <dimen name="dialog_utils_lib_loading_text_size">16sp</dimen>-->
+
+
+<!--    &lt;!&ndash;dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数&ndash;&gt;-->
+<!--    <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.35</item>-->
+<!--    &lt;!&ndash;dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数&ndash;&gt;-->
+<!--    <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.3</item>-->
 </resources>

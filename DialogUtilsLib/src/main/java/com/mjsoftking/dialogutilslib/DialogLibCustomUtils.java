@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,7 +95,9 @@ public class DialogLibCustomUtils {
     public void event(Event event) {
         if (null != event) {
             if (null == event.getTag() || event.getTag().equals(tag)) {
-                Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                if (DialogLibParam.getInstance().isDebug()) {
+                    Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                }
             } else {
                 //tag 校验不符合，不关闭此窗口
                 return;
@@ -292,7 +295,9 @@ public class DialogLibCustomUtils {
             if (null != obj) {
                 //此时关闭自己，并移除注册，但不解除MAP缓存
                 this.closeDialog(false);
-                Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                if (DialogLibParam.getInstance().isDebug()) {
+                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                }
                 return obj;
             }
         }
@@ -324,17 +329,22 @@ public class DialogLibCustomUtils {
                         getOnBtnCancel().cancel();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    if (DialogLibParam.getInstance().isDebug()) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                 }
             });
             binding.setTitle(getTitle());
             dialog.setContentView(binding.getRoot());
             //2个按钮都不显示时，则允许点击其他位置关闭
             dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
+            dialog.setOnCancelListener(dialog -> closeDialog());
             dialog.show();
             setDialogWidth(dialog);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (DialogLibParam.getInstance().isDebug()) {
+                Log.e(TAG, e.getMessage(), e);
+            }
         }
 
         if (!TextUtils.isEmpty(getAlias())) {
@@ -358,17 +368,37 @@ public class DialogLibCustomUtils {
         dialog.getWindow().setAttributes(p);
     }
 
+    private float getLandscapeWidthFactor() {
+        TypedValue outValue = new TypedValue();
+        getContext().getResources().getValue(R.dimen.dialog_utils_lib_landscape_width_factor, outValue, true);
+        float lwf = outValue.getFloat();
+        if (lwf <= 0 || lwf >= 1) {
+            return 0.5F;
+        }
+        return lwf;
+    }
+
+    private float getPortraitWidthFactor() {
+        TypedValue outValue = new TypedValue();
+        getContext().getResources().getValue(R.dimen.dialog_utils_lib_portrait_width_factor, outValue, true);
+        float pwf = outValue.getFloat();
+        if (pwf <= 0 || pwf >= 1) {
+            return 0.85F;
+        }
+        return pwf;
+    }
+
     private float dialogWidthFactor() {
         Configuration mConfiguration = context.getResources().getConfiguration();
         int ori = mConfiguration.orientation; //获取屏幕方向
         if (ori == Configuration.ORIENTATION_LANDSCAPE) {
             //横屏
-            return context.getResources().getDimension(R.dimen.dialog_utils_lib_landscape_width_factor);
+            return getLandscapeWidthFactor();
         } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
             //竖屏
-            return context.getResources().getDimension(R.dimen.dialog_utils_lib_portrait_width_factor);
+            return getPortraitWidthFactor();
         } else {
-            return context.getResources().getDimension(R.dimen.dialog_utils_lib_portrait_width_factor);
+            return getPortraitWidthFactor();
         }
     }
 
@@ -384,7 +414,7 @@ public class DialogLibCustomUtils {
             if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
             }
-        } catch (Exception e) {
+        } catch (Exception ignore) {
         }
 
         if (!TextUtils.isEmpty(getAlias()) && remove) {

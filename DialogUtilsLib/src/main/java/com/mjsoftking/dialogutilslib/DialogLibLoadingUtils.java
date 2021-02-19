@@ -94,7 +94,9 @@ public class DialogLibLoadingUtils {
     public void event(Event event) {
         if (null != event) {
             if (null == event.getTag() || event.getTag().equals(tag)) {
-                Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                if (DialogLibParam.getInstance().isDebug()) {
+                    Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
+                }
             } else {
                 //tag 校验不符合，不关闭此窗口
                 return;
@@ -211,7 +213,9 @@ public class DialogLibLoadingUtils {
             if (null != obj) {
                 //此时关闭自己，并移除注册，但不解除MAP缓存
                 this.closeDialog(false);
-                Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                if (DialogLibParam.getInstance().isDebug()) {
+                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                }
                 return obj;
             }
         }
@@ -226,6 +230,7 @@ public class DialogLibLoadingUtils {
             //ContentView
             dialog.setContentView(binding.getRoot());
             dialog.setCancelable(false);
+            dialog.setOnCancelListener(dialog -> closeDialog());
 
             dialog.show();
             setDialogWidth(dialog);
@@ -235,7 +240,9 @@ public class DialogLibLoadingUtils {
                 new Handler().postDelayed(this::closeDialog, getTimeout());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            if (DialogLibParam.getInstance().isDebug()) {
+                Log.e(TAG, e.getMessage(), e);
+            }
         }
 
         if (!TextUtils.isEmpty(getAlias())) {
@@ -258,8 +265,8 @@ public class DialogLibLoadingUtils {
         Point size = new Point();
         d.getSize(size);
         //全屏
-        layoutParams.width = (int) (size.x * 1);
-        layoutParams.height = (int) (size.y * 1);
+        layoutParams.width = (int) (size.x);
+        layoutParams.height = (int) (size.y);
         window.setAttributes(layoutParams);
         window.setDimAmount(0f);
         dialog.setCanceledOnTouchOutside(false);
@@ -277,7 +284,7 @@ public class DialogLibLoadingUtils {
             if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
             }
-        } catch (Exception e) {
+        } catch (Exception ignore) {
         }
 
         if (!TextUtils.isEmpty(getAlias()) && remove) {
