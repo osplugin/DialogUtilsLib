@@ -14,6 +14,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -118,6 +119,7 @@ public class DialogLibInputUtils {
     private KeyListener keyListener;
     private Integer inputType;
     private Integer length;
+    private boolean popupKeyboard;
 
     private OnBtnOk onBtnOk;
     private OnBtnCancel onBtnCancel;
@@ -187,6 +189,18 @@ public class DialogLibInputUtils {
 
     private String getAlias() {
         return alias;
+    }
+
+    private boolean isPopupKeyboard() {
+        return popupKeyboard;
+    }
+
+    /**
+     * 是否弹出键盘，默认不弹出，弹出键盘时默认光标定位到输入框位置
+     */
+    public DialogLibInputUtils setPopupKeyboard(boolean popupKeyboard) {
+        this.popupKeyboard = popupKeyboard;
+        return this;
     }
 
     /**
@@ -367,6 +381,16 @@ public class DialogLibInputUtils {
             binding.setOkDesc(getOkDesc());
             binding.setCancelDesc(getCancelDesc());
 
+            if (isPopupKeyboard()) {
+                binding.etContent.setFocusable(true);
+                binding.etContent.setFocusableInTouchMode(true);
+                binding.etContent.requestFocus();
+
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                }
+            }
             if (null != getInputType()) {
                 binding.etContent.setInputType(getInputType());
             }
