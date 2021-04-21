@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
@@ -114,6 +115,9 @@ public class DialogLibInputUtils {
     private String alias;
     private String title;
     private String message;
+    private String hint;
+    @ColorRes
+    private Integer hintTextColor;
     private String okDesc;
     private String cancelDesc;
     private KeyListener keyListener;
@@ -193,6 +197,38 @@ public class DialogLibInputUtils {
 
     private boolean isPopupKeyboard() {
         return popupKeyboard;
+    }
+
+    private String getHint() {
+        if (TextUtils.isEmpty(hint)) {
+            return "";
+        }
+        return hint;
+    }
+
+//    private Integer getHintTextColor() {
+//        return hintTextColor;
+//    }
+//
+//    public DialogLibInputUtils setHintTextColor(int hintTextColor) {
+//        this.hintTextColor = hintTextColor;
+//        return this;
+//    }
+
+    /**
+     * 设置提示信息的hint部分，默认为“”(空字符串)
+     */
+    public DialogLibInputUtils setHint(@StringRes int hintId) {
+        this.hint = getContext().getString(hintId);
+        return this;
+    }
+
+    /**
+     * 设置提示信息的hint部分，默认为“”(空字符串)
+     */
+    public DialogLibInputUtils setHint(String hint) {
+        this.hint = hint;
+        return this;
     }
 
     /**
@@ -378,6 +414,7 @@ public class DialogLibInputUtils {
             });
             binding.setTitle(getTitle());
             binding.setMessage(getMessage());
+            binding.setHint(getHint());
             binding.setOkDesc(getOkDesc());
             binding.setCancelDesc(getCancelDesc());
 

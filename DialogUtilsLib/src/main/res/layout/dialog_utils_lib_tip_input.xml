@@ -18,6 +18,10 @@
             type="String" />
 
         <variable
+            name="hint"
+            type="String" />
+
+        <variable
             name="okDesc"
             type="String" />
 
@@ -53,6 +57,7 @@
             android:textColor="@color/dialog_utils_lib_input_fg"
             android:maxLines="10"
             android:text="@={message}"
+            android:hint="@{hint}"
             android:textSize="@dimen/dialog_utils_lib_input_text_size" />
 
         <View
