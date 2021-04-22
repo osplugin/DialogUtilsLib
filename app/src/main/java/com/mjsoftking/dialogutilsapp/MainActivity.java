@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAlias("text1")
                     .noShowCancel()
                     .show();
-            //故意产生2次
+            //todo 故意产生2次
             DialogLibCommonUtils.create(this)
                     .setMessage("普通对话框")
                     .setAlias("text1")
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibInputUtils.create(this)
                     .setMessage("输入信息")
                     .setAlias("text3")
+                    .setPopupKeyboard()
                     .setOnBtnOk(str -> {
                         Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
                         return true;

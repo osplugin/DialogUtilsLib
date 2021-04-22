@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -234,8 +238,8 @@ public class DialogLibInputUtils {
     /**
      * 是否弹出键盘，默认不弹出，弹出键盘时默认光标定位到输入框位置
      */
-    public DialogLibInputUtils setPopupKeyboard(boolean popupKeyboard) {
-        this.popupKeyboard = popupKeyboard;
+    public DialogLibInputUtils setPopupKeyboard() {
+        this.popupKeyboard = true;
         return this;
     }
 
@@ -419,14 +423,14 @@ public class DialogLibInputUtils {
             binding.setCancelDesc(getCancelDesc());
 
             if (isPopupKeyboard()) {
-                binding.etContent.setFocusable(true);
-                binding.etContent.setFocusableInTouchMode(true);
-                binding.etContent.requestFocus();
-
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                }
+                binding.etContent.post(() -> {
+                    binding.etContent.setSelection(binding.etContent.length());
+                    showSoftInput(binding.etContent);
+                });
+            } else {
+                binding.etContent.post(() -> {
+                    binding.etContent.setSelection(binding.etContent.length());
+                });
             }
             if (null != getInputType()) {
                 binding.etContent.setInputType(getInputType());
@@ -455,6 +459,25 @@ public class DialogLibInputUtils {
         }
 
         return this;
+    }
+
+    private void showSoftInput(@NonNull final View view) {
+        InputMethodManager imm =
+                (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm == null) return;
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        imm.showSoftInput(view, 0, new ResultReceiver(new Handler()) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN
+                        || resultCode == InputMethodManager.RESULT_HIDDEN) {
+                    imm.toggleSoftInput(0, 0);
+                }
+            }
+        });
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     /**
