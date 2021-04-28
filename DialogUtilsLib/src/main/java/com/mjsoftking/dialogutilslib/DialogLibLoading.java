@@ -11,15 +11,12 @@ import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilslib.databinding.DialogUtilsLibLoadingDataBinding;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
+import com.mjsoftking.dialogutilslib.utils.DialogLibCacheList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,82 +24,23 @@ import java.util.Map;
 /**
  * 加载等待框工具类
  */
-public class DialogLibLoadingUtils {
-    private final static String TAG = DialogLibLoadingUtils.class.getSimpleName();
-    private final static Map<String, DialogLibLoadingUtils> MAP = new HashMap<>();
+public class DialogLibLoading implements DialogLibUtils {
+    private final static String TAG = DialogLibLoading.class.getSimpleName();
+    private final static Map<String, DialogLibLoading> MAP = new HashMap<>();
 
     private Dialog dialog;
-    private final boolean registerEvenBus;
     private DialogUtilsLibLoadingDataBinding binding;
-    //标签
-    @NonNull
-    private final String tag;
 
     /**
-     * 创建对象并注册成为观察者
+     * 创建对象
      */
-    public static DialogLibLoadingUtils create(Context context) {
-        return create(context, true);
-    }
-
-    /**
-     * 创建对象并根据第二参数决定是否注册成为观察者
-     */
-    public static DialogLibLoadingUtils create(Context context, boolean registerEvenBus) {
-        return create(context, "", registerEvenBus);
-    }
-
-    /**
-     * 创建对象并根据第二参数决定是否注册成为观察者
-     */
-    public static DialogLibLoadingUtils create(Context context, @NonNull String tag) {
-        return create(context, tag, true);
-    }
-
-    /**
-     * 创建对象并根据第二参数决定是否注册成为观察者
-     */
-    public static DialogLibLoadingUtils create(Context context, @NonNull String tag, boolean registerEvenBus) {
-        DialogLibLoadingUtils utils = new DialogLibLoadingUtils(tag, registerEvenBus);
+    public static DialogLibLoading create(Context context) {
+        DialogLibLoading utils = new DialogLibLoading();
         utils.setContext(context);
         return utils;
     }
 
-    /**
-     * 发送关闭事件，仅针对成为观察者的窗体有效
-     */
-    public static void sendCloseEvent(Object obj) {
-        sendCloseEvent(obj, null);
-    }
-
-    /**
-     * 发送关闭事件，仅针对成为观察者的窗体有效
-     */
-    public static void sendCloseEvent(Object obj, String tag) {
-        EventBus.getDefault().post(new DialogLibCommonUtils.Event(obj, tag));
-    }
-
-    private DialogLibLoadingUtils(@NonNull String tag, boolean registerEvenBus) {
-        this.registerEvenBus = registerEvenBus;
-        this.tag = tag;
-        if (registerEvenBus) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void event(Event event) {
-        if (null != event) {
-            if (null == event.getTag() || event.getTag().equals(tag)) {
-                if (DialogLibParam.getInstance().isDebug()) {
-                    Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
-                }
-            } else {
-                //tag 校验不符合，不关闭此窗口
-                return;
-            }
-        }
-        closeDialog();
+    private DialogLibLoading() {
     }
 
     private Context context;
@@ -151,7 +89,7 @@ public class DialogLibLoadingUtils {
     /**
      * 显示前触发，可以先调用show显示，根据此事件去做事情
      */
-    public DialogLibLoadingUtils setOnLoading(OnLoading onLoading) {
+    public DialogLibLoading setOnLoading(OnLoading onLoading) {
         this.onLoading = onLoading;
         return this;
     }
@@ -161,7 +99,7 @@ public class DialogLibLoadingUtils {
      * <p>
      * null、空字符串 无效
      */
-    public DialogLibLoadingUtils setAlias(String alias) {
+    public DialogLibLoading setAlias(String alias) {
         this.alias = alias;
         return this;
     }
@@ -171,7 +109,7 @@ public class DialogLibLoadingUtils {
      * dialog未显示时，默认为“数据处理中...”
      * dialog显示时，则刷新显示的内容
      */
-    public DialogLibLoadingUtils setMessage(String message) {
+    public DialogLibLoading setMessage(String message) {
         if (null != binding) {
             binding.setMessage(message);
         } else {
@@ -185,7 +123,7 @@ public class DialogLibLoadingUtils {
      * dialog未显示时，默认为“数据处理中...”
      * dialog显示时，则刷新显示的内容
      */
-    public DialogLibLoadingUtils setMessage(@StringRes int strId) {
+    public DialogLibLoading setMessage(@StringRes int strId) {
         if (null != binding) {
             binding.setMessage(getContext().getString(strId));
         } else {
@@ -199,7 +137,7 @@ public class DialogLibLoadingUtils {
      *
      * @param timeout 超时时间，单位毫秒（最小500毫秒，低于500均按照500毫米计算），超过此时间后自动关闭，不设置不关闭
      */
-    public DialogLibLoadingUtils setTimeoutClose(int timeout) {
+    public DialogLibLoading setTimeoutClose(int timeout) {
         this.timeout = timeout;
         return this;
     }
@@ -207,13 +145,13 @@ public class DialogLibLoadingUtils {
     /**
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
-    public DialogLibLoadingUtils show() {
+    public DialogLibLoading show() {
         if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibLoadingUtils obj = MAP.get(getAlias());
+            DialogLibLoading obj = MAP.get(getAlias());
             if (null != obj) {
                 //此时关闭自己，并移除注册，但不解除MAP缓存
                 this.closeDialog(false);
-                if (DialogLibParam.getInstance().isDebug()) {
+                if (DialogLibInitSetting.getInstance().isDebug()) {
                     Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
                 }
                 return obj;
@@ -240,7 +178,7 @@ public class DialogLibLoadingUtils {
                 new Handler().postDelayed(this::closeDialog, getTimeout());
             }
         } catch (Exception e) {
-            if (DialogLibParam.getInstance().isDebug()) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.e(TAG, e.getMessage(), e);
             }
         }
@@ -248,6 +186,8 @@ public class DialogLibLoadingUtils {
         if (!TextUtils.isEmpty(getAlias())) {
             MAP.put(getAlias(), this);
         }
+
+        DialogLibCacheList.getInstance().add(getContext(), this);
 
         return this;
     }
@@ -258,6 +198,12 @@ public class DialogLibLoadingUtils {
      */
     private void setDialogWidth(Dialog dialog) {
         Window window = dialog.getWindow();
+        if (null == window) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "由于window为空，设置对话框属性失败！");
+            }
+            return;
+        }
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
@@ -272,49 +218,34 @@ public class DialogLibLoadingUtils {
         dialog.setCanceledOnTouchOutside(false);
     }
 
-    public void closeDialog() {
-        closeDialog(true);
+    public boolean closeDialog() {
+        return closeDialog(true);
     }
 
-    private void closeDialog(boolean remove) {
-        if (registerEvenBus) {
-            EventBus.getDefault().unregister(this);
-        }
+    private boolean closeDialog(boolean remove) {
         try {
             if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
             }
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "关闭对话框异常", e);
+            }
         }
 
         if (!TextUtils.isEmpty(getAlias()) && remove) {
             MAP.remove(getAlias());
         }
+
+        if (remove) {
+            DialogLibCacheList.getInstance().remove(getContext(), this);
+        }
+
+        return true;
     }
 
     public interface OnLoading {
         void loading();
-    }
-
-    /**
-     * 触发此事件可以关闭所有已成为观察者的未关闭的窗体
-     */
-    public static class Event {
-        private String className;
-        private String tag;
-
-        public Event(Object className, String tag) {
-            this.className = className.getClass().getName();
-            this.tag = tag;
-        }
-
-        public String getClassName() {
-            return className;
-        }
-
-        public String getTag() {
-            return tag;
-        }
     }
 
 }

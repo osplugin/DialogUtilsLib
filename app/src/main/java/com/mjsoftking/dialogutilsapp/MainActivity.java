@@ -10,12 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilsapp.databinding.ActivityMainBinding;
-import com.mjsoftking.dialogutilslib.DialogLibAllCustomUtils;
-import com.mjsoftking.dialogutilslib.DialogLibCommonUtils;
-import com.mjsoftking.dialogutilslib.DialogLibCustomUtils;
-import com.mjsoftking.dialogutilslib.DialogLibInputUtils;
-import com.mjsoftking.dialogutilslib.DialogLibLoadingUtils;
-import com.mjsoftking.dialogutilslib.DialogLibParam;
+import com.mjsoftking.dialogutilslib.DialogLibAllCustom;
+import com.mjsoftking.dialogutilslib.DialogLibCommon;
+import com.mjsoftking.dialogutilslib.DialogLibCustom;
+import com.mjsoftking.dialogutilslib.DialogLibInput;
+import com.mjsoftking.dialogutilslib.DialogLibLoading;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,47 +24,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //todo 无论使用那个版本的aar资源，使用此方法均会强制改变是否是debug模式，此模式仅仅会控制是否打印日志。
-        DialogLibParam.getInstance().setDebug(true);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setClick(this);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //todo 因系统字体、翻转等导致的销毁，使用下面的方法可以关闭全部使用create(this)方式注册的窗体，而不引发泄漏异常
-        //todo 使用create(this, false)方式注册的需要手动处理返回的对象，进行关闭
-        DialogLibCommonUtils.sendCloseEvent(this);
-        DialogLibCustomUtils.sendCloseEvent(this);
-        DialogLibInputUtils.sendCloseEvent(this);
-        DialogLibLoadingUtils.sendCloseEvent(this);
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.equals(binding.text1)) {
-            DialogLibCommonUtils.create(this)
-                    .setMessage("普通对话框")
-                    .setAlias("text1")
-                    .noShowCancel()
-                    .show();
-            //todo 故意产生2次
-            DialogLibCommonUtils.create(this)
-                    .setMessage("普通对话框")
+            DialogLibCommon.create(this)
+                    .setMessage("普通对话框1")
                     .setAlias("text1")
                     .noShowCancel()
                     .show();
         } else if (v.equals(binding.text2)) {
             ImageView imageView = new ImageView(this);
             imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
-            DialogLibCustomUtils.create(this)
+            DialogLibCustom.create(this)
                     .noShowCancel()
                     .setAlias("text2")
                     .show(imageView);
         } else if (v.equals(binding.text3)) {
-            DialogLibInputUtils.create(this)
+            DialogLibInput.create(this)
                     .setMessage("输入信息")
                     .setAlias("text3")
                     .setPopupKeyboard()
@@ -75,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .show();
         } else if (v.equals(binding.text4)) {
-            DialogLibLoadingUtils.create(this)
+            DialogLibLoading.create(this)
                     .setTimeoutClose(2000)
                     .setAlias("text4")
                     .setOnLoading(() -> {
@@ -83,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .show();
         } else if (v.equals(binding.text5)) {
-            final DialogLibAllCustomUtils dialog = DialogLibAllCustomUtils.create(this)
+            final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
                     .setCancelable(true)
                     .setAlias("text5");
 

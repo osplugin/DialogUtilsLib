@@ -11,17 +11,15 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilslib.databinding.DialogUtilsLibCustomViewBinding;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
+import com.mjsoftking.dialogutilslib.utils.DialogLibCacheList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,81 +27,22 @@ import java.util.Map;
 /**
  * 自定义弹窗提示工具类
  */
-public class DialogLibCustomUtils {
-    private final static String TAG = DialogLibCustomUtils.class.getSimpleName();
-    private final static Map<String, DialogLibCustomUtils> MAP = new HashMap<>();
+public class DialogLibCustom implements DialogLibUtils {
+    private final static String TAG = DialogLibCustom.class.getSimpleName();
+    private final static Map<String, DialogLibCustom> MAP = new HashMap<>();
 
     private Dialog dialog;
-    private final boolean registerEvenBus;
-    //标签
-    @NonNull
-    private final String tag;
 
     /**
-     * 创建对象并注册成为观察者
+     * 创建对象
      */
-    public static DialogLibCustomUtils create(Context context) {
-        return create(context, true);
-    }
-
-    /**
-     * 创建对象并根据第二参数决定是否注册成为观察者
-     */
-    public static DialogLibCustomUtils create(Context context, boolean registerEvenBus) {
-        return create(context, "", registerEvenBus);
-    }
-
-    /**
-     * 创建对象并根据第二参数决定是否注册成为观察者
-     */
-    public static DialogLibCustomUtils create(Context context, @NonNull String tag) {
-        return create(context, tag, true);
-    }
-
-    /**
-     * 创建对象并根据第二参数决定是否注册成为观察者
-     */
-    public static DialogLibCustomUtils create(Context context, @NonNull String tag, boolean registerEvenBus) {
-        DialogLibCustomUtils utils = new DialogLibCustomUtils(tag, registerEvenBus);
+    public static DialogLibCustom create(Context context) {
+        DialogLibCustom utils = new DialogLibCustom();
         utils.setContext(context);
         return utils;
     }
 
-    /**
-     * 发送关闭事件，仅针对成为观察者的窗体有效
-     */
-    public static void sendCloseEvent(Object obj) {
-        sendCloseEvent(obj, null);
-    }
-
-    /**
-     * 发送关闭事件，仅针对成为观察者的窗体有效
-     */
-    public static void sendCloseEvent(Object obj, String tag) {
-        EventBus.getDefault().post(new DialogLibCommonUtils.Event(obj, tag));
-    }
-
-    private DialogLibCustomUtils(@NonNull String tag, boolean registerEvenBus) {
-        this.registerEvenBus = registerEvenBus;
-        this.tag = tag;
-        if (registerEvenBus) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void event(Event event) {
-        if (null != event) {
-            if (null == event.getTag() || event.getTag().equals(tag)) {
-                if (DialogLibParam.getInstance().isDebug()) {
-                    Log.w(getClass().getSimpleName(), "触发关闭者：" + event.getClassName());
-                }
-            } else {
-                //tag 校验不符合，不关闭此窗口
-                return;
-            }
-        }
-        closeDialog();
+    private DialogLibCustom() {
     }
 
     private Context context;
@@ -188,7 +127,7 @@ public class DialogLibCustomUtils {
      * <p>
      * null、空字符串 无效
      */
-    public DialogLibCustomUtils setAlias(String alias) {
+    public DialogLibCustom setAlias(String alias) {
         this.alias = alias;
         return this;
     }
@@ -197,7 +136,7 @@ public class DialogLibCustomUtils {
      * 设置自定义视图触发ok按钮时的响应
      * 接口返回true关闭对话框，反之不关闭
      */
-    public DialogLibCustomUtils setOnCustomBtnOk(OnCustomBtnOk onCustomBtnOk) {
+    public DialogLibCustom setOnCustomBtnOk(OnCustomBtnOk onCustomBtnOk) {
         this.onCustomBtnOk = onCustomBtnOk;
         return this;
     }
@@ -205,7 +144,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置标题显示信息，默认为“提示”
      */
-    public DialogLibCustomUtils setTitle(String title) {
+    public DialogLibCustom setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -213,7 +152,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置标题显示信息，默认为“提示”
      */
-    public DialogLibCustomUtils setTitle(@StringRes int strId) {
+    public DialogLibCustom setTitle(@StringRes int strId) {
         this.title = getContext().getString(strId);
         return this;
     }
@@ -221,7 +160,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置确认按钮位置的提示文字，默认为“确认”
      */
-    public DialogLibCustomUtils setOkDesc(String okDesc) {
+    public DialogLibCustom setOkDesc(String okDesc) {
         this.okDesc = okDesc;
         return this;
     }
@@ -229,7 +168,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置确认按钮位置的提示文字，默认为“确认”
      */
-    public DialogLibCustomUtils setOkDesc(@StringRes int strId) {
+    public DialogLibCustom setOkDesc(@StringRes int strId) {
         this.okDesc = getContext().getString(strId);
         return this;
     }
@@ -237,7 +176,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置取消按钮位置的提示文字，默认为“取消”
      */
-    public DialogLibCustomUtils setCancelDesc(String cancelDesc) {
+    public DialogLibCustom setCancelDesc(String cancelDesc) {
         this.cancelDesc = cancelDesc;
         return this;
     }
@@ -245,7 +184,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置取消按钮位置的提示文字，默认为“取消”
      */
-    public DialogLibCustomUtils setCancelDesc(@StringRes int strId) {
+    public DialogLibCustom setCancelDesc(@StringRes int strId) {
         this.cancelDesc = getContext().getString(strId);
         return this;
     }
@@ -253,18 +192,18 @@ public class DialogLibCustomUtils {
 
     /**
      * 设置是否不显示确认按钮位置，对应确认按钮事件也无法触发
-     * 与{@link DialogLibCustomUtils#noShowCancel()} 同时设置时，只能通过点击提示框外的其他区域关闭（存在按钮时无法点击提示框外的其他区域关闭），且无法触发任何事件回调
+     * 与{@link DialogLibCustom#noShowCancel()} 同时设置时，只能通过点击提示框外的其他区域关闭（存在按钮时无法点击提示框外的其他区域关闭），且无法触发任何事件回调
      */
-    public DialogLibCustomUtils noShowOk() {
+    public DialogLibCustom noShowOk() {
         this.noShowOk = true;
         return this;
     }
 
     /**
      * 设置是否不显示取消按钮位置，对应取消按钮事件也无法触发
-     * 与{@link DialogLibCustomUtils#noShowOk()} 同时设置时，只能通过点击提示框外的其他区域关闭（存在按钮时无法点击提示框外的其他区域关闭），且无法触发任何事件回调
+     * 与{@link DialogLibCustom#noShowOk()} 同时设置时，只能通过点击提示框外的其他区域关闭（存在按钮时无法点击提示框外的其他区域关闭），且无法触发任何事件回调
      */
-    public DialogLibCustomUtils noShowCancel() {
+    public DialogLibCustom noShowCancel() {
         this.noShowCancel = true;
         return this;
     }
@@ -272,7 +211,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置取消按钮的事件触发
      */
-    public DialogLibCustomUtils setOnBtnCancel(OnBtnCancel onBtnCancel) {
+    public DialogLibCustom setOnBtnCancel(OnBtnCancel onBtnCancel) {
         this.onBtnCancel = onBtnCancel;
         return this;
     }
@@ -280,7 +219,7 @@ public class DialogLibCustomUtils {
     /**
      * 设置确认和取消按钮的事件触发时均会触发的事件
      */
-    public DialogLibCustomUtils setOnBtn(OnBtn onBtn) {
+    public DialogLibCustom setOnBtn(OnBtn onBtn) {
         this.onBtn = onBtn;
         return this;
     }
@@ -289,13 +228,13 @@ public class DialogLibCustomUtils {
      * 显示自定义视图的提示框
      * 需要手动控制dialog关闭
      */
-    public DialogLibCustomUtils show(View view) {
+    public DialogLibCustom show(View view) {
         if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibCustomUtils obj = MAP.get(getAlias());
+            DialogLibCustom obj = MAP.get(getAlias());
             if (null != obj) {
                 //此时关闭自己，并移除注册，但不解除MAP缓存
                 this.closeDialog(false);
-                if (DialogLibParam.getInstance().isDebug()) {
+                if (DialogLibInitSetting.getInstance().isDebug()) {
                     Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
                 }
                 return obj;
@@ -329,7 +268,7 @@ public class DialogLibCustomUtils {
                         getOnBtnCancel().cancel();
                     }
                 } catch (Exception e) {
-                    if (DialogLibParam.getInstance().isDebug()) {
+                    if (DialogLibInitSetting.getInstance().isDebug()) {
                         Log.e(TAG, e.getMessage(), e);
                     }
                 }
@@ -342,7 +281,7 @@ public class DialogLibCustomUtils {
             dialog.show();
             setDialogWidth(dialog);
         } catch (Exception e) {
-            if (DialogLibParam.getInstance().isDebug()) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.e(TAG, e.getMessage(), e);
             }
         }
@@ -351,6 +290,7 @@ public class DialogLibCustomUtils {
             MAP.put(getAlias(), this);
         }
 
+        DialogLibCacheList.getInstance().add(getContext(), this);
         return this;
     }
 
@@ -359,9 +299,16 @@ public class DialogLibCustomUtils {
      * 需要在show之后调用
      */
     private void setDialogWidth(Dialog dialog) {
-        WindowManager m = dialog.getWindow().getWindowManager();
+        Window window = dialog.getWindow();
+        if (null == window) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "由于window为空，设置对话框属性失败！");
+            }
+            return;
+        }
+        WindowManager m = window.getWindowManager();
         Display d = m.getDefaultDisplay();
-        WindowManager.LayoutParams p = dialog.getWindow().getAttributes();
+        WindowManager.LayoutParams p = window.getAttributes();
         Point size = new Point();
         d.getSize(size);
         p.width = (int) (size.x * dialogWidthFactor());
@@ -402,24 +349,30 @@ public class DialogLibCustomUtils {
         }
     }
 
-    public void closeDialog() {
-        closeDialog(true);
+    public boolean closeDialog() {
+        return closeDialog(true);
     }
 
-    private void closeDialog(boolean remove) {
-        if (registerEvenBus) {
-            EventBus.getDefault().unregister(this);
-        }
+    private boolean closeDialog(boolean remove) {
         try {
             if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
             }
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "关闭对话框异常", e);
+            }
         }
 
         if (!TextUtils.isEmpty(getAlias()) && remove) {
             MAP.remove(getAlias());
         }
+
+        if (remove) {
+            DialogLibCacheList.getInstance().remove(getContext(), this);
+        }
+
+        return true;
     }
 
     public interface OnCustomBtnOk {
@@ -434,24 +387,4 @@ public class DialogLibCustomUtils {
         void btn();
     }
 
-    /**
-     * 触发此事件可以关闭所有已成为观察者的未关闭的窗体
-     */
-    public static class Event {
-        private String className;
-        private String tag;
-
-        public Event(Object className, String tag) {
-            this.className = className.getClass().getName();
-            this.tag = tag;
-        }
-
-        public String getClassName() {
-            return className;
-        }
-
-        public String getTag() {
-            return tag;
-        }
-    }
 }
