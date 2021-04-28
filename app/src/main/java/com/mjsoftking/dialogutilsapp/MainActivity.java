@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibInput.create(this)
                     .setMessage("输入信息")
                     .setAlias("text3")
+                    //自动弹出键盘
                     .setPopupKeyboard()
                     .setOnBtnOk(str -> {
                         Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
