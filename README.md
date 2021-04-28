@@ -1,15 +1,15 @@
 # DialogUtilsApp
 
 ### 一、介绍
-        替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可下载项目后自行调整
+替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可下载项目后自行调整
 - APP 使用示例项目，libs下含有已编译最新的aar资源。
 - dialogutilslib arr资源项目，需要引入的资源包项目。
 - aar文件生成，在工具栏直接Gradle - (项目名) - dialogutilslib - Tasks - build - assemble，直到编译完成
 - aar文件位置，打开项目所在文件夹，找到 dialogutilslib\build\outputs\aar 下。
 
 ### 二、工程引入工具包准备
-        下载项目，可以在APP项目的libs文件下找到DialogUtilsLib.aar文件（已编译为最新版），引入自己的工程
-        引用时需要在android标签下加入，此处设置libs路径需要根据项目结构确定位置。
+下载项目，可以在APP项目的libs文件下找到DialogUtilsLib.aar文件（已编译为最新版），引入自己的工程
+引用时需要在android标签下加入，此处设置libs路径需要根据项目结构确定位置。
 
 ```
 android {
@@ -31,7 +31,7 @@ dependencies {
 ```
 ### 三、使用
 
-        注意下方只做了基础展示，dialog的都会返回对应的utils对象，在需要特殊处理的地方可以使用create(this, false)方式创建，不加入观察者管理，此时自行维护返回获得对象，手动处理因为系统字体改变，横竖屏切换等引起的activity销毁重建现象引发窗体泄漏bug。反之，只需要在activity的onDestroy调用DialogLibCommonUtils.sendCloseEvent(Object obj)方法即可，关闭所有同类型已加入观察者管理的对话框，避免引发泄漏风险
+注意下方只做了基础展示，dialog的都会返回对应的utils对象，registerActivityLifecycleCallbacks方法设置后，activity销毁时会自动把显示在此activity上的dialog一起关闭。
 
 -  **application初始化设置** 
 
