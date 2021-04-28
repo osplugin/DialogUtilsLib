@@ -192,4 +192,14 @@ public class App extends Application {
 </resources>
 ```
 
-
+### 五、预览
+- 普通对话框
+![普通对话框](https://images.gitee.com/uploads/images/2021/0421/154236_fa7889fe_1021361.png "1.png")
+- 自定义对话框
+![自定义对话框](https://images.gitee.com/uploads/images/2021/0421/154252_0da16cb5_1021361.png "2.png")
+- 完全自定义对话框
+![完全自定义对话框](https://images.gitee.com/uploads/images/2021/0421/154300_1d122592_1021361.png "3.png")
+- 输入对话框
+![输入对话框](https://images.gitee.com/uploads/images/2021/0421/154309_67c5cf0f_1021361.png "4.png")
+- 等待对话框
+![等待对话框](https://images.gitee.com/uploads/images/2021/0421/154318_cb3811ea_1021361.png "5.png"))
