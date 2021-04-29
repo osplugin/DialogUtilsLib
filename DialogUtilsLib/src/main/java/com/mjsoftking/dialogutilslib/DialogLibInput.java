@@ -10,7 +10,9 @@ import android.os.ResultReceiver;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.KeyListener;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -68,6 +70,7 @@ public class DialogLibInput implements DialogLibUtils {
     private Integer inputType;
     private Integer length;
     private boolean popupKeyboard;
+    private boolean showLookPassword;
 
     private OnBtnOk onBtnOk;
     private OnBtnCancel onBtnCancel;
@@ -150,7 +153,21 @@ public class DialogLibInput implements DialogLibUtils {
         return hint;
     }
 
-//    private Integer getHintTextColor() {
+    private boolean isShowLookPassword() {
+        return showLookPassword;
+    }
+
+    /**
+     * 显示查看/隐藏密码图标组件
+     * <p>
+     * 建议在使用密码输入时启用
+     */
+    public DialogLibInput setShowLookPassword() {
+        this.showLookPassword = true;
+        return this;
+    }
+
+    //    private Integer getHintTextColor() {
 //        return hintTextColor;
 //    }
 //
@@ -350,6 +367,28 @@ public class DialogLibInput implements DialogLibUtils {
                         //cancel按钮位置触发
                         getOnBtnCancel().cancel();
                     }
+                    //显示/隐藏密码
+                    else if (v.equals(binding.lookPassword)) {
+                        int index = binding.etContent.getSelectionStart();
+                        Object obj = binding.lookPassword.getTag(R.integer.dialog_utils_lib_password_tag_key);
+                        boolean status = true;
+                        if (obj instanceof Boolean) {
+                            status = (Boolean) obj;
+                        }
+                        if (status) {
+                            //显示文本
+                            binding.etContent.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                            binding.lookPassword.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.dialog_utils_lib_password_show));
+                        } else {
+                            //隐藏文本
+                            binding.etContent.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                            binding.lookPassword.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.dialog_utils_lib_password_hide));
+                        }
+                        binding.lookPassword.setTag(R.integer.dialog_utils_lib_password_tag_key, !status);
+                        if (index >= 0) {
+                            binding.etContent.setSelection(index);
+                        }
+                    }
                 } catch (Exception e) {
                     if (DialogLibInitSetting.getInstance().isDebug()) {
                         Log.e(TAG, e.getMessage(), e);
@@ -361,6 +400,8 @@ public class DialogLibInput implements DialogLibUtils {
             binding.setHint(getHint());
             binding.setOkDesc(getOkDesc());
             binding.setCancelDesc(getCancelDesc());
+
+            binding.setShowLookPassword(isShowLookPassword());
 
             if (isPopupKeyboard()) {
                 binding.etContent.post(() -> {

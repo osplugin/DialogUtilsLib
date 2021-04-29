@@ -2,6 +2,7 @@ package com.mjsoftking.dialogutilsapp;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,6 +77,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
 
             dialog.show(view);
+        } else if (v.equals(binding.text6)) {
+            DialogLibInput.create(this)
+                    .setMessage("123")
+                    .setLength(6)
+                    .setInputType(EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD)
+                    .setAlias("text6")
+                    //设置显示密码隐藏/显示图片，请在密码输入时设置此参数
+                    .setShowLookPassword()
+                    //自动弹出键盘
+                    .setPopupKeyboard()
+                    .setOnBtnOk(str -> {
+                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+                        return true;
+                    })
+                    .show();
         }
     }
 }
