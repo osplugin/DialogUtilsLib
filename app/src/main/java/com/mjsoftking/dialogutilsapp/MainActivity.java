@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibInput.create(this)
                     .setMessage("输入信息")
                     .setAlias("text3")
+                    //todo 设置显示密码隐藏/显示图片，由于输入类型限制不是密码，此处设置无效
+                    .setShowLookPassword()
                     //自动弹出键盘
                     .setPopupKeyboard()
                     .setOnBtnOk(str -> {
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setLength(6)
                     .setInputType(EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD)
                     .setAlias("text6")
-                    //设置显示密码隐藏/显示图片，请在密码输入时设置此参数
+                    //设置显示密码隐藏/显示图片
                     .setShowLookPassword()
                     //自动弹出键盘
                     .setPopupKeyboard()

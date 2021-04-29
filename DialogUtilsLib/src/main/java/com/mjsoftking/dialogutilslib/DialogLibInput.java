@@ -401,8 +401,6 @@ public class DialogLibInput implements DialogLibUtils {
             binding.setOkDesc(getOkDesc());
             binding.setCancelDesc(getCancelDesc());
 
-            binding.setShowLookPassword(isShowLookPassword());
-
             if (isPopupKeyboard()) {
                 binding.etContent.post(() -> {
                     binding.etContent.setSelection(binding.etContent.length());
@@ -415,7 +413,13 @@ public class DialogLibInput implements DialogLibUtils {
             }
             if (null != getInputType()) {
                 binding.etContent.setInputType(getInputType());
+
+                //是密码输入类型，设置显示/隐藏密码图标才会有效
+                if (isPasswordInputType()) {
+                    binding.setShowLookPassword(isShowLookPassword());
+                }
             }
+
             if (null != getKeyListener()) {
                 binding.etContent.setKeyListener(getKeyListener());
             }
@@ -441,6 +445,17 @@ public class DialogLibInput implements DialogLibUtils {
 
         DialogLibCacheList.getInstance().add(getContext(), this);
         return this;
+    }
+
+    private boolean isPasswordInputType() {
+        final int variation =
+                getInputType() & (EditorInfo.TYPE_MASK_CLASS | EditorInfo.TYPE_MASK_VARIATION);
+        return variation
+                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD)
+                || variation
+                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_WEB_PASSWORD)
+                || variation
+                == (EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD);
     }
 
     private void showSoftInput(@NonNull final View view) {
