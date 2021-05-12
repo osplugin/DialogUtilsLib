@@ -31,19 +31,6 @@ public class DialogLibCommon implements DialogLibUtils {
     private final static Map<String, DialogLibCommon> MAP = new HashMap<>();
 
     private Dialog dialog;
-
-    /**
-     * 创建对象
-     */
-    public static DialogLibCommon create(Context context) {
-        DialogLibCommon utils = new DialogLibCommon();
-        utils.setContext(context);
-        return utils;
-    }
-
-    private DialogLibCommon() {
-    }
-
     private Context context;
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
@@ -53,10 +40,21 @@ public class DialogLibCommon implements DialogLibUtils {
     private String cancelDesc;
     private boolean noShowOk;
     private boolean noShowCancel;
-
     private OnBtnOk onBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
+    private OnBtnMessage onBtnMessage;
+    private DialogLibCommon() {
+    }
+
+    /**
+     * 创建对象
+     */
+    public static DialogLibCommon create(Context context) {
+        DialogLibCommon utils = new DialogLibCommon();
+        utils.setContext(context);
+        return utils;
+    }
 
     private Context getContext() {
         return context;
@@ -71,73 +69,6 @@ public class DialogLibCommon implements DialogLibUtils {
             return getContext().getResources().getString(R.string.dialog_utils_lib_default_title);
         }
         return title;
-    }
-
-    private String getMessage() {
-        if (TextUtils.isEmpty(message)) {
-            return "";
-        }
-        return message;
-    }
-
-    private String getOkDesc() {
-        if (TextUtils.isEmpty(okDesc)) {
-            return getContext().getResources().getString(R.string.dialog_utils_lib_ok);
-        }
-        return okDesc;
-    }
-
-    private String getCancelDesc() {
-        if (TextUtils.isEmpty(cancelDesc)) {
-            return getContext().getResources().getString(R.string.dialog_utils_lib_cancel);
-        }
-        return cancelDesc;
-    }
-
-    private boolean isNoShowOk() {
-        return noShowOk;
-    }
-
-    private boolean isNoShowCancel() {
-        return noShowCancel;
-    }
-
-    private OnBtnOk getOnBtnOk() {
-        if (null == onBtnOk) {
-            onBtnOk = () -> {
-            };
-        }
-        return onBtnOk;
-    }
-
-    private OnBtnCancel getOnBtnCancel() {
-        if (null == onBtnCancel) {
-            onBtnCancel = () -> {
-            };
-        }
-        return onBtnCancel;
-    }
-
-    private OnBtn getOnBtn() {
-        if (null == onBtn) {
-            onBtn = () -> {
-            };
-        }
-        return onBtn;
-    }
-
-    private String getAlias() {
-        return alias;
-    }
-
-    /**
-     * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
-     * <p>
-     * null、空字符串 无效
-     */
-    public DialogLibCommon setAlias(String alias) {
-        this.alias = alias;
-        return this;
     }
 
     /**
@@ -156,6 +87,13 @@ public class DialogLibCommon implements DialogLibUtils {
         return this;
     }
 
+    private String getMessage() {
+        if (TextUtils.isEmpty(message)) {
+            return "";
+        }
+        return message;
+    }
+
     /**
      * 设置提示信息的内容部分，默认为“”(空字符串)
      */
@@ -170,6 +108,13 @@ public class DialogLibCommon implements DialogLibUtils {
     public DialogLibCommon setMessage(@StringRes int strId) {
         this.message = getContext().getString(strId);
         return this;
+    }
+
+    private String getOkDesc() {
+        if (TextUtils.isEmpty(okDesc)) {
+            return getContext().getResources().getString(R.string.dialog_utils_lib_ok);
+        }
+        return okDesc;
     }
 
     /**
@@ -188,6 +133,13 @@ public class DialogLibCommon implements DialogLibUtils {
         return this;
     }
 
+    private String getCancelDesc() {
+        if (TextUtils.isEmpty(cancelDesc)) {
+            return getContext().getResources().getString(R.string.dialog_utils_lib_cancel);
+        }
+        return cancelDesc;
+    }
+
     /**
      * 设置取消按钮位置的提示文字，默认为“取消”
      */
@@ -204,6 +156,84 @@ public class DialogLibCommon implements DialogLibUtils {
         return this;
     }
 
+    private boolean isNoShowOk() {
+        return noShowOk;
+    }
+
+    private boolean isNoShowCancel() {
+        return noShowCancel;
+    }
+
+    private OnBtnOk getOnBtnOk() {
+        if (null == onBtnOk) {
+            onBtnOk = () -> {
+            };
+        }
+        return onBtnOk;
+    }
+
+    /**
+     * 设置确认按钮的事件触发
+     * 只能用在默认dialog的OK按钮触发返回
+     */
+    public DialogLibCommon setOnBtnOk(OnBtnOk onBtnOk) {
+        this.onBtnOk = onBtnOk;
+        return this;
+    }
+
+    private OnBtnCancel getOnBtnCancel() {
+        if (null == onBtnCancel) {
+            onBtnCancel = () -> {
+            };
+        }
+        return onBtnCancel;
+    }
+
+    /**
+     * 设置取消按钮的事件触发
+     */
+    public DialogLibCommon setOnBtnCancel(OnBtnCancel onBtnCancel) {
+        this.onBtnCancel = onBtnCancel;
+        return this;
+    }
+
+    private OnBtn getOnBtn() {
+        if (null == onBtn) {
+            onBtn = () -> {
+            };
+        }
+        return onBtn;
+    }
+
+    /**
+     * 设置确认和取消按钮的事件触发时均会触发的事件
+     */
+    public DialogLibCommon setOnBtn(OnBtn onBtn) {
+        this.onBtn = onBtn;
+        return this;
+    }
+
+    private String getAlias() {
+        return alias;
+    }
+
+    /**
+     * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+     * <p>
+     * null、空字符串 无效
+     */
+    public DialogLibCommon setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    /**
+     * 设置内容提示区域的点击事件，不设置或为null则内容提示区域无点击效果
+     */
+    public DialogLibCommon setOnBtnMessage(OnBtnMessage onBtnMessage) {
+        this.onBtnMessage = onBtnMessage;
+        return this;
+    }
 
     /**
      * 设置是否不显示确认按钮位置，对应确认按钮事件也无法触发
@@ -220,31 +250,6 @@ public class DialogLibCommon implements DialogLibUtils {
      */
     public DialogLibCommon noShowCancel() {
         this.noShowCancel = true;
-        return this;
-    }
-
-    /**
-     * 设置确认按钮的事件触发
-     * 只能用在默认dialog的OK按钮触发返回
-     */
-    public DialogLibCommon setOnBtnOk(OnBtnOk onBtnOk) {
-        this.onBtnOk = onBtnOk;
-        return this;
-    }
-
-    /**
-     * 设置取消按钮的事件触发
-     */
-    public DialogLibCommon setOnBtnCancel(OnBtnCancel onBtnCancel) {
-        this.onBtnCancel = onBtnCancel;
-        return this;
-    }
-
-    /**
-     * 设置确认和取消按钮的事件触发时均会触发的事件
-     */
-    public DialogLibCommon setOnBtn(OnBtn onBtn) {
-        this.onBtn = onBtn;
         return this;
     }
 
@@ -295,6 +300,10 @@ public class DialogLibCommon implements DialogLibUtils {
             binding.setCancelDesc(getCancelDesc());
             binding.setNoShowOk(isNoShowOk());
             binding.setNoShowCancel(isNoShowCancel());
+
+            if(null != onBtnMessage){
+                binding.messText.setOnClickListener(v -> onBtnMessage.btn());
+            }
 
             //ContentView
             dialog.setContentView(binding.getRoot());
@@ -407,6 +416,10 @@ public class DialogLibCommon implements DialogLibUtils {
     }
 
     public interface OnBtn {
+        void btn();
+    }
+
+    public interface OnBtnMessage {
         void btn();
     }
 

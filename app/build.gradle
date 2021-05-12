@@ -31,11 +31,6 @@ android {
         dataBinding true
     }
 
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
 }
 
 dependencies {
@@ -47,7 +42,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-//    implementation(name: 'DialogUtilsLib', ext: 'aar')
+//    implementation files('libs/DialogUtilsLib-release.aar')
     implementation project(path: ':DialogUtilsLib')
     implementation 'org.greenrobot:eventbus:3.1.1'
 }
