@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibCommon.create(this)
                     .setMessage("普通对话框1")
                     .setAlias("text1")
+                    .setOnBtnMessage(()->{
+                        //描述区域点击时触发
+                    })
                     .noShowCancel()
                     .show();
         } else if (v.equals(binding.text2)) {

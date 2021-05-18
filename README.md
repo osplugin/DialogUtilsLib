@@ -9,23 +9,11 @@
 
 ### 二、工程引入工具包准备
 下载项目，可以在APP项目的libs文件下找到DialogUtilsLib.aar文件（已编译为最新版），引入自己的工程
-引用时需要在android标签下加入，此处设置libs路径需要根据项目结构确定位置。
-
-```
-android {
-     repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
-    ...
-}
-```
 引入aar
 
 ```
 dependencies {
-   implementation(name: 'DialogUtilsLib', ext: 'aar')
+   implementation files('libs/DialogUtilsLib-release.aar')
    ...
 }
 ```
@@ -60,6 +48,9 @@ public class App extends Application {
             DialogLibCommon.create(this)
                     .setMessage("普通对话框1")
                     .setAlias("text1")
+                    .setOnBtnMessage(()->{
+                        //描述区域点击时触发
+                    })
                     .noShowCancel()
                     .show();
 ```
