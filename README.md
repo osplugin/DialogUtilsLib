@@ -1,5 +1,5 @@
 # DialogUtilsApp
-
+[![](https://jitpack.io/v/com.gitee.mjsoftking/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.mjsoftking/DialogUtilsLib)
 
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可下载项目后自行调整
@@ -27,7 +27,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.github.mjsoftking:dialog-utils-lib:1.0.1'
+    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.2'
 }
 ```
 ### 三、使用
