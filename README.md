@@ -1,4 +1,5 @@
 # DialogUtilsApp
+[![](https://jitpack.io/v/com.gitee.mjsoftking/dialog-utils-lib.svg)](https://jitpack.io/#com.gitee.mjsoftking/dialog-utils-lib)
 
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可下载项目后自行调整
@@ -8,13 +9,25 @@
 - aar文件位置，打开项目所在文件夹，找到 dialogutilslib\build\outputs\aar 下。
 
 ### 二、工程引入工具包准备
-下载项目，可以在APP项目的libs文件下找到DialogUtilsLib.aar文件（已编译为最新版），引入自己的工程
-引入aar
+**工程的build.gradle文件添加** 
 
 ```
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+
+        //jitpack 仓库
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+**APP的build.gradle文件添加** 
+```
 dependencies {
-   implementation files('libs/DialogUtilsLib-release.aar')
-   ...
+    ...
+    implementation 'com.github.mjsoftking:dialog-utils-lib:1.0.1'
 }
 ```
 ### 三、使用
