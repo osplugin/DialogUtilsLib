@@ -2,11 +2,7 @@
 [![](https://jitpack.io/v/com.gitee.mjsoftking/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.mjsoftking/DialogUtilsLib)
 
 ### 一、介绍
-替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可下载项目后自行调整
-- APP 使用示例项目，libs下含有已编译最新的aar资源。
-- dialogutilslib arr资源项目，需要引入的资源包项目。
-- aar文件生成，在工具栏直接Gradle - (项目名) - dialogutilslib - Tasks - build - assemble，直到编译完成
-- aar文件位置，打开项目所在文件夹，找到 dialogutilslib\build\outputs\aar 下。
+替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可参考文档覆盖属性
 
 ### 二、工程引入工具包准备
 **工程的build.gradle文件添加** 
@@ -147,60 +143,107 @@ public class App extends Application {
 
 ```
 <resources>
-    <!--黑色-->
-    <color name="dialog_utils_lib_black">#FF000000</color>
-    <!--白色-->
-    <color name="dialog_utils_lib_white">#FFFFFFFF</color>
+    <!--dialog的整体背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_bg">#FFFFFF</color>
+    <!--dialog的内容文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_content_fg">#000000</color>
+    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_title_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_ok_fg">#2C9BF3</color>
+    <!--dialog的 取消 按钮文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_cancel_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_ok_bg">#FFFFFF</color>
+    <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_cancel_bg">#FFFFFF</color>
+    <!--dialog的内容文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_split_line">#EAEAEA</color>
+    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_button_split_bg">#EAEAEA</color>
 
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog-->
-    <color name="dialog_utils_lib_title_fg">@color/dialog_utils_lib_black</color>
-    <!--dialog的 确认 按钮文字的前景色-->
-    <color name="dialog_utils_lib_ok_fg">@color/dialog_utils_lib_white</color>
-    <!--dialog的 取消 按钮文字的前景色-->
-    <color name="dialog_utils_lib_cancel_fg">@color/dialog_utils_lib_white</color>
-    <!--dialog的 确认 按钮文字的背景色-->
-    <color name="dialog_utils_lib_ok_bg">#22C5A3</color>
-    <!--dialog的 取消 按钮文字的背景色-->
-    <color name="dialog_utils_lib_cancel_bg">#F8A01A</color>
-    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色-->
-    <color name="dialog_utils_lib_button_split_bg">@color/dialog_utils_lib_white</color>
+    <!--dialog的整体背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_bg">#FFFFFF</color>
+    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_title_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_ok_fg">#2C9BF3</color>
+    <!--dialog的 取消 按钮文字的前景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_cancel_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_ok_bg">#FFFFFF</color>
+    <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_cancel_bg">#FFFFFF</color>
+    <!--dialog的输入框标题与内容和内容与按钮分割线的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_split_line">#EAEAEA</color>
+    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_button_split_bg">#EAEAEA</color>
 
-    <!--dialog的内容文字的前景色，适用于 DialogLibCommonUtils-->
-    <color name="dialog_utils_lib_content_fg">@color/dialog_utils_lib_black</color>
+    <!--dialog的整体背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_bg">#FFFFFF</color>
+    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_title_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_ok_fg">#2C9BF3</color>
+    <!--dialog的 取消 按钮文字的前景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_cancel_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_ok_bg">#FFFFFF</color>
+    <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_cancel_bg">#FFFFFF</color>
+    <!--dialog的输入框文字的前景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_fg">#000000</color>
+    <!--dialog的输入框下方分割线的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_split_line">#EAEAEA</color>
+    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_button_split_bg">#EAEAEA</color>
 
-    <!--dialog的输入框文字的前景色，适用于 DialogLibInputUtils-->
-    <color name="dialog_utils_lib_input_fg">@color/dialog_utils_lib_black</color>
-    <!--dialog的输入框下方分割线的背景色，适用于 DialogLibInputUtils-->
-    <color name="dialog_utils_lib_input_split_line">@color/dialog_utils_lib_ok_bg</color>
-
-    <!--dialog的加载框加载等待区域的背景色-->
-    <color name="dialog_utils_lib_loading_content_bg">#FFc4c4c4</color>
-    <!--dialog的加载框加载等待区域文字提示的前景色-->
-    <color name="dialog_utils_lib_loading_content_text_fg">@color/dialog_utils_lib_white</color>
+    <!--dialog的加载框加载等待区域的背景色，适用于 DialogLibLoading-->
+    <color name="dialog_utils_lib_loading_content_bg">#FFC4C4C4</color>
+    <!--dialog的加载框加载等待区域文字提示的前景色，适用于 DialogLibLoading-->
+    <color name="dialog_utils_lib_loading_content_text_fg">#FFFFFF</color>
 </resources>
 ```
 -  **dimens下字体大小资源** 
 
 ```
 <resources>
-    <dimen name="dialog_utils_lib_text_size_normal">14sp</dimen>
 
-    <!--标题字体大小，统一设定-->
-    <dimen name="dialog_utils_lib_title_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
-    <!--确定 字体大小，统一设定-->
-    <dimen name="dialog_utils_lib_ok_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
-    <!--取消 字体大小，统一设定-->
-    <dimen name="dialog_utils_lib_cancel_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
-    <!--内容 字体大小，适用于 DialogLibCommonUtils的提示内容区域-->
-    <dimen name="dialog_utils_lib_content_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
-    <!--输入框 字体大小，适用于 DialogLibInputUtils 输入区域-->
-    <dimen name="dialog_utils_lib_input_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
-    <!--加载框 字体大小，适用于 DialogLibLoadingUtils 提示内容区域-->
-    <dimen name="dialog_utils_lib_loading_text_size">@dimen/dialog_utils_lib_text_size_normal</dimen>
+    <!--标题字体大小，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_title_text_size">14sp</dimen>
+    <!--确定 字体大小，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_ok_text_size">14sp</dimen>
+    <!--取消 字体大小，，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_cancel_text_size">14sp</dimen>
+    <!--内容 字体大小，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_content_text_size">14sp</dimen>
 
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数-->
+
+    <!--标题字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_title_text_size">14sp</dimen>
+    <!--确定 字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_ok_text_size">14sp</dimen>
+    <!--取消 字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_cancel_text_size">14sp</dimen>
+    <!--输入框 字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_text_size">14sp</dimen>
+
+
+    <!--标题字体大小，适用于 DialogLibCustom-->
+    <dimen name="dialog_utils_lib_custom_title_text_size">14sp</dimen>
+    <!--确定 字体大小，适用于 DialogLibCustom-->
+    <dimen name="dialog_utils_lib_custom_ok_text_size">14sp</dimen>
+    <!--取消 字体大小，适用于 DialogLibCustom-->
+    <dimen name="dialog_utils_lib_custom_cancel_text_size">14sp</dimen>
+
+
+    <!--加载框 字体大小，适用于 DialogLibLoading 提示内容区域-->
+    <dimen name="dialog_utils_lib_loading_text_size">14sp</dimen>
+
+
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，统一设定-->
     <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.85</item>
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数-->
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数，统一设定-->
     <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.5</item>
 </resources>
 ```
