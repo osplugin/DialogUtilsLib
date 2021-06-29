@@ -33,7 +33,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dialog_utils_lib_bg_white_circle"
+        android:background="@drawable/dialog_utils_lib_custom_bg_white_circle"
         android:orientation="vertical">
 
         <TextView
@@ -42,8 +42,14 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{title}"
-            android:textColor="@color/dialog_utils_lib_title_fg"
-            android:textSize="@dimen/dialog_utils_lib_title_text_size" />
+            android:textColor="@color/dialog_utils_lib_custom_title_fg"
+            android:textSize="@dimen/dialog_utils_lib_custom_title_text_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/dialog_utils_lib_custom_split_line" />
 
         <RelativeLayout
             android:id="@+id/contentGroup"
@@ -51,10 +57,15 @@
             android:layout_height="wrap_content"
             android:padding="10dp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/dialog_utils_lib_custom_split_line" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -62,19 +73,19 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@{noShowCancel ? @drawable/dialog_utils_lib_ok_button_double : @drawable/dialog_utils_lib_ok_button}"
+                android:background="@{noShowCancel ? @drawable/dialog_utils_lib_custom_ok_button_double : @drawable/dialog_utils_lib_custom_ok_button}"
                 android:gravity="center"
                 android:onClick="@{click::onClick}"
                 android:padding="10dp"
                 android:text="@{okDesc}"
-                android:textColor="@color/dialog_utils_lib_ok_fg"
-                android:textSize="@dimen/dialog_utils_lib_ok_text_size"
+                android:textColor="@color/dialog_utils_lib_custom_ok_fg"
+                android:textSize="@dimen/dialog_utils_lib_custom_ok_text_size"
                 android:visibility="@{!noShowOk ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/dialog_utils_lib_button_split_bg"
+                android:background="@color/dialog_utils_lib_custom_button_split_bg"
                 android:visibility="@{(!noShowCancel &amp;&amp; !noShowOk) ? View.VISIBLE : View.GONE}" />
 
             <TextView
@@ -82,13 +93,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@{noShowOk ? @drawable/dialog_utils_lib_cancel_button_double : @drawable/dialog_utils_lib_cancel_button}"
+                android:background="@{noShowOk ? @drawable/dialog_utils_lib_custom_cancel_button_double : @drawable/dialog_utils_lib_custom_cancel_button}"
                 android:gravity="center"
                 android:onClick="@{click::onClick}"
                 android:padding="10dp"
                 android:text="@{cancelDesc}"
-                android:textColor="@color/dialog_utils_lib_cancel_fg"
-                android:textSize="@dimen/dialog_utils_lib_cancel_text_size"
+                android:textColor="@color/dialog_utils_lib_custom_cancel_fg"
+                android:textSize="@dimen/dialog_utils_lib_custom_cancel_text_size"
                 android:visibility="@{!noShowCancel ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>

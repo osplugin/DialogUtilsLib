@@ -2,7 +2,7 @@
 <shape
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="rectangle">
-    <solid android:color="@color/dialog_utils_lib_cancel_bg" />
+    <solid android:color="@color/dialog_utils_lib_common_cancel_bg" />
 <!--    只显示一个按钮时用的底边双圆角-->
     <corners
         android:bottomRightRadius="5dp"

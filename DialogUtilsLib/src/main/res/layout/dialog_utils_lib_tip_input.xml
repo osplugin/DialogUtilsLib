@@ -39,7 +39,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dialog_utils_lib_bg_white_circle"
+        android:background="@drawable/dialog_utils_lib_input_bg_white_circle"
         android:orientation="vertical">
 
         <TextView
@@ -48,13 +48,19 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{title}"
-            android:textColor="@color/dialog_utils_lib_title_fg"
-            android:textSize="@dimen/dialog_utils_lib_title_text_size" />
+            android:textColor="@color/dialog_utils_lib_input_title_fg"
+            android:textSize="@dimen/dialog_utils_lib_input_title_text_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/dialog_utils_lib_input_split_line" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <View
@@ -100,7 +106,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"
             android:background="@color/dialog_utils_lib_input_split_line" />
 
         <LinearLayout
@@ -113,31 +119,31 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/dialog_utils_lib_ok_button"
+                android:background="@drawable/dialog_utils_lib_input_ok_button"
                 android:gravity="center"
                 android:onClick="@{click::onClick}"
                 android:padding="10dp"
                 android:text="@{okDesc}"
-                android:textColor="@color/dialog_utils_lib_ok_fg"
-                android:textSize="@dimen/dialog_utils_lib_ok_text_size" />
+                android:textColor="@color/dialog_utils_lib_input_ok_fg"
+                android:textSize="@dimen/dialog_utils_lib_input_ok_text_size" />
 
             <TextView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/dialog_utils_lib_button_split_bg" />
+                android:background="@color/dialog_utils_lib_input_button_split_bg" />
 
             <TextView
                 android:id="@+id/btnCancel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/dialog_utils_lib_cancel_button"
+                android:background="@drawable/dialog_utils_lib_input_cancel_button"
                 android:gravity="center"
                 android:onClick="@{click::onClick}"
                 android:padding="10dp"
                 android:text="@{cancelDesc}"
-                android:textColor="@color/dialog_utils_lib_cancel_fg"
-                android:textSize="@dimen/dialog_utils_lib_cancel_text_size" />
+                android:textColor="@color/dialog_utils_lib_input_cancel_fg"
+                android:textSize="@dimen/dialog_utils_lib_input_cancel_text_size" />
 
         </LinearLayout>
 

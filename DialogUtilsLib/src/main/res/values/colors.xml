@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
 
-    <!--黑色-->
-    <color name="dialog_utils_lib_black">#FF000000</color>
-    <!--白色-->
-    <color name="dialog_utils_lib_white">#FFFFFFFF</color>
-
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog-->
-    <color name="dialog_utils_lib_title_fg">@color/dialog_utils_lib_black</color>
-    <!--dialog的 确认 按钮文字的前景色-->
-    <color name="dialog_utils_lib_ok_fg">@color/dialog_utils_lib_white</color>
-    <!--dialog的 取消 按钮文字的前景色-->
-    <color name="dialog_utils_lib_cancel_fg">@color/dialog_utils_lib_white</color>
-    <!--dialog的 确认 按钮文字的背景色-->
-    <color name="dialog_utils_lib_ok_bg">#22C5A3</color>
-    <!--dialog的 取消 按钮文字的背景色-->
-    <color name="dialog_utils_lib_cancel_bg">#F8A01A</color>
-    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色-->
-    <color name="dialog_utils_lib_button_split_bg">@color/dialog_utils_lib_white</color>
-
+    <!--dialog的整体背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_bg">#FFFFFF</color>
     <!--dialog的内容文字的前景色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_content_fg">@color/dialog_utils_lib_black</color>
+    <color name="dialog_utils_lib_common_content_fg">#000000</color>
+    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_title_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_ok_fg">#2C9BF3</color>
+    <!--dialog的 取消 按钮文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_cancel_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_ok_bg">#FFFFFF</color>
+    <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_cancel_bg">#FFFFFF</color>
+    <!--dialog的内容文字的前景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_split_line">#EAEAEA</color>
+    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCommon-->
+    <color name="dialog_utils_lib_common_button_split_bg">#EAEAEA</color>
 
+    <!--dialog的整体背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_bg">#FFFFFF</color>
+    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_title_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_ok_fg">#2C9BF3</color>
+    <!--dialog的 取消 按钮文字的前景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_cancel_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_ok_bg">#FFFFFF</color>
+    <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_cancel_bg">#FFFFFF</color>
+    <!--dialog的输入框标题与内容和内容与按钮分割线的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_split_line">#EAEAEA</color>
+    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCustom-->
+    <color name="dialog_utils_lib_custom_button_split_bg">#EAEAEA</color>
+
+    <!--dialog的整体背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_bg">#FFFFFF</color>
+    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_title_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_ok_fg">#2C9BF3</color>
+    <!--dialog的 取消 按钮文字的前景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_cancel_fg">#000000</color>
+    <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_ok_bg">#FFFFFF</color>
+    <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_cancel_bg">#FFFFFF</color>
     <!--dialog的输入框文字的前景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_fg">@color/dialog_utils_lib_black</color>
+    <color name="dialog_utils_lib_input_fg">#000000</color>
     <!--dialog的输入框下方分割线的背景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_split_line">@color/dialog_utils_lib_ok_bg</color>
+    <color name="dialog_utils_lib_input_split_line">#EAEAEA</color>
+    <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibInput-->
+    <color name="dialog_utils_lib_input_button_split_bg">#EAEAEA</color>
 
-    <!--dialog的加载框加载等待区域的背景色-->
-    <color name="dialog_utils_lib_loading_content_bg">#FFc4c4c4</color>
-    <!--dialog的加载框加载等待区域文字提示的前景色-->
-    <color name="dialog_utils_lib_loading_content_text_fg">@color/dialog_utils_lib_white</color>
+    <!--dialog的加载框加载等待区域的背景色，适用于 DialogLibLoading-->
+    <color name="dialog_utils_lib_loading_content_bg">#FFC4C4C4</color>
+    <!--dialog的加载框加载等待区域文字提示的前景色，适用于 DialogLibLoading-->
+    <color name="dialog_utils_lib_loading_content_text_fg">#FFFFFF</color>
+
 </resources>
