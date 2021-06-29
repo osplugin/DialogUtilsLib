@@ -267,19 +267,19 @@ dialog_utils_lib_password_show 显示图片命名
 
 ### 五、预览
 -  **普通对话框** 
-![普通对话框](https://images.gitee.com/uploads/images/2021/0421/154236_fa7889fe_1021361.png "1.png")
+![普通对话框](https://images.gitee.com/uploads/images/2021/0629/164213_9646f711_1021361.png "普通.png")
 -  **自定义对话框** 
-![自定义对话框](https://images.gitee.com/uploads/images/2021/0421/154252_0da16cb5_1021361.png "2.png")
+![自定义对话框](https://images.gitee.com/uploads/images/2021/0629/164235_a87a557f_1021361.png "自定义.png")
 -  **完全自定义对话框** 
-![完全自定义对话框](https://images.gitee.com/uploads/images/2021/0421/154300_1d122592_1021361.png "3.png")
+![完全自定义对话框](https://images.gitee.com/uploads/images/2021/0629/164251_3d768863_1021361.png "完全自定义.png")
 -  **输入对话框** 
-![输入对话框](https://images.gitee.com/uploads/images/2021/0421/154309_67c5cf0f_1021361.png "4.png")
+![输入对话框](https://images.gitee.com/uploads/images/2021/0629/164307_101e5302_1021361.png "输入.png")
 -  **等待对话框** 
-![等待对话框](https://images.gitee.com/uploads/images/2021/0421/154318_cb3811ea_1021361.png "5.png"))
+![等待对话框](https://images.gitee.com/uploads/images/2021/0629/164333_93867347_1021361.png "等待.png")
 -  **密码输入显示密码时对话框** 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0429/144540_599285ea_1021361.png "显示.png")
+![密码输入显示密码时对话框](https://images.gitee.com/uploads/images/2021/0629/164348_abd94487_1021361.png "密码显示.png")
 -  **密码输入隐藏密码时对话框** 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0429/144608_874ecbca_1021361.png "隐藏.png")
+![密码输入隐藏密码时对话框](https://images.gitee.com/uploads/images/2021/0629/164405_96b990fb_1021361.png "密码隐藏.png")
 
 
 License
