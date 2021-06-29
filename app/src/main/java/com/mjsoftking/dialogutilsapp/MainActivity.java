@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAlias("text5");
 
             TextView view = new TextView(this);
-            view.setBackgroundResource(R.color.design_default_color_secondary);
+            view.setBackgroundResource(R.color.purple_500);
+            view.setTextColor(getResources().getColor(R.color.white));
             view.setText("这是一个完全自定义布局的对话框，对话框显示后需要手动关闭");
             view.setOnClickListener(v2 -> {
                 dialog.closeDialog();
