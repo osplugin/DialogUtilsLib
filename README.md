@@ -23,7 +23,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.2'
+    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.3'
 }
 ```
 ### 三、使用
