@@ -237,3 +237,22 @@ dialog_utils_lib_password_show 显示图片命名
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0429/144540_599285ea_1021361.png "显示.png")
 -  **密码输入隐藏密码时对话框** 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0429/144608_874ecbca_1021361.png "隐藏.png")
+
+
+License
+-------
+
+    Copyright 2021 mjsoftking
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
