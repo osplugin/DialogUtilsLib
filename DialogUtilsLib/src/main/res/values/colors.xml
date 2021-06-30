@@ -5,7 +5,7 @@
     <color name="dialog_utils_lib_common_bg">#FFFFFF</color>
     <!--dialog的内容文字的前景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_content_fg">#000000</color>
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCommon-->
+    <!--dialog的标题文字的前景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_title_fg">#000000</color>
     <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_ok_fg">#2C9BF3</color>
@@ -22,7 +22,7 @@
 
     <!--dialog的整体背景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_bg">#FFFFFF</color>
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCustom-->
+    <!--dialog的标题文字的前景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_title_fg">#000000</color>
     <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_ok_fg">#2C9BF3</color>
@@ -39,7 +39,7 @@
 
     <!--dialog的整体背景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_bg">#FFFFFF</color>
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibInput-->
+    <!--dialog的标题文字的前景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_title_fg">#000000</color>
     <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_ok_fg">#2C9BF3</color>
