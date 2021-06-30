@@ -23,7 +23,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.2'
+    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.3'
 }
 ```
 ### 三、使用
@@ -147,7 +147,7 @@ public class App extends Application {
     <color name="dialog_utils_lib_common_bg">#FFFFFF</color>
     <!--dialog的内容文字的前景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_content_fg">#000000</color>
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCommon-->
+    <!--dialog的标题文字的前景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_title_fg">#000000</color>
     <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_ok_fg">#2C9BF3</color>
@@ -164,7 +164,7 @@ public class App extends Application {
 
     <!--dialog的整体背景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_bg">#FFFFFF</color>
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibCustom-->
+    <!--dialog的标题文字的前景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_title_fg">#000000</color>
     <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_ok_fg">#2C9BF3</color>
@@ -181,7 +181,7 @@ public class App extends Application {
 
     <!--dialog的整体背景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_bg">#FFFFFF</color>
-    <!--dialog的标题文字的前景色，适用于所有带标题的dialog，适用于 DialogLibInput-->
+    <!--dialog的标题文字的前景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_title_fg">#000000</color>
     <!--dialog的 确认 按钮文字的前景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_ok_fg">#2C9BF3</color>
@@ -241,9 +241,9 @@ public class App extends Application {
     <dimen name="dialog_utils_lib_loading_text_size">14sp</dimen>
 
 
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，统一设定-->
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，所有类型统一设定-->
     <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.85</item>
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数，统一设定-->
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数，所有类型统一设定-->
     <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.5</item>
 </resources>
 ```
