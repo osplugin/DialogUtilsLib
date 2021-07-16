@@ -1,6 +1,8 @@
 package com.mjsoftking.dialogutilsapp;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import com.mjsoftking.dialogutilslib.DialogLibCommon;
 import com.mjsoftking.dialogutilslib.DialogLibCustom;
 import com.mjsoftking.dialogutilslib.DialogLibInput;
 import com.mjsoftking.dialogutilslib.DialogLibLoading;
+import com.mjsoftking.dialogutilslib.SnackBarLib;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibCommon.create(this)
                     .setMessage("普通对话框1")
                     .setAlias("text1")
-                    .setOnBtnMessage(()->{
+                    .setOnBtnMessage(() -> {
                         //描述区域点击时触发
                     })
                     .noShowCancel()
@@ -98,6 +101,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                     })
                     .show();
+        } else if (v.equals(binding.text7)) {
+            SnackBarLib snackBarLib = SnackBarLib.makeCustom(binding.text7, R.string.snackbar_tip, 10 * 1000).show();
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    snackBarLib.dismiss();
+                    Toast.makeText(getApplication(), "3秒手动调用关闭Snackbar", Toast.LENGTH_SHORT).show();
+                }
+            }, 3000);
         }
     }
 }
