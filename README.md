@@ -332,7 +332,7 @@ snackbar_lib_default_warn snackbar警告的默认图标
 -  **密码输入隐藏密码时对话框** 
 ![密码输入隐藏密码时对话框](https://images.gitee.com/uploads/images/2021/0629/164405_96b990fb_1021361.png "密码隐藏.png")
 -  **Snackbar提示框**
-![Snackbar提示框](https://images.gitee.com/uploads/images/2021/0629/164405_96b990fb_1021361.png "密码隐藏.png")
+![Snackbar提示框](https://images.gitee.com/uploads/images/2021/0719/150802_8b4318b8_1021361.png "Snackbar提示框.png")
 
 
 License
