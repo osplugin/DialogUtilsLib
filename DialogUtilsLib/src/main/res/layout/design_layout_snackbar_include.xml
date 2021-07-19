@@ -9,10 +9,10 @@
 
     <ImageView
         android:id="@+id/snackbar_img"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/snackbar_lib_img_w_h"
+        android:layout_height="@dimen/snackbar_lib_img_w_h"
         android:layout_gravity="center_vertical|left|start"
-        android:src="@color/cardview_shadow_start_color"
+        android:visibility="gone"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -28,7 +28,8 @@
         android:paddingRight="@dimen/design_snackbar_padding_horizontal"
         android:paddingBottom="@dimen/design_snackbar_padding_vertical"
         android:textAlignment="viewStart"
-        android:textAppearance="@style/TextAppearance.Design.Snackbar.Message" />
+        android:textAppearance="@style/TextAppearance.Design.Snackbar.Message"
+        android:textSize="@dimen/snackbar_lib_content_size" />
 
     <Button
         android:id="@+id/snackbar_action"
@@ -40,6 +41,7 @@
         android:layout_marginLeft="@dimen/design_snackbar_extra_spacing_horizontal"
         android:minWidth="48dp"
         android:textColor="?attr/colorAccent"
+        android:textSize="@dimen/snackbar_lib_action_size"
         android:visibility="gone" />
 
 </view>

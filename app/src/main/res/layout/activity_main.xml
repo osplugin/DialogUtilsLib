@@ -91,7 +91,7 @@
             android:background="@color/purple_500"
             android:gravity="center"
             android:onClick="@{click::onClick}"
-            android:text="@string/snackbar_tip"
+            android:text="Snackbar提示框"
             android:textColor="@color/white" />
 
     </LinearLayout>

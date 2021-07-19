@@ -100,14 +100,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .show();
         } else if (v.equals(binding.text7)) {
-            SnackBarLib snackBarLib = SnackBarLib.makeCustom(binding.text7, R.string.snackbar_tip, 10 * 1000).show();
-//            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    snackBarLib.dismiss();
-//                    Toast.makeText(getApplication(), "3秒手动调用关闭Snackbar", Toast.LENGTH_SHORT).show();
-//                }
-//            }, 3000);
+            SnackBarLib.makeCustom(binding.text7,
+                    "Snackbar提示框", 10 * 1000)
+                    .setContentColor(R.color.white)
+                    .setAction("试试", v1 ->
+                            Toast.makeText(getApplicationContext(), "点击action关闭", Toast.LENGTH_SHORT).show())
+                    .setContentMaxLine(2)
+                    .show();
         }
     }
 }
