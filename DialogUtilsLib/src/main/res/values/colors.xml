@@ -20,6 +20,7 @@
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_button_split_bg">#EAEAEA</color>
 
+
     <!--dialog的整体背景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_bg">#FFFFFF</color>
     <!--dialog的标题文字的文字颜色，适用于 DialogLibCustom-->
@@ -36,6 +37,7 @@
     <color name="dialog_utils_lib_custom_split_line">#EAEAEA</color>
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCustom-->
     <color name="dialog_utils_lib_custom_button_split_bg">#EAEAEA</color>
+
 
     <!--dialog的整体背景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_bg">#FFFFFF</color>
@@ -56,6 +58,7 @@
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibInput-->
     <color name="dialog_utils_lib_input_button_split_bg">#EAEAEA</color>
 
+
     <!--dialog的加载框加载等待区域的背景色，适用于 DialogLibLoading-->
     <color name="dialog_utils_lib_loading_content_bg">#FFC4C4C4</color>
     <!--dialog的加载框加载等待区域文字提示的文字颜色，适用于 DialogLibLoading-->
@@ -63,9 +66,9 @@
 
 
     <!--snackbar的背景色，适用于 SnackBarLib-->
-    <color name="snackbar_lib_bg">#FFC4C4C4</color>
+    <color name="snackbar_lib_bg">#C4C4C4</color>
     <!--snackbar的文本显示区域前文字颜色，适用于 SnackBarLib-->
-    <color name="snackbar_lib_content_fg">#FFFFFFFF</color>
+    <color name="snackbar_lib_content_fg">#FFFFFF</color>
     <!--snackbar的action显示区域文字颜色，适用于 SnackBarLib-->
     <color name="snackbar_lib_action_fg">#2C9BF3</color>
 

@@ -104,9 +104,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     "Snackbar提示框", 10 * 1000)
                     .setContentColor(R.color.white)
                     .setAction("试试", v1 ->
-                            Toast.makeText(getApplicationContext(), "点击action关闭", Toast.LENGTH_SHORT).show())
-                    .setContentMaxLine(2)
-                    .show();
+                            Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
+                    .setActionClickCallback(tag -> {
+                        Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
+                    })
+                    .showSuccess();
         }
     }
 }

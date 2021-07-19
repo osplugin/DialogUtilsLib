@@ -25,7 +25,7 @@ public class SnackBarLib {
 
     private static final String TAG = SnackBarLib.class.getSimpleName();
 
-    private Snackbar snackbar;
+    private static Snackbar snackbar;
     private View view;
     private String content;
     @BaseTransientBottomBar.Duration
@@ -94,6 +94,8 @@ public class SnackBarLib {
                     if (null != snackbar) {
                         snackbar.removeCallback(DEFAULT_CALLBACK);
                     }
+                    //在此处主要负责清除static的引用关系
+                    dismiss();
                 }
 
                 @Override
@@ -195,6 +197,16 @@ public class SnackBarLib {
     public static SnackBarLib makeCustom(@NonNull View view, @StringRes int content,
                                          @BaseTransientBottomBar.Duration int duration) {
         return makeCustom(view, view.getContext().getString(content), duration);
+    }
+
+    /**
+     * 如果正在显示则关闭。
+     */
+    public static void dismiss() {
+        if (null != snackbar && snackbar.isShown()) {
+            snackbar.dismiss();
+        }
+        snackbar = null;
     }
 
     private int getViewBackground() {
@@ -343,10 +355,8 @@ public class SnackBarLib {
 
     /**
      * 显示
-     *
-     * @return 返回原对象，可以控制直接关闭
      */
-    public SnackBarLib show() {
+    public void show() {
         snackbar = Snackbar.make(view, content, duration);
         View view = snackbar.getView();
         ImageView imageView = view.findViewById(R.id.snackbar_img);
@@ -387,7 +397,6 @@ public class SnackBarLib {
         snackbar.addCallback(DEFAULT_CALLBACK);
 
         snackbar.show();
-        return this;
     }
 
     /**
@@ -395,8 +404,8 @@ public class SnackBarLib {
      * <p>
      * 使用此方法覆盖之前{@link SnackBarLib#setImgRes(int)}的设置，图标资源可覆盖替换
      */
-    public SnackBarLib showSuccess() {
-        return setImgRes(R.mipmap.snackbar_lib_default_success).show();
+    public void showSuccess() {
+        setImgRes(R.mipmap.snackbar_lib_default_success).show();
     }
 
     /**
@@ -404,8 +413,8 @@ public class SnackBarLib {
      * <p>
      * 使用此方法覆盖之前{@link SnackBarLib#setImgRes(int)}的设置，图标资源可覆盖替换
      */
-    public SnackBarLib showError() {
-        return setImgRes(R.mipmap.snackbar_lib_default_error).show();
+    public void showError() {
+        setImgRes(R.mipmap.snackbar_lib_default_error).show();
     }
 
     /**
@@ -413,8 +422,8 @@ public class SnackBarLib {
      * <p>
      * 使用此方法覆盖之前{@link SnackBarLib#setImgRes(int)}的设置，图标资源可覆盖替换
      */
-    public SnackBarLib showInfo() {
-        return setImgRes(R.mipmap.snackbar_lib_default_info).show();
+    public void showInfo() {
+        setImgRes(R.mipmap.snackbar_lib_default_info).show();
     }
 
     /**
@@ -422,17 +431,8 @@ public class SnackBarLib {
      * <p>
      * 使用此方法覆盖之前{@link SnackBarLib#setImgRes(int)}的设置，图标资源可覆盖替换
      */
-    public SnackBarLib showWarning() {
-        return setImgRes(R.mipmap.snackbar_lib_default_warn).show();
-    }
-
-    /**
-     * 如果正在显示则关闭。
-     */
-    public void dismiss() {
-        if (null != snackbar && snackbar.isShown()) {
-            snackbar.dismiss();
-        }
+    public void showWarning() {
+        setImgRes(R.mipmap.snackbar_lib_default_warn).show();
     }
 
     /**
