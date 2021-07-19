@@ -1,8 +1,6 @@
 package com.mjsoftking.dialogutilsapp;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -103,13 +101,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .show();
         } else if (v.equals(binding.text7)) {
             SnackBarLib snackBarLib = SnackBarLib.makeCustom(binding.text7, R.string.snackbar_tip, 10 * 1000).show();
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    snackBarLib.dismiss();
-                    Toast.makeText(getApplication(), "3秒手动调用关闭Snackbar", Toast.LENGTH_SHORT).show();
-                }
-            }, 3000);
+//            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    snackBarLib.dismiss();
+//                    Toast.makeText(getApplication(), "3秒手动调用关闭Snackbar", Toast.LENGTH_SHORT).show();
+//                }
+//            }, 3000);
         }
     }
 }

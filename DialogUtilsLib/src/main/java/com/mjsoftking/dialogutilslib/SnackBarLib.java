@@ -22,7 +22,7 @@ public class SnackBarLib {
     private int duration;
 //    private Context context;
 
-    public SnackBarLib(View view, String content, int duration) {
+    public SnackBarLib(View view, String content, @BaseTransientBottomBar.Duration int duration) {
         this.view = view;
 //        this.context = view.getContext();
         this.content = content;
@@ -120,6 +120,11 @@ public class SnackBarLib {
      */
     public SnackBarLib show() {
         snackbar = Snackbar.make(view, content, duration);
+        View view = snackbar.getView();
+        view.setBackgroundResource(R.color.dialog_utils_lib_common_ok_fg);
+
+
+
 
         //事件
         snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
