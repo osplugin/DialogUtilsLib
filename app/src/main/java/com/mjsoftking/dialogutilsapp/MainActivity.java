@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .show();
         } else if (v.equals(binding.text7)) {
-            SnackBarLib.makeCustom(binding.text7,
-                    "Snackbar提示框", 10 * 1000)
+            SnackBarLib.makeCustom(binding.coordinator,
+                    "Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框", 10 * 1000)
                     .setContentColor(R.color.white)
                     .setAction("试试", v1 ->
                             Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
