@@ -61,7 +61,15 @@ public class SnackBarLib {
             new BaseTransientBottomBar.BaseCallback<Snackbar>() {
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
+                    //移除监听
+                    if (null != snackbar) {
+                        snackbar.removeCallback(DEFAULT_CALLBACK);
+                    }
+                    //在此处主要负责清除static的引用关系
+                    snackbar = null;
+
                     super.onDismissed(transientBottomBar, event);
+
                     switch (event) {
                         case DISMISS_EVENT_SWIPE:
                             if (null != swipeCallback) {
@@ -89,13 +97,6 @@ public class SnackBarLib {
                             }
                             break;
                     }
-
-                    //移除监听
-                    if (null != snackbar) {
-                        snackbar.removeCallback(DEFAULT_CALLBACK);
-                    }
-                    //在此处主要负责清除static的引用关系
-                    dismiss();
                 }
 
                 @Override
