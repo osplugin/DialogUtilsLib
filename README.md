@@ -25,7 +25,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.4'
+    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.5'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
@@ -275,6 +275,10 @@ public class App extends Application {
     <dimen name="snackbar_lib_action_size">14sp</dimen>
     <!--snackbar的 image 的宽高，正方形，适用于 SnackBarLib-->
     <dimen name="snackbar_lib_img_w_h">30dp</dimen>
+    <!--snackbar的 内容单行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
+    <dimen name="design_snackbar_padding_vertical">10dp</dimen>
+    <!--snackbar的 内容多行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
+    <dimen name="design_snackbar_padding_vertical_2lines">10dp</dimen>
 
 
     <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，所有类型统一设定-->
