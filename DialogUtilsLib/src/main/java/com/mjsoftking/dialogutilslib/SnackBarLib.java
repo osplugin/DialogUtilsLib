@@ -186,7 +186,7 @@ public class SnackBarLib {
      * @param content  内容
      * @param duration 时间，单位：毫秒
      */
-    public static SnackBarLib makeCustom(@NonNull View view, @NonNull String content,
+    public static SnackBarLib make(@NonNull View view, @NonNull String content,
                                          @BaseTransientBottomBar.Duration int duration) {
         return new SnackBarLib(view, content, duration);
     }
@@ -198,9 +198,9 @@ public class SnackBarLib {
      * @param content  内容
      * @param duration 时间，单位：毫秒
      */
-    public static SnackBarLib makeCustom(@NonNull View view, @StringRes int content,
+    public static SnackBarLib make(@NonNull View view, @StringRes int content,
                                          @BaseTransientBottomBar.Duration int duration) {
-        return makeCustom(view, view.getContext().getString(content), duration);
+        return make(view, view.getContext().getString(content), duration);
     }
 
     /**

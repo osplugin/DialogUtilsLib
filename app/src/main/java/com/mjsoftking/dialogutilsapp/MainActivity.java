@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .show();
         } else if (v.equals(binding.text7)) {
-            SnackBarLib.makeCustom(binding.coordinator,
+            SnackBarLib.make(binding.coordinator,
                     "Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框", 10 * 1000)
                     .setContentColor(R.color.white)
                     .setAction("试试", v1 ->
