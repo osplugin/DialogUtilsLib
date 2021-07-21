@@ -25,7 +25,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.6'
+    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.1.0'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
