@@ -102,6 +102,9 @@ public class SnackBarLib {
                 @Override
                 public void onShown(Snackbar transientBottomBar) {
                     super.onShown(transientBottomBar);
+                    //在此处赋值，确保static的对象记录留存最后显示的Snackbar
+                    snackbar = transientBottomBar;
+
                     if (null != showCallback) {
                         showCallback.fun(tag);
                     }
@@ -358,7 +361,7 @@ public class SnackBarLib {
      * 显示
      */
     public void show() {
-        snackbar = Snackbar.make(view, content, duration);
+        Snackbar snackbar = Snackbar.make(view, content, duration);
         View view = snackbar.getView();
         ImageView imageView = view.findViewById(R.id.snackbar_img);
         TextView textView = view.findViewById(R.id.snackbar_text);

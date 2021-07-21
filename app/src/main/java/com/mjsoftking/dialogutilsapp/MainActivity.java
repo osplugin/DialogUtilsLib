@@ -1,6 +1,8 @@
 package com.mjsoftking.dialogutilsapp;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -21,6 +23,13 @@ import com.mjsoftking.dialogutilslib.SnackBarLib;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ActivityMainBinding binding;
+    private Handler handler = new Handler(Looper.myLooper());
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            SnackBarLib.dismiss();
+        }
+    };
 
     //todo colors、strings、dimens 文件分别展示了覆盖属性，变更对话框的颜色风格，具体属性请前往对应lib下查看
     @Override
@@ -109,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
                     })
                     .showSuccess();
+
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, 1500);
         }
     }
 }
