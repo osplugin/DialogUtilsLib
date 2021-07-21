@@ -141,7 +141,7 @@ public class App extends Application {
 -  **Snackbar提示框**
 
 ```
-    SnackBarLib.makeCustom(binding.text7,
+    SnackBarLib.make(binding.text7,
         "Snackbar提示框", 10 * 1000)
         .setContentColor(R.color.white)
         .setAction("试试", v1 ->
