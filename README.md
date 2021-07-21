@@ -25,7 +25,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.5'
+    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.0.6'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
@@ -150,9 +150,29 @@ public class App extends Application {
           Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
         })
         .showSuccess();
+
+    //或者使用默认风格，与系统默认Snackbar的属性书写习惯基本一致
+    SnackBarLib.makeShort(binding.text7,"Snackbar提示框").show();
 ```
 
 ### 四、资源覆盖，改变颜色、字体大小、默认文字
+
+
+- **drawable下可覆盖资源及注释**
+
+```
+snackbar_lib_bg.xml   SnackBarLib默认使用的背景
+```
+ **snackbar_lib_bg.xml，如果颜色替换了@color/snackbar_lib_bg，则colors下的snackbar_lib_bg属性覆盖将会失效** 
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/snackbar_lib_bg" />
+    <corners android:radius="5dp" />
+</shape>
+```
+
  
 - **colors下可覆盖资源及注释**
 
