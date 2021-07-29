@@ -1,7 +1,8 @@
 # DialogUtilsApp
 [![License](https://img.shields.io/badge/License%20-Apache%202-337ab7.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
-[![](https://jitpack.io/v/com.gitee.mjsoftking/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.mjsoftking/DialogUtilsLib)
+[![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
+
 
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可参考文档覆盖属性
@@ -25,7 +26,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.1.0'
+    implementation 'com.gitee.osard:DialogUtilsLib:1.1.0'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
