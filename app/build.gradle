@@ -46,4 +46,7 @@ dependencies {
     implementation project(path: ':DialogUtilsLib')
     implementation 'org.greenrobot:eventbus:3.2.0'
 
+    //文档地址：https://gitee.com/mjsoftking/DialogUtilsLib
+//    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.1.0'
+
 }

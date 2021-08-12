@@ -26,7 +26,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.osard:DialogUtilsLib:1.1.0'
+    implementation 'com.gitee.osard:DialogUtilsLib:1.1.1'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
@@ -179,6 +179,27 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
 
 ```
 <resources>
+
+    <!-- dialog的统一风格，适用于DialogLibCommon、DialogLibCustom、DialogLibInput -->
+    <!-- dialog的统一风格，背景色 -->
+    <color name="dialog_all_default_bg">#FFFFFF</color>
+    <!-- dialog的统一风格，标题字体颜色 -->
+    <color name="dialog_all_default_title_fg">#000000</color>
+    <!-- dialog的统一风格，内容区域字体颜色 -->
+    <color name="dialog_all_default_content_fg">#000000</color>
+    <!-- dialog的统一风格，确认按钮字体颜色 -->
+    <color name="dialog_all_default_ok_fg">#2C9BF3</color>
+    <!-- dialog的统一风格，取消按钮字体颜色 -->
+    <color name="dialog_all_default_cancel_fg">#FFFFFF</color>
+    <!-- dialog的统一风格，确认按钮背景色 -->
+    <color name="dialog_all_default_ok_bg">#FFFFFF</color>
+    <!-- dialog的统一风格，取消按钮背景色 -->
+    <color name="dialog_all_default_cancel_bg">#FFFFFF</color>
+    <!-- dialog的统一风格，风格线的颜色 -->
+    <color name="dialog_all_default_split_line_bg">#EAEAEA</color>
+    <!-- dialog的统一风格，按钮间分割线的颜色 -->
+    <color name="dialog_all_default_button_split_line_bg">#EAEAEA</color>
+
 
     <!--dialog的整体背景色，适用于 DialogLibCommon-->
     <color name="dialog_utils_lib_common_bg">#FFFFFF</color>
