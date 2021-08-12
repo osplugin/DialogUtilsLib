@@ -36,7 +36,7 @@ dependencies {
 
 -  **application初始化设置** 
 
-```
+```java
 public class App extends Application {
 
     @Override
@@ -57,7 +57,7 @@ public class App extends Application {
 
 -  **普通dialog** 
 
-```
+```java
     DialogLibCommon.create(this)
             .setMessage("普通对话框1")
             .setAlias("text1")
@@ -70,7 +70,7 @@ public class App extends Application {
 
 -  **自定义dialog** 
 
-```
+```java
     ImageView imageView = new ImageView(this);
     imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
     DialogLibCustom.create(this)
@@ -81,7 +81,7 @@ public class App extends Application {
 
 -  **输入型dialog** 
 
-```
+```java
     DialogLibInput.create(this)
             .setMessage("输入信息")
             .setAlias("text3")
@@ -96,7 +96,7 @@ public class App extends Application {
 
 -  **等待型dialog** 
 
-```
+```java
     DialogLibLoading.create(this)
             .setTimeoutClose(2000)
             .setAlias("text4")
@@ -107,7 +107,7 @@ public class App extends Application {
 ```
 
 -  **完全自定义型dialog** 
-```
+```java
     final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
             .setCancelable(true)
             .setAlias("text5");
@@ -123,7 +123,7 @@ public class App extends Application {
 ```
 -  **密码输入型dialog** 
 
-```
+```java
     DialogLibInput.create(this)
         .setMessage("123")
         .setLength(6)
@@ -141,7 +141,7 @@ public class App extends Application {
 ```
 -  **Snackbar提示框**
 
-```
+```java
     SnackBarLib.make(binding.text7,
         "Snackbar提示框", 10 * 1000)
         .setContentColor(R.color.white)
@@ -161,12 +161,12 @@ public class App extends Application {
 
 - **drawable下可覆盖资源及注释**
 
-```
+```html
 snackbar_lib_bg.xml   SnackBarLib默认使用的背景
 ```
  **snackbar_lib_bg.xml，如果颜色替换了@color/snackbar_lib_bg，则colors下的snackbar_lib_bg属性覆盖将会失效** 
 
-```
+```html
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/snackbar_lib_bg" />
@@ -177,7 +177,7 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
  
 - **colors下可覆盖资源及注释**
 
-```
+```html
 <resources>
 
     <!-- dialog的统一风格，适用于DialogLibCommon、DialogLibCustom、DialogLibInput -->
@@ -276,7 +276,7 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
 ```
 -  **dimens下字体大小资源** 
 
-```
+```html
 <resources>
 
     <!--标题字体大小，适用于 DialogLibCommon-->
@@ -331,7 +331,7 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
 ```
 - **strings下资源定义，注意：如果你的项目存在多语言，则必须覆盖** 
 
-```
+```html
 <resources>
     <string name="dialog_utils_lib_ok">确定</string>
     <string name="dialog_utils_lib_cancel">取消</string>
@@ -354,7 +354,7 @@ snackbar_lib_default_warn snackbar警告的默认图标
 
 - **integers下资源定义，可覆盖**
 
-```
+```html
 <resources>
 
     <!--snackbar的文本显示区域的最大行数，超出时末尾自动显示...，适用于 SnackBarLib-->
