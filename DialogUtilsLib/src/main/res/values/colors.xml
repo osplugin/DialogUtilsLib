@@ -11,7 +11,7 @@
     <!-- dialog的统一风格，确认按钮字体颜色 -->
     <color name="dialog_all_default_ok_fg">#2C9BF3</color>
     <!-- dialog的统一风格，取消按钮字体颜色 -->
-    <color name="dialog_all_default_cancel_fg">#FFFFFF</color>
+    <color name="dialog_all_default_cancel_fg">#000000</color>
     <!-- dialog的统一风格，确认按钮背景色 -->
     <color name="dialog_all_default_ok_bg">#FFFFFF</color>
     <!-- dialog的统一风格，取消按钮背景色 -->
