@@ -9,6 +9,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +45,7 @@ public class DialogLibCommon implements DialogLibUtils {
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
     private OnBtnMessage onBtnMessage;
+    private Integer messageGravity;
     private DialogLibCommon() {
     }
 
@@ -138,6 +140,22 @@ public class DialogLibCommon implements DialogLibUtils {
             return getContext().getResources().getString(R.string.dialog_utils_lib_cancel);
         }
         return cancelDesc;
+    }
+
+    public Integer getMessageGravity() {
+        if(null == messageGravity){
+            messageGravity = Gravity.CENTER;
+        }
+        return messageGravity;
+    }
+
+    /**
+     * 设置消息区域的对齐方式，默认居中显示
+     * 参考 {@link android.view.Gravity}
+     */
+    public DialogLibCommon setMessageGravity(Integer messageGravity) {
+        this.messageGravity = messageGravity;
+        return this;
     }
 
     /**
@@ -293,6 +311,9 @@ public class DialogLibCommon implements DialogLibUtils {
                 }
             });
             binding.setTitle(getTitle());
+
+            //消息区域的对齐方式
+            binding.messText.setGravity(getMessageGravity());
 
             binding.messText.setMovementMethod(ScrollingMovementMethod.getInstance());
             binding.setMessage(getMessage());
