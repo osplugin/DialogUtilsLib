@@ -271,7 +271,7 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
     <!-- dialog的统一风格，确认按钮字体颜色 -->
     <color name="dialog_all_default_ok_fg">#2C9BF3</color>
     <!-- dialog的统一风格，取消按钮字体颜色 -->
-    <color name="dialog_all_default_cancel_fg">#FFFFFF</color>
+    <color name="dialog_all_default_cancel_fg">#000000</color>
     <!-- dialog的统一风格，确认按钮背景色 -->
     <color name="dialog_all_default_ok_bg">#FFFFFF</color>
     <!-- dialog的统一风格，取消按钮背景色 -->
@@ -283,61 +283,61 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
 
 
     <!--dialog的整体背景色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_common_bg">@color/dialog_all_default_bg</color>
     <!--dialog的内容文字的文字颜色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_content_fg">#000000</color>
+    <color name="dialog_utils_lib_common_content_fg">@color/dialog_all_default_content_fg</color>
     <!--dialog的标题文字的文字颜色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_title_fg">#000000</color>
+    <color name="dialog_utils_lib_common_title_fg">@color/dialog_all_default_title_fg</color>
     <!--dialog的 确认 按钮文字的文字颜色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_ok_fg">#2C9BF3</color>
+    <color name="dialog_utils_lib_common_ok_fg">@color/dialog_all_default_ok_fg</color>
     <!--dialog的 取消 按钮文字的文字颜色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_cancel_fg">#000000</color>
+    <color name="dialog_utils_lib_common_cancel_fg">@color/dialog_all_default_cancel_fg</color>
     <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_ok_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_common_ok_bg">@color/dialog_all_default_ok_bg</color>
     <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_cancel_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_common_cancel_bg">@color/dialog_all_default_cancel_bg</color>
     <!--dialog的内容文字的文字颜色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_split_line">#EAEAEA</color>
+    <color name="dialog_utils_lib_common_split_line">@color/dialog_all_default_split_line_bg</color>
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCommon-->
-    <color name="dialog_utils_lib_common_button_split_bg">#EAEAEA</color>
+    <color name="dialog_utils_lib_common_button_split_bg">@color/dialog_all_default_button_split_line_bg</color>
 
 
     <!--dialog的整体背景色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_custom_bg">@color/dialog_all_default_bg</color>
     <!--dialog的标题文字的文字颜色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_title_fg">#000000</color>
+    <color name="dialog_utils_lib_custom_title_fg">@color/dialog_all_default_title_fg</color>
     <!--dialog的 确认 按钮文字的文字颜色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_ok_fg">#2C9BF3</color>
+    <color name="dialog_utils_lib_custom_ok_fg">@color/dialog_all_default_ok_fg</color>
     <!--dialog的 取消 按钮文字的文字颜色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_cancel_fg">#000000</color>
+    <color name="dialog_utils_lib_custom_cancel_fg">@color/dialog_all_default_cancel_fg</color>
     <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_ok_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_custom_ok_bg">@color/dialog_all_default_ok_bg</color>
     <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_cancel_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_custom_cancel_bg">@color/dialog_all_default_cancel_bg</color>
     <!--dialog的输入框标题与内容和内容与按钮分割线的背景色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_split_line">#EAEAEA</color>
+    <color name="dialog_utils_lib_custom_split_line">@color/dialog_all_default_split_line_bg</color>
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibCustom-->
-    <color name="dialog_utils_lib_custom_button_split_bg">#EAEAEA</color>
+    <color name="dialog_utils_lib_custom_button_split_bg">@color/dialog_all_default_button_split_line_bg</color>
 
 
     <!--dialog的整体背景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_input_bg">@color/dialog_all_default_bg</color>
     <!--dialog的标题文字的文字颜色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_title_fg">#000000</color>
+    <color name="dialog_utils_lib_input_title_fg">@color/dialog_all_default_title_fg</color>
     <!--dialog的 确认 按钮文字的文字颜色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_ok_fg">#2C9BF3</color>
+    <color name="dialog_utils_lib_input_ok_fg">@color/dialog_all_default_ok_fg</color>
     <!--dialog的 取消 按钮文字的文字颜色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_cancel_fg">#000000</color>
+    <color name="dialog_utils_lib_input_cancel_fg">@color/dialog_all_default_cancel_fg</color>
     <!--dialog的 确认 按钮文字的背景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_ok_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_input_ok_bg">@color/dialog_all_default_ok_bg</color>
     <!--dialog的 取消 按钮文字的背景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_cancel_bg">#FFFFFF</color>
+    <color name="dialog_utils_lib_input_cancel_bg">@color/dialog_all_default_cancel_bg</color>
     <!--dialog的输入框文字的文字颜色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_fg">#000000</color>
+    <color name="dialog_utils_lib_input_fg">@color/dialog_all_default_content_fg</color>
     <!--dialog的输入框下方分割线的背景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_split_line">#EAEAEA</color>
+    <color name="dialog_utils_lib_input_split_line">@color/dialog_all_default_split_line_bg</color>
     <!--dialog的输入框下方显示2个按钮时，中间分隔的背景色，适用于 DialogLibInput-->
-    <color name="dialog_utils_lib_input_button_split_bg">#EAEAEA</color>
+    <color name="dialog_utils_lib_input_button_split_bg">@color/dialog_all_default_button_split_line_bg</color>
 
 
     <!--dialog的加载框加载等待区域的背景色，适用于 DialogLibLoading-->
