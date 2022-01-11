@@ -3,6 +3,10 @@
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
+### 更新记录
+#### 1.2.0版本
+- DialogLibCommon、DialogLibCustom、DialogLibInput这3种对话框的统一布局设定新增设置反转按钮位置，原按钮位置为“左确定，右取消”（默认），设置反转后为“左取消，右确定”。 
+- 反转后操作与原操作完全一致，无需额外代码设置。
 
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可参考文档覆盖属性
@@ -26,7 +30,7 @@ allprojects {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.osard:DialogUtilsLib:1.1.1'
+    implementation 'com.gitee.osard:DialogUtilsLib:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
@@ -47,6 +51,8 @@ public class App extends Application {
         DialogLibInitSetting.getInstance()
                 //设置debug
                 .setDebug(BuildConfig.DEBUG)
+                //设置是否反转确定和取消按钮位置，false：左确定，右取消；true：左取消，右确定。默认：false
+                .setReverseButton(true)
                 //注册全局activity生命周期监听
                 .registerActivityLifecycleCallbacks(this);
 
@@ -59,67 +65,88 @@ public class App extends Application {
 
 ```java
     DialogLibCommon.create(this)
-            .setMessage("普通对话框1")
-            .setAlias("text1")
-            .setOnBtnMessage(()->{
-                //描述区域点击时触发
-            })
-            .noShowCancel()
-            .show();
+        .setMessage("普通对话框1")
+        .setAlias("text1")
+        .setOnBtnMessage(() -> {
+        //描述区域点击时触发
+            Toast.makeText(MainActivity.this, "点击了消息区域", Toast.LENGTH_SHORT).show();
+        })
+        .setOnBtnOk(() -> {
+            Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
+        })
+        .setOnBtnCancel(() -> {
+            Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+        })
+        .show();
 ```
 
 -  **自定义dialog** 
 
 ```java
     ImageView imageView = new ImageView(this);
-    imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
-    DialogLibCustom.create(this)
-            .noShowCancel()
-            .setAlias("text2")
-            .show(imageView);
+        imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
+        DialogLibCustom.create(this)
+        .setOnCustomBtnOk(() -> {
+            Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
+            return true;
+        })
+        .setOnBtnCancel(() -> {
+            Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+        })
+        .setAlias("text2")
+        .show(imageView);
 ```
 
 -  **输入型dialog** 
 
 ```java
     DialogLibInput.create(this)
-            .setMessage("输入信息")
-            .setAlias("text3")
-            //自动弹出键盘
-            .setPopupKeyboard()
-            .setOnBtnOk(str -> {
-                Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
-                return true;
-            })
-            .show();
+        .setMessage("输入信息")
+        .setAlias("text3")
+        //todo 设置显示密码隐藏/显示图片，由于输入类型限制不是密码，此处设置无效
+        .setShowLookPassword()
+        //自动弹出键盘
+        .setPopupKeyboard()
+        .setOnBtnCancel(() -> {
+            Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+        })
+        .setOnBtnOk(str -> {
+            Toast.makeText(MainActivity.this, "输入消息为：" + str, Toast.LENGTH_SHORT).show();
+            return true;
+        })
+        .show();
 ```
 
 -  **等待型dialog** 
 
 ```java
     DialogLibLoading.create(this)
-            .setTimeoutClose(2000)
-            .setAlias("text4")
-            .setOnLoading(() -> {
-                Toast.makeText(MainActivity.this, "我是显示对话框前触发的", Toast.LENGTH_SHORT).show();
-            })
-            .show();
+        //自动关闭时间，如需手动关闭，则保存此对象，在需要时调用 **dialogLibLoading.closeDialog()** 
+        .setTimeoutClose(2000)
+        .setAlias("text4")
+        .setOnLoading(() -> {
+            Toast.makeText(MainActivity.this, "我是显示对话框前触发的", Toast.LENGTH_SHORT).show();
+        })
+        .show();
 ```
 
 -  **完全自定义型dialog** 
 ```java
     final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
-            .setCancelable(true)
-            .setAlias("text5");
+        .setCancelable(true)
+        .setAlias("text5");
 
-    TextView view = new TextView(this);
-    view.setBackgroundResource(R.color.design_default_color_secondary);
-    view.setText("这是一个完全自定义布局的对话框，对话框显示后需要手动关闭");
-    view.setOnClickListener(v2 -> {
-        dialog.closeDialog();
-    });
+        TextView view = new TextView(this);
+        view.setBackgroundResource(R.color.purple_500);
+        view.setTextColor(getResources().getColor(R.color.white));
+        view.setText("这是一个完全自定义布局的对话框，对话框显示后需要手动关闭");
+        view.setOnClickListener(v2 -> {
+            dialog.closeDialog();
+        });
 
-    dialog.show(view);
+        dialog.show(view);
+        
+        
 ```
 -  **密码输入型dialog** 
 
@@ -133,27 +160,34 @@ public class App extends Application {
         .setShowLookPassword()
         //自动弹出键盘
         .setPopupKeyboard()
+        .setOnBtnCancel(() -> {
+        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+        })
         .setOnBtnOk(str -> {
-            Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
-            return true;
+        Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
+        return true;
         })
         .show();
 ```
 -  **Snackbar提示框**
 
 ```java
-    SnackBarLib.make(binding.text7,
-        "Snackbar提示框", 10 * 1000)
+    SnackBarLib.make(binding.coordinator,
+        "Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框",
+        10 * 1000)
         .setContentColor(R.color.white)
-        .setAction("试试", v1 ->
-              Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
+        .setAction("action", v1 ->
+        Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
         .setActionClickCallback(tag -> {
-          Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
         })
         .showSuccess();
 
     //或者使用默认风格，与系统默认Snackbar的属性书写习惯基本一致
     SnackBarLib.makeShort(binding.text7,"Snackbar提示框").show();
+
+    //关闭已显示的SnackBar
+    SnackBarLib.dismiss();
 ```
 
 ### 四、资源覆盖，改变颜色、字体大小、默认文字

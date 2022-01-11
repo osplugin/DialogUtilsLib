@@ -3,6 +3,9 @@ package com.mjsoftking.dialogutilslib.init;
 import android.app.Application;
 
 import com.mjsoftking.dialogutilslib.BuildConfig;
+import com.mjsoftking.dialogutilslib.DialogLibCommon;
+import com.mjsoftking.dialogutilslib.DialogLibCustom;
+import com.mjsoftking.dialogutilslib.DialogLibInput;
 import com.mjsoftking.dialogutilslib.callback.DialogLibActivityLifecycleCallbacks;
 
 /**
@@ -21,9 +24,14 @@ public class DialogLibInitSetting {
     }
 
     private boolean debug;
+    private boolean reverseButton;
 
     public boolean isDebug() {
         return debug;
+    }
+
+    public boolean isReverseButton() {
+        return reverseButton;
     }
 
     /**
@@ -35,6 +43,21 @@ public class DialogLibInitSetting {
      */
     public DialogLibInitSetting setDebug(boolean debug) {
         this.debug = debug;
+        return this;
+    }
+
+    /**
+     * 设置是否反转确定和取消按钮位置
+     * <p>
+     * 适用于 {@link DialogLibCommon}、{@link DialogLibCustom}、{@link DialogLibInput} 这3种对话框的统一布局设定
+     * <p>
+     * 默认为false
+     * <p>
+     * false：左确定，右取消
+     * true：左取消，右确定
+     */
+    public DialogLibInitSetting setReverseButton(boolean reverseButton) {
+        this.reverseButton = reverseButton;
         return this;
     }
 

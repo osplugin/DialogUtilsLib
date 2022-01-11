@@ -28,6 +28,10 @@
         <variable
             name="noShowCancel"
             type="Boolean" />
+
+        <variable
+            name="reverseButton"
+            type="Boolean" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -66,10 +70,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="@{!reverseButton ? View.VISIBLE : View.GONE}">
 
             <TextView
-                android:id="@+id/btnOk"
+                android:id="@+id/btnOk1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -89,7 +94,7 @@
                 android:visibility="@{(!noShowCancel &amp;&amp; !noShowOk) ? View.VISIBLE : View.GONE}" />
 
             <TextView
-                android:id="@+id/btnCancel"
+                android:id="@+id/btnCancel1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -101,6 +106,48 @@
                 android:textColor="@color/dialog_utils_lib_custom_cancel_fg"
                 android:textSize="@dimen/dialog_utils_lib_custom_cancel_text_size"
                 android:visibility="@{!noShowCancel ? View.VISIBLE : View.GONE}" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="@{reverseButton ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                android:id="@+id/btnCancel2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@{noShowOk ? @drawable/dialog_utils_lib_custom_cancel_button_double : @drawable/dialog_utils_lib_custom_cancel_button}"
+                android:gravity="center"
+                android:onClick="@{click::onClick}"
+                android:padding="10dp"
+                android:text="@{cancelDesc}"
+                android:textColor="@color/dialog_utils_lib_custom_cancel_fg"
+                android:textSize="@dimen/dialog_utils_lib_custom_cancel_text_size"
+                android:visibility="@{!noShowCancel ? View.VISIBLE : View.GONE}" />
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/dialog_utils_lib_custom_button_split_bg"
+                android:visibility="@{(!noShowCancel &amp;&amp; !noShowOk) ? View.VISIBLE : View.GONE}" />
+
+            <TextView
+                android:id="@+id/btnOk2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@{noShowCancel ? @drawable/dialog_utils_lib_custom_ok_button_double : @drawable/dialog_utils_lib_custom_ok_button}"
+                android:gravity="center"
+                android:onClick="@{click::onClick}"
+                android:padding="10dp"
+                android:text="@{okDesc}"
+                android:textColor="@color/dialog_utils_lib_custom_ok_fg"
+                android:textSize="@dimen/dialog_utils_lib_custom_ok_text_size"
+                android:visibility="@{!noShowOk ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>
 

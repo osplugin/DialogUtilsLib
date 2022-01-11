@@ -245,6 +245,7 @@ public class DialogLibCustom implements DialogLibUtils {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
             //ContentView
             DialogUtilsLibCustomViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_custom_view, null, false);
+            binding.setReverseButton(DialogLibInitSetting.getInstance().isReverseButton());
             binding.contentGroup.removeAllViews();
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(params);
@@ -257,12 +258,12 @@ public class DialogLibCustom implements DialogLibUtils {
                 try {
                     //任何按钮都会触发
                     getOnBtn().btn();
-                    if (v.getId() == R.id.btnOk) {
+                    if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
                         //ok按钮位置触发
                         if (getOnCustomBtnOk().ok()) {
                             closeDialog();
                         }
-                    } else if (v.getId() == R.id.btnCancel) {
+                    } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
                         closeDialog();
                         //cancel按钮位置触发
                         getOnBtnCancel().cancel();

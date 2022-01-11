@@ -1,5 +1,6 @@
 package com.mjsoftking.dialogutilsapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         binding.setClick(this);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onClick(View v) {
         if (v.equals(binding.text1)) {
@@ -48,14 +50,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAlias("text1")
                     .setOnBtnMessage(() -> {
                         //描述区域点击时触发
+                        Toast.makeText(MainActivity.this, "点击了消息区域", Toast.LENGTH_SHORT).show();
                     })
-                    .noShowCancel()
+                    .setOnBtnOk(() -> {
+                        Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
+                    })
+                    .setOnBtnCancel(() -> {
+                        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+                    })
                     .show();
         } else if (v.equals(binding.text2)) {
             ImageView imageView = new ImageView(this);
             imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
             DialogLibCustom.create(this)
-                    .noShowCancel()
+                    .setOnCustomBtnOk(() -> {
+                        Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
+                        return true;
+                    })
+                    .setOnBtnCancel(() -> {
+                        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+                    })
                     .setAlias("text2")
                     .show(imageView);
         } else if (v.equals(binding.text3)) {
@@ -66,8 +80,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setShowLookPassword()
                     //自动弹出键盘
                     .setPopupKeyboard()
+                    .setOnBtnCancel(() -> {
+                        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+                    })
                     .setOnBtnOk(str -> {
-                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "输入消息为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
                     })
                     .show();
@@ -103,16 +120,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setShowLookPassword()
                     //自动弹出键盘
                     .setPopupKeyboard()
+                    .setOnBtnCancel(() -> {
+                        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+                    })
                     .setOnBtnOk(str -> {
-                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
                     })
                     .show();
         } else if (v.equals(binding.text7)) {
             SnackBarLib.make(binding.coordinator,
-                    "Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框", 10 * 1000)
+                    "Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框Snackbar提示框",
+                    10 * 1000)
                     .setContentColor(R.color.white)
-                    .setAction("试试", v1 ->
+                    .setAction("action", v1 ->
                             Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
                     .setActionClickCallback(tag -> {
                         Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
@@ -120,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .showSuccess();
 
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, 1500);
+            handler.postDelayed(runnable, 1000 * 3);
         }
     }
 }

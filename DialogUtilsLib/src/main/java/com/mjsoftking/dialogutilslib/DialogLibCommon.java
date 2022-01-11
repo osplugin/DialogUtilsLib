@@ -46,6 +46,7 @@ public class DialogLibCommon implements DialogLibUtils {
     private OnBtn onBtn;
     private OnBtnMessage onBtnMessage;
     private Integer messageGravity;
+
     private DialogLibCommon() {
     }
 
@@ -143,7 +144,7 @@ public class DialogLibCommon implements DialogLibUtils {
     }
 
     public Integer getMessageGravity() {
-        if(null == messageGravity){
+        if (null == messageGravity) {
             messageGravity = Gravity.CENTER;
         }
         return messageGravity;
@@ -291,16 +292,17 @@ public class DialogLibCommon implements DialogLibUtils {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
 
             DialogUtilsLibTipBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip, null, false);
+            binding.setReverseButton(DialogLibInitSetting.getInstance().isReverseButton());
             binding.setClick(v -> {
                 try {
                     //关闭对话框
                     closeDialog();
                     //任何按钮都会触发
                     getOnBtn().btn();
-                    if (v.getId() == R.id.btnOk) {
+                    if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
                         //ok按钮位置触发
                         getOnBtnOk().ok();
-                    } else if (v.getId() == R.id.btnCancel) {
+                    } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
                         //cancel按钮位置触发
                         getOnBtnCancel().cancel();
                     }
@@ -322,7 +324,7 @@ public class DialogLibCommon implements DialogLibUtils {
             binding.setNoShowOk(isNoShowOk());
             binding.setNoShowCancel(isNoShowCancel());
 
-            if(null != onBtnMessage){
+            if (null != onBtnMessage) {
                 binding.messText.setOnClickListener(v -> onBtnMessage.btn());
             }
 

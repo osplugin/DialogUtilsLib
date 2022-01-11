@@ -353,15 +353,16 @@ public class DialogLibInput implements DialogLibUtils {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
 
             DialogUtilsLibTipInputBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip_input, null, false);
+            binding.setReverseButton(DialogLibInitSetting.getInstance().isReverseButton());
             binding.setClick(v -> {
                 try {
-                    if (v.getId() == R.id.btnOk) {
+                    if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
                         //ok按钮位置触发
                         if (getOnBtnOk().ok(binding.getMessage())) {
                             //关闭对话框
                             closeDialog();
                         }
-                    } else if (v.getId() == R.id.btnCancel) {
+                    } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
                         //关闭对话框
                         closeDialog();
                         //cancel按钮位置触发
