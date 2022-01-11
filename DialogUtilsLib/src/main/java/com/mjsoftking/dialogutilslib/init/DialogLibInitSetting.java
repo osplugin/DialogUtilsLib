@@ -1,12 +1,16 @@
 package com.mjsoftking.dialogutilslib.init;
 
 import android.app.Application;
+import android.content.res.Configuration;
+
+import androidx.annotation.NonNull;
 
 import com.mjsoftking.dialogutilslib.BuildConfig;
 import com.mjsoftking.dialogutilslib.DialogLibCommon;
 import com.mjsoftking.dialogutilslib.DialogLibCustom;
 import com.mjsoftking.dialogutilslib.DialogLibInput;
 import com.mjsoftking.dialogutilslib.callback.DialogLibActivityLifecycleCallbacks;
+import com.mjsoftking.dialogutilslib.callback.ScreenRotationCallback;
 
 /**
  * 对话框工具初始化设置
@@ -26,12 +30,18 @@ public class DialogLibInitSetting {
     private boolean debug;
     private boolean reverseButton;
 
+    private boolean registerActivityLifecycle;
+
     public boolean isDebug() {
         return debug;
     }
 
     public boolean isReverseButton() {
         return reverseButton;
+    }
+
+    public boolean isRegisterActivityLifecycle() {
+        return registerActivityLifecycle;
     }
 
     /**
@@ -66,6 +76,19 @@ public class DialogLibInitSetting {
      */
     public DialogLibInitSetting registerActivityLifecycleCallbacks(Application application) {
         application.registerActivityLifecycleCallbacks(new DialogLibActivityLifecycleCallbacks());
+        this.registerActivityLifecycle = true;
         return this;
     }
+
+    /**
+     * 注册屏幕翻转改变的事件
+     * 加在application的onConfigurationChanged方法下
+     * <p>
+     * 仅针对屏幕横屏、竖屏改变时自动调整已打开的对话框屏幕宽度占比风格。
+     * 仅限于activity
+     */
+    public void onScreenRotation(@NonNull Configuration newConfig) {
+        ScreenRotationCallback.run(newConfig);
+    }
+
 }

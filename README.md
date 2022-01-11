@@ -4,15 +4,19 @@
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
 ### 更新记录
-#### 1.2.0版本
+#### 1.2.1版本
 - DialogLibCommon、DialogLibCustom、DialogLibInput这3种对话框的统一布局设定新增设置反转按钮位置，原按钮位置为“左确定，右取消”（默认），设置反转后为“左取消，右确定”。 
 - 反转后操作与原操作完全一致，无需额外代码设置。
+- 支持设置翻转屏幕不重建activity时，dialog跟随设置的横竖屏宽度比自动改变宽度大小（除SnackBarLib外全部）。
+- 若未设置翻转屏幕不重建activity且注册了全局activity生命周期，则翻转屏幕将自动关闭已打开的dialog（除SnackBarLib外全部）。
+- 支持设置因activity生命周期结束而关闭对话框时，触发回调监听（除SnackBarLib外全部）。
+- 其他错误修正。
 
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可参考文档覆盖属性
 
 ### 二、工程引入工具包准备
-**工程的build.gradle文件添加** 
+**com.android.tools.build:gradle:4.2.2及以下版本，在工程的 build.gradle 文件添加** 
 
 ```
 allprojects {
@@ -26,11 +30,28 @@ allprojects {
 }
 ```
 
+**com.android.tools.build:gradle:7.0.0及以上版本，在工程的 settings.gradle 文件添加**
+
+```
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        //jitpack 仓库
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}
+```
+
 **APP的build.gradle文件添加** 
 ```
 dependencies {
     ...
-    implementation 'com.gitee.osard:DialogUtilsLib:1.2.0'
+    implementation 'com.gitee.osard:DialogUtilsLib:1.2.1'
     implementation 'com.google.android.material:material:1.2.1'
 }
 ```
@@ -57,9 +78,18 @@ public class App extends Application {
                 .registerActivityLifecycleCallbacks(this);
 
     }
+
+    // **application** 下的此方法进行注册，且 **activity** 设置 **android:configChanges="orientation|keyboardHidden|screenSize"** 时，
+    // 屏幕翻转不会销毁重建 **activity** ，注册的此方法，将会根据设置的横竖屏宽度比自动改变dialog的宽度大小。
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        DialogLibInitSetting.getInstance().onScreenRotation(newConfig);
+
+    }
 }
 ```
-
 
 -  **普通dialog** 
 
@@ -77,6 +107,9 @@ public class App extends Application {
         .setOnBtnCancel(() -> {
             Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
         })
+        .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        })
         .show();
 ```
 
@@ -92,6 +125,9 @@ public class App extends Application {
         })
         .setOnBtnCancel(() -> {
             Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+        })
+        .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
         })
         .setAlias("text2")
         .show(imageView);
@@ -114,6 +150,9 @@ public class App extends Application {
             Toast.makeText(MainActivity.this, "输入消息为：" + str, Toast.LENGTH_SHORT).show();
             return true;
         })
+        .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        })
         .show();
 ```
 
@@ -126,6 +165,9 @@ public class App extends Application {
         .setAlias("text4")
         .setOnLoading(() -> {
             Toast.makeText(MainActivity.this, "我是显示对话框前触发的", Toast.LENGTH_SHORT).show();
+        })
+        .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
         })
         .show();
 ```
@@ -143,7 +185,9 @@ public class App extends Application {
         view.setOnClickListener(v2 -> {
             dialog.closeDialog();
         });
-
+        dialog.setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        });
         dialog.show(view);
         
         
@@ -161,11 +205,14 @@ public class App extends Application {
         //自动弹出键盘
         .setPopupKeyboard()
         .setOnBtnCancel(() -> {
-        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
         })
         .setOnBtnOk(str -> {
-        Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
-        return true;
+            Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
+            return true;
+        })
+        .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
         })
         .show();
 ```
@@ -177,9 +224,9 @@ public class App extends Application {
         10 * 1000)
         .setContentColor(R.color.white)
         .setAction("action", v1 ->
-        Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
+            Toast.makeText(getApplicationContext(), "action的点击事件", Toast.LENGTH_SHORT).show())
         .setActionClickCallback(tag -> {
-        Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "由点击action触发关闭", Toast.LENGTH_SHORT).show();
         })
         .showSuccess();
 

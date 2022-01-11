@@ -19,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilslib.databinding.DialogUtilsLibCustomViewBinding;
 import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
+import com.mjsoftking.dialogutilslib.utils.DensityUtils;
 import com.mjsoftking.dialogutilslib.utils.DialogLibCacheList;
 
 import java.util.HashMap;
@@ -57,6 +58,7 @@ public class DialogLibCustom implements DialogLibUtils {
     private OnCustomBtnOk onCustomBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
+    private OnActivityLifecycleClose onActivityLifecycleClose;
 
     private Context getContext() {
         return context;
@@ -225,6 +227,23 @@ public class DialogLibCustom implements DialogLibUtils {
     }
 
     /**
+     * 设置因activity生命周期结束而关闭对话框时，触发的回调
+     */
+    public DialogLibCustom setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
+        this.onActivityLifecycleClose = onActivityLifecycleClose;
+        return this;
+    }
+
+    /**
+     * activity生命周期结束时调用此方法触发相关回调
+     */
+    public void activityLifecycleClose() {
+        if (null != onActivityLifecycleClose) {
+            onActivityLifecycleClose.close();
+        }
+    }
+
+    /**
      * 显示自定义视图的提示框
      * 需要手动控制dialog关闭
      */
@@ -295,25 +314,46 @@ public class DialogLibCustom implements DialogLibUtils {
         return this;
     }
 
+    public void setDialogWidth(Configuration configuration) {
+        setDialogWidth(dialog, configuration);
+    }
+
+    public void setDialogWidth(Dialog dialog) {
+        setDialogWidth(dialog, null);
+    }
+
     /**
      * 设置dialog的宽度
      * 需要在show之后调用
      */
-    private void setDialogWidth(Dialog dialog) {
-        Window window = dialog.getWindow();
-        if (null == window) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "由于window为空，设置对话框属性失败！");
+    public void setDialogWidth(Dialog dialog, Configuration configuration) {
+        try {
+            if (null == dialog || !dialog.isShowing()) {
+                return;
             }
-            return;
+            Window window = dialog.getWindow();
+            if (null == window) {
+                if (DialogLibInitSetting.getInstance().isDebug()) {
+                    Log.w(TAG, "由于window为空，设置对话框属性失败！");
+                }
+                return;
+            }
+            WindowManager m = window.getWindowManager();
+            Display d = m.getDefaultDisplay();
+            WindowManager.LayoutParams p = window.getAttributes();
+            Point size = new Point();
+            d.getSize(size);
+            if (null == configuration) {
+                p.width = (int) (size.x * dialogWidthFactor(configuration));
+            } else {
+                p.width = (int) (DensityUtils.dipToPX(getContext(), configuration.screenWidthDp) * dialogWidthFactor(configuration));
+            }
+            dialog.getWindow().setAttributes(p);
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "设置对话框宽度异常", e);
+            }
         }
-        WindowManager m = window.getWindowManager();
-        Display d = m.getDefaultDisplay();
-        WindowManager.LayoutParams p = window.getAttributes();
-        Point size = new Point();
-        d.getSize(size);
-        p.width = (int) (size.x * dialogWidthFactor());
-        dialog.getWindow().setAttributes(p);
     }
 
     private float getLandscapeWidthFactor() {
@@ -336,8 +376,10 @@ public class DialogLibCustom implements DialogLibUtils {
         return pwf;
     }
 
-    private float dialogWidthFactor() {
-        Configuration mConfiguration = context.getResources().getConfiguration();
+    private float dialogWidthFactor(Configuration mConfiguration) {
+        if (null == mConfiguration) {
+            mConfiguration = context.getResources().getConfiguration();
+        }
         int ori = mConfiguration.orientation; //获取屏幕方向
         if (ori == Configuration.ORIENTATION_LANDSCAPE) {
             //横屏
@@ -388,4 +430,7 @@ public class DialogLibCustom implements DialogLibUtils {
         void btn();
     }
 
+    public interface OnActivityLifecycleClose {
+        void close();
+    }
 }

@@ -1,6 +1,9 @@
 package com.mjsoftking.dialogutilsapp;
 
 import android.app.Application;
+import android.content.res.Configuration;
+
+import androidx.annotation.NonNull;
 
 import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
 
@@ -26,4 +29,15 @@ public class App extends Application {
                 .registerActivityLifecycleCallbacks(this);
 
     }
+
+    // **application** 下的此方法进行注册，且 **activity** 设置 **android:configChanges="orientation|keyboardHidden|screenSize"** 时，
+    // 屏幕翻转不会销毁重建 **activity** ，注册的此方法，将会根据设置的横竖屏宽度比自动改变dialog的宽度大小。
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        DialogLibInitSetting.getInstance().onScreenRotation(newConfig);
+
+    }
+
 }

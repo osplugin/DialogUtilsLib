@@ -64,6 +64,7 @@ public class DialogLibActivityLifecycleCallbacks implements Application.Activity
         for (DialogLibBean obj : DialogLibCacheList.getInstance()) {
             //匹配activity类名，关闭被销毁的activity下的所有对话框
             if (activityClassName.equals(obj.getActivityName())) {
+                obj.getDialogLibUtils().activityLifecycleClose();
                 obj.getDialogLibUtils().closeDialog();
             }
         }

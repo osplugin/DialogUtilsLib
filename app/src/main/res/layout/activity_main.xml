@@ -9,103 +9,110 @@
             type="android.view.View.OnClickListener" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/parentLayout"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            tools:context=".MainActivity">
-
-            <TextView
-                android:id="@+id/text1"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="普通对话框"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/text2"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="自定义对话框"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/text5"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="全自定义对话框"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/text3"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="输入对话框"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/text6"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="密码输入对话框"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/text4"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="加载对话框"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/text7"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/purple_500"
-                android:gravity="center"
-                android:onClick="@{click::onClick}"
-                android:text="Snackbar提示框"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator"
-            android:layout_width="match_parent"
-            android:background="@color/white"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom" />
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/parentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:context=".MainActivity">
+
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="普通对话框"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/text2"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="自定义对话框"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/text5"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="全自定义对话框"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/text3"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="输入对话框"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/text6"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="密码输入对话框"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/text4"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="加载对话框"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/text7"
+                    android:layout_width="160dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/purple_500"
+                    android:gravity="center"
+                    android:onClick="@{click::onClick}"
+                    android:text="Snackbar提示框"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/white" />
+        </LinearLayout>
+    </ScrollView>
 </layout>

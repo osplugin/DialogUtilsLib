@@ -1,15 +1,18 @@
 package com.mjsoftking.dialogutilsapp;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -41,6 +44,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         binding.setClick(this);
     }
 
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Log.e("MainActivity屏幕", "旋转");
+
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onClick(View v) {
@@ -58,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setOnBtnCancel(() -> {
                         Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
                     })
+                    .setOnActivityLifecycleClose(() -> {
+                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+                    })
                     .show();
         } else if (v.equals(binding.text2)) {
             ImageView imageView = new ImageView(this);
@@ -69,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .setOnBtnCancel(() -> {
                         Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+                    })
+                    .setOnActivityLifecycleClose(() -> {
+                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
                     })
                     .setAlias("text2")
                     .show(imageView);
@@ -87,13 +105,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "输入消息为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
                     })
+                    .setOnActivityLifecycleClose(() -> {
+                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+                    })
                     .show();
         } else if (v.equals(binding.text4)) {
             DialogLibLoading.create(this)
-                    .setTimeoutClose(2000)
+                    .setTimeoutClose(10 * 1000)
                     .setAlias("text4")
                     .setOnLoading(() -> {
-                        Toast.makeText(MainActivity.this, "我是显示对话框前触发的", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "我是显示对话框前触发的，10秒后自动关闭", Toast.LENGTH_SHORT).show();
+                    })
+                    .setOnActivityLifecycleClose(() -> {
+                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
                     })
                     .show();
         } else if (v.equals(binding.text5)) {
@@ -109,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.closeDialog();
             });
 
+            dialog.setOnActivityLifecycleClose(() -> {
+                Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+            });
             dialog.show(view);
         } else if (v.equals(binding.text6)) {
             DialogLibInput.create(this)
@@ -126,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setOnBtnOk(str -> {
                         Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
+                    })
+                    .setOnActivityLifecycleClose(() -> {
+                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
                     })
                     .show();
         } else if (v.equals(binding.text7)) {

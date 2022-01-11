@@ -2,6 +2,7 @@ package com.mjsoftking.dialogutilslib;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilslib.databinding.DialogUtilsLibLoadingDataBinding;
 import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
+import com.mjsoftking.dialogutilslib.utils.DensityUtils;
 import com.mjsoftking.dialogutilslib.utils.DialogLibCacheList;
 
 import java.util.HashMap;
@@ -50,6 +52,7 @@ public class DialogLibLoading implements DialogLibUtils {
     private Integer timeout;
     //显示前触发，可以先调用show显示，根据此事件去做事情
     private OnLoading onLoading;
+    private OnActivityLifecycleClose onActivityLifecycleClose;
 
     private Context getContext() {
         return context;
@@ -143,6 +146,23 @@ public class DialogLibLoading implements DialogLibUtils {
     }
 
     /**
+     * 设置因activity生命周期结束而关闭对话框时，触发的回调
+     */
+    public DialogLibLoading setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
+        this.onActivityLifecycleClose = onActivityLifecycleClose;
+        return this;
+    }
+
+    /**
+     * activity生命周期结束时调用此方法触发相关回调
+     */
+    public void activityLifecycleClose() {
+        if (null != onActivityLifecycleClose) {
+            onActivityLifecycleClose.close();
+        }
+    }
+
+    /**
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
     public DialogLibLoading show() {
@@ -192,30 +212,52 @@ public class DialogLibLoading implements DialogLibUtils {
         return this;
     }
 
+    public void setDialogWidth(Configuration configuration) {
+        setDialogWidth(dialog, configuration);
+    }
+
+    public void setDialogWidth(Dialog dialog) {
+        setDialogWidth(dialog, null);
+    }
+
     /**
      * 设置dialog的宽度
      * 需要在show之后调用
      */
-    private void setDialogWidth(Dialog dialog) {
-        Window window = dialog.getWindow();
-        if (null == window) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "由于window为空，设置对话框属性失败！");
+    public void setDialogWidth(Dialog dialog, Configuration configuration) {
+        try {
+            if (null == dialog || !dialog.isShowing()) {
+                return;
             }
-            return;
-        }
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            Window window = dialog.getWindow();
+            if (null == window) {
+                if (DialogLibInitSetting.getInstance().isDebug()) {
+                    Log.w(TAG, "由于window为空，设置对话框属性失败！");
+                }
+                return;
+            }
+            WindowManager.LayoutParams layoutParams = window.getAttributes();
+            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
-        Display d = window.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        d.getSize(size);
-        //全屏
-        layoutParams.width = (int) (size.x);
-        layoutParams.height = (int) (size.y);
-        window.setAttributes(layoutParams);
-        window.setDimAmount(0f);
-        dialog.setCanceledOnTouchOutside(false);
+            Display d = window.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            d.getSize(size);
+            //全屏
+            if (null == configuration) {
+                layoutParams.width = (int) (size.x);
+                layoutParams.height = (int) (size.y);
+            } else {
+                layoutParams.width = (int) DensityUtils.dipToPX(getContext(), configuration.screenWidthDp);
+                layoutParams.height = (int) DensityUtils.dipToPX(getContext(), configuration.screenHeightDp);
+            }
+            window.setAttributes(layoutParams);
+            window.setDimAmount(0f);
+            dialog.setCanceledOnTouchOutside(false);
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "设置对话框宽度异常", e);
+            }
+        }
     }
 
     public boolean closeDialog() {
@@ -248,4 +290,7 @@ public class DialogLibLoading implements DialogLibUtils {
         void loading();
     }
 
+    public interface OnActivityLifecycleClose {
+        void close();
+    }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.mjsoftking.dialogutilslib.DialogLibUtils;
 import com.mjsoftking.dialogutilslib.bean.DialogLibBean;
+import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -27,6 +28,11 @@ public class DialogLibCacheList extends CopyOnWriteArrayList<DialogLibBean> {
     }
 
     public boolean add(Context context, DialogLibUtils lib) {
+        //没有注册生命周期时，无需缓存，以避免内存无法释放
+        if (!DialogLibInitSetting.getInstance().isRegisterActivityLifecycle()) {
+            return false;
+        }
+
         if (context instanceof Activity) {
             DialogLibBean obj = new DialogLibBean(((Activity) context).getComponentName().getClassName(),
                     lib);
@@ -36,6 +42,11 @@ public class DialogLibCacheList extends CopyOnWriteArrayList<DialogLibBean> {
     }
 
     public boolean remove(Context context, DialogLibUtils lib) {
+        //没有注册生命周期时，无需缓存，以避免内存无法释放，因此移除缓存也无需设置
+        if (!DialogLibInitSetting.getInstance().isRegisterActivityLifecycle()) {
+            return false;
+        }
+
         if (context instanceof Activity) {
             DialogLibBean obj = new DialogLibBean(((Activity) context).getComponentName().getClassName(),
                     lib);
