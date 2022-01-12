@@ -52,7 +52,7 @@ dependencyResolutionManagement {
 dependencies {
     ...
     implementation 'com.gitee.osard:DialogUtilsLib:1.2.1'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.3.0'
 }
 ```
 ### 三、使用
