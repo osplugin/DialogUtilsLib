@@ -4,6 +4,13 @@
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
 ### 更新记录
+
+#### 1.2.2版本
+- 对话框设置增加单独设置横竖屏宽度比，具体看示例。
+- 设置按钮反转方法移除传递boolean变量。
+- gradle升级到7.0.4。
+- 重新优化继承关系，接口回调未做调整，对比先前版本并无调用时的代码变化。
+
 #### 1.2.1版本
 - DialogLibCommon、DialogLibCustom、DialogLibInput这3种对话框的统一布局设定新增设置反转按钮位置，原按钮位置为“左确定，右取消”（默认），设置反转后为“左取消，右确定”。 
 - 反转后操作与原操作完全一致，无需额外代码设置。
@@ -51,7 +58,7 @@ dependencyResolutionManagement {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.osard:DialogUtilsLib:1.2.1'
+    implementation 'com.gitee.osard:DialogUtilsLib:1.2.2'
     implementation 'com.google.android.material:material:1.3.0'
 }
 ```
@@ -72,8 +79,8 @@ public class App extends Application {
         DialogLibInitSetting.getInstance()
                 //设置debug
                 .setDebug(BuildConfig.DEBUG)
-                //设置是否反转确定和取消按钮位置，false：左确定，右取消；true：左取消，右确定。默认：false
-                .setReverseButton(true)
+                //设置是否反转确定和取消按钮位置，默认：左确定，右取消；设置后：左取消，右确定
+                .setReverseButton()
                 //注册全局activity生命周期监听
                 .registerActivityLifecycleCallbacks(this);
 
@@ -97,6 +104,8 @@ public class App extends Application {
     DialogLibCommon.create(this)
         .setMessage("普通对话框1")
         .setAlias("text1")
+        .setPortraitWidthFactor(0.85F)
+        .setLandscapeWidthFactor(0.5F)
         .setOnBtnMessage(() -> {
         //描述区域点击时触发
             Toast.makeText(MainActivity.this, "点击了消息区域", Toast.LENGTH_SHORT).show();
@@ -119,6 +128,8 @@ public class App extends Application {
     ImageView imageView = new ImageView(this);
         imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
         DialogLibCustom.create(this)
+        .setPortraitWidthFactor(0.85F)
+        .setLandscapeWidthFactor(0.5F)
         .setOnCustomBtnOk(() -> {
             Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
             return true;
@@ -139,6 +150,8 @@ public class App extends Application {
     DialogLibInput.create(this)
         .setMessage("输入信息")
         .setAlias("text3")
+        .setPortraitWidthFactor(0.85F)
+        .setLandscapeWidthFactor(0.5F)
         //todo 设置显示密码隐藏/显示图片，由于输入类型限制不是密码，此处设置无效
         .setShowLookPassword()
         //自动弹出键盘
@@ -176,6 +189,8 @@ public class App extends Application {
 ```java
     final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
         .setCancelable(true)
+        .setPortraitWidthFactor(0.85F)
+        .setLandscapeWidthFactor(0.5F)
         .setAlias("text5");
 
         TextView view = new TextView(this);
@@ -198,6 +213,8 @@ public class App extends Application {
     DialogLibInput.create(this)
         .setMessage("123")
         .setLength(6)
+        .setPortraitWidthFactor(0.85F)
+        .setLandscapeWidthFactor(0.5F)
         .setInputType(EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD)
         .setAlias("text6")
         //设置显示密码隐藏/显示图片

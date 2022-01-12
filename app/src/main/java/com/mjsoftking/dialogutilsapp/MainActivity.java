@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibCommon.create(this)
                     .setMessage("普通对话框1")
                     .setAlias("text1")
+                    .setPortraitWidthFactor(0.85F)
+                    .setLandscapeWidthFactor(0.5F)
                     .setOnBtnMessage(() -> {
                         //描述区域点击时触发
                         Toast.makeText(MainActivity.this, "点击了消息区域", Toast.LENGTH_SHORT).show();
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ImageView imageView = new ImageView(this);
             imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
             DialogLibCustom.create(this)
+                    .setPortraitWidthFactor(0.85F)
+                    .setLandscapeWidthFactor(0.5F)
                     .setOnCustomBtnOk(() -> {
                         Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
                         return true;
@@ -92,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .show(imageView);
         } else if (v.equals(binding.text3)) {
             DialogLibInput.create(this)
+                    .setPortraitWidthFactor(0.85F)
+                    .setLandscapeWidthFactor(0.5F)
                     .setMessage("输入信息")
                     .setAlias("text3")
                     //todo 设置显示密码隐藏/显示图片，由于输入类型限制不是密码，此处设置无效
@@ -123,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.equals(binding.text5)) {
             final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
                     .setCancelable(true)
+                    .setPortraitWidthFactor(0.85F)
+                    .setLandscapeWidthFactor(0.5F)
                     .setAlias("text5");
 
             TextView view = new TextView(this);
@@ -141,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DialogLibInput.create(this)
                     .setMessage("123")
                     .setLength(6)
+                    .setPortraitWidthFactor(0.85F)
+                    .setLandscapeWidthFactor(0.5F)
                     .setInputType(EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD)
                     .setAlias("text6")
                     //设置显示密码隐藏/显示图片

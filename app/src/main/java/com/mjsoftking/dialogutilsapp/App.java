@@ -23,8 +23,8 @@ public class App extends Application {
         DialogLibInitSetting.getInstance()
                 //设置debug
                 .setDebug(BuildConfig.DEBUG)
-                //设置是否反转确定和取消按钮位置，false：左确定，右取消；true：左取消，右确定。默认：false
-                .setReverseButton(true)
+                //设置是否反转确定和取消按钮位置，默认：左确定，右取消；设置后：左取消，右确定
+                .setReverseButton()
                 //注册全局activity生命周期监听
                 .registerActivityLifecycleCallbacks(this);
 
