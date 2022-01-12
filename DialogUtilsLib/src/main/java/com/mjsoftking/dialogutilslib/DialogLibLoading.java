@@ -3,21 +3,16 @@ package com.mjsoftking.dialogutilslib;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilslib.databinding.DialogUtilsLibLoadingDataBinding;
 import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
-import com.mjsoftking.dialogutilslib.utils.DensityUtils;
 import com.mjsoftking.dialogutilslib.utils.DialogLibCacheList;
 
 import java.util.HashMap;
@@ -26,7 +21,7 @@ import java.util.Map;
 /**
  * 加载等待框工具类
  */
-public class DialogLibLoading implements DialogLibUtils {
+public class DialogLibLoading extends BaseDialogLibUtils {
     private final static String TAG = DialogLibLoading.class.getSimpleName();
     private final static Map<String, DialogLibLoading> MAP = new HashMap<>();
 
@@ -45,7 +40,6 @@ public class DialogLibLoading implements DialogLibUtils {
     private DialogLibLoading() {
     }
 
-    private Context context;
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
     private String message;
@@ -53,10 +47,6 @@ public class DialogLibLoading implements DialogLibUtils {
     //显示前触发，可以先调用show显示，根据此事件去做事情
     private OnLoading onLoading;
     private OnActivityLifecycleClose onActivityLifecycleClose;
-
-    private Context getContext() {
-        return context;
-    }
 
     private void setContext(Context context) {
         this.context = context;
@@ -189,9 +179,9 @@ public class DialogLibLoading implements DialogLibUtils {
             dialog.setContentView(binding.getRoot());
             dialog.setCancelable(false);
             dialog.setOnCancelListener(dialog -> closeDialog());
-
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
-            setDialogWidth(dialog);
+            setDialogFullScreen(TAG, dialog);
 
             //如果设置了超时关闭，则时间到时关闭，反之需要手动关闭
             if (null != getTimeout()) {
@@ -213,51 +203,7 @@ public class DialogLibLoading implements DialogLibUtils {
     }
 
     public void setDialogWidth(Configuration configuration) {
-        setDialogWidth(dialog, configuration);
-    }
-
-    public void setDialogWidth(Dialog dialog) {
-        setDialogWidth(dialog, null);
-    }
-
-    /**
-     * 设置dialog的宽度
-     * 需要在show之后调用
-     */
-    public void setDialogWidth(Dialog dialog, Configuration configuration) {
-        try {
-            if (null == dialog || !dialog.isShowing()) {
-                return;
-            }
-            Window window = dialog.getWindow();
-            if (null == window) {
-                if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, "由于window为空，设置对话框属性失败！");
-                }
-                return;
-            }
-            WindowManager.LayoutParams layoutParams = window.getAttributes();
-            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-
-            Display d = window.getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            d.getSize(size);
-            //全屏
-            if (null == configuration) {
-                layoutParams.width = (int) (size.x);
-                layoutParams.height = (int) (size.y);
-            } else {
-                layoutParams.width = (int) DensityUtils.dipToPX(getContext(), configuration.screenWidthDp);
-                layoutParams.height = (int) DensityUtils.dipToPX(getContext(), configuration.screenHeightDp);
-            }
-            window.setAttributes(layoutParams);
-            window.setDimAmount(0f);
-            dialog.setCanceledOnTouchOutside(false);
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "设置对话框宽度异常", e);
-            }
-        }
+        setDialogFullScreen(TAG, dialog, configuration);
     }
 
     public boolean closeDialog() {

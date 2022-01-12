@@ -3,23 +3,17 @@ package com.mjsoftking.dialogutilslib;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilslib.databinding.DialogUtilsLibCustomViewBinding;
 import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
-import com.mjsoftking.dialogutilslib.utils.DensityUtils;
 import com.mjsoftking.dialogutilslib.utils.DialogLibCacheList;
 
 import java.util.HashMap;
@@ -28,7 +22,7 @@ import java.util.Map;
 /**
  * 自定义弹窗提示工具类
  */
-public class DialogLibCustom implements DialogLibUtils {
+public class DialogLibCustom extends BaseDialogLibUtils {
     private final static String TAG = DialogLibCustom.class.getSimpleName();
     private final static Map<String, DialogLibCustom> MAP = new HashMap<>();
 
@@ -46,7 +40,6 @@ public class DialogLibCustom implements DialogLibUtils {
     private DialogLibCustom() {
     }
 
-    private Context context;
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
     private String title;
@@ -59,10 +52,6 @@ public class DialogLibCustom implements DialogLibUtils {
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
     private OnActivityLifecycleClose onActivityLifecycleClose;
-
-    private Context getContext() {
-        return context;
-    }
 
     private void setContext(Context context) {
         this.context = context;
@@ -227,6 +216,22 @@ public class DialogLibCustom implements DialogLibUtils {
     }
 
     /**
+     * 横屏时dialog占屏幕宽度的百分比系数，0-1之间有效，不含边界
+     */
+    public DialogLibCustom setLandscapeWidthFactor(float landscapeWidthFactor) {
+        this.landscapeWidthFactor = landscapeWidthFactor;
+        return this;
+    }
+
+    /**
+     * 竖屏时dialog占屏幕宽度的百分比系数，0-1之间有效，不含边界
+     */
+    public DialogLibCustom setPortraitWidthFactor(float portraitWidthFactor) {
+        this.portraitWidthFactor = portraitWidthFactor;
+        return this;
+    }
+
+    /**
      * 设置因activity生命周期结束而关闭对话框时，触发的回调
      */
     public DialogLibCustom setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
@@ -299,7 +304,7 @@ public class DialogLibCustom implements DialogLibUtils {
             dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
             dialog.setOnCancelListener(dialog -> closeDialog());
             dialog.show();
-            setDialogWidth(dialog);
+            setDialogWidth(TAG, dialog);
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.e(TAG, e.getMessage(), e);
@@ -315,81 +320,7 @@ public class DialogLibCustom implements DialogLibUtils {
     }
 
     public void setDialogWidth(Configuration configuration) {
-        setDialogWidth(dialog, configuration);
-    }
-
-    public void setDialogWidth(Dialog dialog) {
-        setDialogWidth(dialog, null);
-    }
-
-    /**
-     * 设置dialog的宽度
-     * 需要在show之后调用
-     */
-    public void setDialogWidth(Dialog dialog, Configuration configuration) {
-        try {
-            if (null == dialog || !dialog.isShowing()) {
-                return;
-            }
-            Window window = dialog.getWindow();
-            if (null == window) {
-                if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, "由于window为空，设置对话框属性失败！");
-                }
-                return;
-            }
-            WindowManager m = window.getWindowManager();
-            Display d = m.getDefaultDisplay();
-            WindowManager.LayoutParams p = window.getAttributes();
-            Point size = new Point();
-            d.getSize(size);
-            if (null == configuration) {
-                p.width = (int) (size.x * dialogWidthFactor(configuration));
-            } else {
-                p.width = (int) (DensityUtils.dipToPX(getContext(), configuration.screenWidthDp) * dialogWidthFactor(configuration));
-            }
-            dialog.getWindow().setAttributes(p);
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "设置对话框宽度异常", e);
-            }
-        }
-    }
-
-    private float getLandscapeWidthFactor() {
-        TypedValue outValue = new TypedValue();
-        getContext().getResources().getValue(R.dimen.dialog_utils_lib_landscape_width_factor, outValue, true);
-        float lwf = outValue.getFloat();
-        if (lwf <= 0 || lwf >= 1) {
-            return 0.5F;
-        }
-        return lwf;
-    }
-
-    private float getPortraitWidthFactor() {
-        TypedValue outValue = new TypedValue();
-        getContext().getResources().getValue(R.dimen.dialog_utils_lib_portrait_width_factor, outValue, true);
-        float pwf = outValue.getFloat();
-        if (pwf <= 0 || pwf >= 1) {
-            return 0.85F;
-        }
-        return pwf;
-    }
-
-    private float dialogWidthFactor(Configuration mConfiguration) {
-        if (null == mConfiguration) {
-            mConfiguration = context.getResources().getConfiguration();
-        }
-        int ori = mConfiguration.orientation; //获取屏幕方向
-        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
-            //横屏
-            return getLandscapeWidthFactor();
-        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
-            //竖屏
-            return getPortraitWidthFactor();
-        } else {
-            return getPortraitWidthFactor();
-        }
+        setDialogWidth(TAG, dialog, configuration);
     }
 
     public boolean closeDialog() {
