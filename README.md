@@ -58,7 +58,9 @@ dependencyResolutionManagement {
 ```
 dependencies {
     ...
-    implementation 'com.gitee.osard:DialogUtilsLib:1.2.2'
+    
+    def dialog_version = 'x.x.x' //使用最新版本
+    implementation "com.gitee.osard:DialogUtilsLib:$dialog_version"
     implementation 'com.google.android.material:material:1.3.0'
 }
 ```
