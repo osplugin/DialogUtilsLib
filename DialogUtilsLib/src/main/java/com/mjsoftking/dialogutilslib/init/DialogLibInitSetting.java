@@ -66,8 +66,8 @@ public class DialogLibInitSetting {
      * false：左确定，右取消
      * true：左取消，右确定
      */
-    public DialogLibInitSetting setReverseButton() {
-        this.reverseButton = true;
+    public DialogLibInitSetting setReverseButton(boolean reverseButton) {
+        this.reverseButton = reverseButton;
         return this;
     }
 

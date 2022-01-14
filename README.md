@@ -4,6 +4,8 @@
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
 ### 更新记录
+#### 1.2.3版本
+- 对比1.2.2版本修改设置反转按钮时需要传递boolean变量，适配某些需要动态左右手切换的项目，设置后的下次对话框创建时生效。
 
 #### 1.2.2版本
 - 对话框设置增加单独设置横竖屏宽度比，具体看示例。
@@ -78,7 +80,7 @@ public class App extends Application {
                 //设置debug
                 .setDebug(BuildConfig.DEBUG)
                 //设置是否反转确定和取消按钮位置，默认：左确定，右取消；设置后：左取消，右确定
-                .setReverseButton()
+                .setReverseButton(true)
                 //注册全局activity生命周期监听
                 .registerActivityLifecycleCallbacks(this);
 
