@@ -208,6 +208,18 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置是否反转确定和取消按钮位置
+     * <p>
+     * false：左确定，右取消，全局设置无效
+     * true：左取消，右确定，全局设置无效
+     * null：使用全局设置
+     */
+    public DialogLibCustom setReverseButton(Boolean reverseButton) {
+        this.reverseButton = reverseButton;
+        return this;
+    }
+
+    /**
      * 设置确认和取消按钮的事件触发时均会触发的事件
      */
     public DialogLibCustom setOnBtn(OnBtn onBtn) {
@@ -269,7 +281,9 @@ public class DialogLibCustom extends BaseDialogLibUtils {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
             //ContentView
             DialogUtilsLibCustomViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_custom_view, null, false);
-            binding.setReverseButton(DialogLibInitSetting.getInstance().isReverseButton());
+            binding.setReverseButton(this.reverseButton == null ?
+                    DialogLibInitSetting.getInstance().isReverseButton() :
+                    this.reverseButton);
             binding.contentGroup.removeAllViews();
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(params);

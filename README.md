@@ -4,6 +4,10 @@
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
 ### 更新记录
+
+#### 1.2.4版本
+- DialogLibCommon、DialogLibCustom、DialogLibInput支持单次更改按钮翻转，设置后无视全局设置，以当前翻转设置为准
+
 #### 1.2.3版本
 - 对比1.2.2版本修改设置反转按钮时需要传递boolean变量，适配某些需要动态左右手切换的项目，设置后的下次对话框创建时生效。
 

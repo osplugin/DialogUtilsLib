@@ -23,6 +23,9 @@ public abstract class BaseDialogLibUtils implements DialogLibUtils {
     protected float landscapeWidthFactor = -1;
     protected float portraitWidthFactor = -1;
 
+    //临时翻转确定与取消按钮位置
+    protected Boolean reverseButton;
+
     protected Context getContext() {
         return context;
     }

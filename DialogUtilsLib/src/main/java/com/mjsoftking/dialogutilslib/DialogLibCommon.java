@@ -182,6 +182,18 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         return this;
     }
 
+    /**
+     * 设置是否反转确定和取消按钮位置
+     * <p>
+     * false：左确定，右取消，全局设置无效
+     * true：左取消，右确定，全局设置无效
+     * null：使用全局设置
+     */
+    public DialogLibCommon setReverseButton(Boolean reverseButton) {
+        this.reverseButton = reverseButton;
+        return this;
+    }
+
     private boolean isNoShowOk() {
         return noShowOk;
     }
@@ -316,7 +328,9 @@ public class DialogLibCommon extends BaseDialogLibUtils {
             dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
 
             DialogUtilsLibTipBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip, null, false);
-            binding.setReverseButton(DialogLibInitSetting.getInstance().isReverseButton());
+            binding.setReverseButton(this.reverseButton == null ?
+                    DialogLibInitSetting.getInstance().isReverseButton() :
+                    this.reverseButton);
             binding.setClick(v -> {
                 try {
                     //关闭对话框
