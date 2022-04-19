@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -17,11 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.mjsoftking.dialogutilsapp.databinding.ActivityMainBinding;
+import com.mjsoftking.dialogutilsapp.databinding.PopLayoutBinding;
 import com.mjsoftking.dialogutilslib.DialogLibAllCustom;
 import com.mjsoftking.dialogutilslib.DialogLibCommon;
 import com.mjsoftking.dialogutilslib.DialogLibCustom;
 import com.mjsoftking.dialogutilslib.DialogLibInput;
 import com.mjsoftking.dialogutilslib.DialogLibLoading;
+import com.mjsoftking.dialogutilslib.PopupWindowLib;
 import com.mjsoftking.dialogutilslib.SnackBarLib;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -182,6 +185,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, 1000 * 3);
+        } else if (v.equals(binding.text8)) {
+          PopLayoutBinding plb = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.pop_layout, null, false);
+
+            PopupWindowLib popupWindowLib = PopupWindowLib.create()
+                    .setOutsideTouchable(true)
+                    .setAttachedInDecor(true)
+                    .setFocusable(true)
+//                    .setContentView(plb.getRoot(), WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
+                    .setContentView(plb.getRoot(), binding.text8.getWidth(), 280)
+                    .showAsDropDown(binding.text8, 0, 20);
+
+            //5秒后自动关闭
+            new Handler(Looper.getMainLooper()).postDelayed(popupWindowLib::dismiss, 5 * 1000);
         }
     }
 }

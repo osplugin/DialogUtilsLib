@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dialog_all_default_ok_fg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sst1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1111111111"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sst2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2222222222"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sst3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3333333333"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sst4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4444444444"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sst5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5555555555"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </ScrollView>
+</layout>
