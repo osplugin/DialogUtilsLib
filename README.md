@@ -5,6 +5,10 @@
 
 ### 更新记录
 
+#### 1.2.5版本
+- 新增PopupWindowLib工具，PopupWindowLib是PopupWindow的封装
+- gradle升级到7.1.3。
+
 #### 1.2.4版本
 - DialogLibCommon、DialogLibCustom、DialogLibInput支持单次更改按钮翻转，设置后无视全局设置，以当前翻转设置为准
 
@@ -258,6 +262,29 @@ public class App extends Application {
 
     //关闭已显示的SnackBar
     SnackBarLib.dismiss();
+```
+- **PopupWindow提示**
+```java
+    //创建PopupWindowLib对象
+    final PopupWindowLib popupWindowLib = PopupWindowLib.create();
+
+    //创建PopupWindowLib内容布局
+    PopLayoutBinding plb = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.pop_layout, null, false);
+    plb.setClick(vv -> {
+        TextView tv = (TextView) vv;
+        Toast.makeText(MainActivity.this, "点击了\"" + tv.getText() + "\"", Toast.LENGTH_SHORT).show();
+        popupWindowLib.dismiss();
+    });
+
+    //设置PopupWindowLib参数并显示
+    popupWindowLib
+            .setOutsideTouchable(true)
+            .setAttachedInDecor(true)
+            .setFocusable(true)
+//                    .setContentView(plb.getRoot(), WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            .setContentView(plb.getRoot(), binding.text8.getWidth(), 280)
+            .setAutoCloseTime(8 * 1000)
+            .showAsDropDown(binding.text8, 0, 20);
 ```
 
 ### 四、资源覆盖，改变颜色、字体大小、默认文字

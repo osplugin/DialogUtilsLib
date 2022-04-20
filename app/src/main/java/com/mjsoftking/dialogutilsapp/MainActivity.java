@@ -186,9 +186,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, 1000 * 3);
         } else if (v.equals(binding.text8)) {
-            PopLayoutBinding plb = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.pop_layout, null, false);
+            //创建PopupWindowLib对象
+            final PopupWindowLib popupWindowLib = PopupWindowLib.create();
 
-            PopupWindowLib popupWindowLib = PopupWindowLib.create()
+            //创建PopupWindowLib内容布局
+            PopLayoutBinding plb = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.pop_layout, null, false);
+            plb.setClick(vv -> {
+                TextView tv = (TextView) vv;
+                Toast.makeText(MainActivity.this, "点击了\"" + tv.getText() + "\"", Toast.LENGTH_SHORT).show();
+                popupWindowLib.dismiss();
+            });
+
+            //设置PopupWindowLib参数并显示
+            popupWindowLib
                     .setOutsideTouchable(true)
                     .setAttachedInDecor(true)
                     .setFocusable(true)
