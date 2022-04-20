@@ -1,11 +1,16 @@
 package com.mjsoftking.dialogutilslib;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import androidx.annotation.RequiresApi;
+
+import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
 
 public class PopupWindowLib {
 
@@ -18,6 +23,11 @@ public class PopupWindowLib {
     private boolean mOutsideTouchable;
     private boolean mAttachedInDecor;
     private boolean mFocusable;
+    private long mAutoCloseTime;
+
+    //自动关闭的Handler和处理对象
+    private Handler autoCloseHandler;
+    private Runnable autoCloseRunnable = this::dismiss;
 
     /**
      * 创建对象
@@ -69,6 +79,16 @@ public class PopupWindowLib {
     }
 
     /**
+     * PopupWindow 弹出后的自动关闭时间
+     *
+     * @param millisecond 单位：毫秒，<=0时不自动关闭
+     */
+    public PopupWindowLib setAutoCloseTime(long millisecond) {
+        mAutoCloseTime = millisecond;
+        return this;
+    }
+
+    /**
      * 在锚点视图左下角的弹出窗口中显示内容视图。
      *
      * @param anchor 锚点视图
@@ -76,6 +96,7 @@ public class PopupWindowLib {
     public PopupWindowLib showAsDropDown(View anchor) {
         createPopupWindow();
         popupWindow.showAsDropDown(anchor);
+        autoClose();
         return this;
     }
 
@@ -89,6 +110,7 @@ public class PopupWindowLib {
     public PopupWindowLib showAsDropDown(View anchor, int xoff, int yoff) {
         createPopupWindow();
         popupWindow.showAsDropDown(anchor, xoff, yoff);
+        autoClose();
         return this;
     }
 
@@ -104,6 +126,7 @@ public class PopupWindowLib {
     public PopupWindowLib showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         createPopupWindow();
         popupWindow.showAsDropDown(anchor, xoff, yoff, gravity);
+        autoClose();
         return this;
     }
 
@@ -118,23 +141,46 @@ public class PopupWindowLib {
     public PopupWindowLib showAtLocation(View parent, int gravity, int x, int y) {
         createPopupWindow();
         popupWindow.showAtLocation(parent, gravity, x, y);
+        autoClose();
         return this;
     }
 
     void createPopupWindow() {
-        if (null == popupWindow) {
-            popupWindow = new PopupWindow();
-        } else {
-            popupWindow.dismiss();
+        try {
+            if (null == popupWindow) {
+                popupWindow = new PopupWindow();
+            } else {
+                popupWindow.dismiss();
+            }
+            popupWindow.setContentView(mContentView);
+            popupWindow.setWidth(mWidth < -2 ? WindowManager.LayoutParams.WRAP_CONTENT : mWidth);
+            popupWindow.setHeight(mHeight < -2 ? WindowManager.LayoutParams.WRAP_CONTENT : mHeight);
+            popupWindow.setOutsideTouchable(mOutsideTouchable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                popupWindow.setAttachedInDecor(mAttachedInDecor);
+            }
+            popupWindow.setFocusable(mFocusable);
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.e(TAG, "创建PopupWindow时出现错误", e);
+            }
         }
-        popupWindow.setContentView(mContentView);
-        popupWindow.setWidth(mWidth < -2 ? WindowManager.LayoutParams.WRAP_CONTENT : mWidth);
-        popupWindow.setHeight(mHeight < -2 ? WindowManager.LayoutParams.WRAP_CONTENT : mHeight);
-        popupWindow.setOutsideTouchable(mOutsideTouchable);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            popupWindow.setAttachedInDecor(mAttachedInDecor);
+    }
+
+    synchronized void autoClose() {
+        try {
+            if (autoCloseHandler == null) {
+                autoCloseHandler = new Handler(Looper.getMainLooper());
+            }
+            if (mAutoCloseTime > 0) {
+                autoCloseHandler.removeCallbacks(autoCloseRunnable);
+                autoCloseHandler.postDelayed(autoCloseRunnable, mAutoCloseTime);
+            }
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.e(TAG, "自动关闭PopupWindow时出现错误", e);
+            }
         }
-        popupWindow.setFocusable(mFocusable);
     }
 
     /**
