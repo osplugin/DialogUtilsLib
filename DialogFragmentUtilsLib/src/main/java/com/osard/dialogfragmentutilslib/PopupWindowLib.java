@@ -1,4 +1,4 @@
-package com.mjsoftking.dialogutilslib;
+package com.osard.dialogfragmentutilslib;
 
 import android.os.Build;
 import android.os.Handler;
@@ -10,7 +10,8 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.RequiresApi;
 
-import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
+import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
+
 
 public class PopupWindowLib {
 
@@ -24,7 +25,6 @@ public class PopupWindowLib {
     private boolean mAttachedInDecor;
     private boolean mFocusable;
     private long mAutoCloseTime;
-    private PopupWindow.OnDismissListener onDismissListener;
 
     //自动关闭的Handler和处理对象
     private Handler autoCloseHandler;
@@ -146,14 +146,6 @@ public class PopupWindowLib {
         return this;
     }
 
-    /**
-     * 设置PopupWindow关闭的监听
-     */
-    public PopupWindowLib setOnDismissListener(PopupWindow.OnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
-        return this;
-    }
-
     void createPopupWindow() {
         try {
             if (null == popupWindow) {
@@ -165,7 +157,6 @@ public class PopupWindowLib {
             popupWindow.setWidth(mWidth < -2 ? WindowManager.LayoutParams.WRAP_CONTENT : mWidth);
             popupWindow.setHeight(mHeight < -2 ? WindowManager.LayoutParams.WRAP_CONTENT : mHeight);
             popupWindow.setOutsideTouchable(mOutsideTouchable);
-            popupWindow.setOnDismissListener(onDismissListener);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 popupWindow.setAttachedInDecor(mAttachedInDecor);
             }

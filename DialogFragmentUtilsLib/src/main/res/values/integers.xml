@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--不要覆盖-->
+    <integer name="dialog_utils_lib_password_tag_key">1000000000</integer>
+
+
+    <!--snackbar的文本显示区域的最大行数，超出时末尾自动显示...，适用于 SnackBarLib-->
+    <integer name="design_snackbar_text_max_lines">2</integer>
+</resources>

@@ -1,3 +1,4 @@
 include ':DialogUtilsLib'
 include ':app'
 rootProject.name = "DialogUtilsApp"
+include ':DialogFragmentUtilsLib'

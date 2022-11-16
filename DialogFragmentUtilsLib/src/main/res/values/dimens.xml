@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--标题字体大小，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_title_text_size">14sp</dimen>
+    <!--确定 字体大小，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_ok_text_size">14sp</dimen>
+    <!--取消 字体大小，，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_cancel_text_size">14sp</dimen>
+    <!--内容 字体大小，适用于 DialogLibCommon-->
+    <dimen name="dialog_utils_lib_common_content_text_size">14sp</dimen>
+
+
+    <!--标题字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_title_text_size">14sp</dimen>
+    <!--确定 字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_ok_text_size">14sp</dimen>
+    <!--取消 字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_cancel_text_size">14sp</dimen>
+    <!--输入框 字体大小，适用于 DialogLibInput-->
+    <dimen name="dialog_utils_lib_input_text_size">14sp</dimen>
+
+
+    <!--标题字体大小，适用于 DialogLibCustom-->
+    <dimen name="dialog_utils_lib_custom_title_text_size">14sp</dimen>
+    <!--确定 字体大小，适用于 DialogLibCustom-->
+    <dimen name="dialog_utils_lib_custom_ok_text_size">14sp</dimen>
+    <!--取消 字体大小，适用于 DialogLibCustom-->
+    <dimen name="dialog_utils_lib_custom_cancel_text_size">14sp</dimen>
+
+
+    <!--加载框 字体大小，适用于 DialogLibLoading 提示内容区域-->
+    <dimen name="dialog_utils_lib_loading_text_size">14sp</dimen>
+
+
+    <!--snackbar的文本 字体大小，适用于 SnackBarLib-->
+    <dimen name="snackbar_lib_content_size">14sp</dimen>
+    <!--snackbar的 action 字体大小，适用于 SnackBarLib-->
+    <dimen name="snackbar_lib_action_size">14sp</dimen>
+    <!--snackbar的 image 的宽高，正方形，适用于 SnackBarLib-->
+    <dimen name="snackbar_lib_img_w_h">30dp</dimen>
+    <!--snackbar的 内容单行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
+    <dimen name="design_snackbar_padding_vertical">10dp</dimen>
+    <!--snackbar的 内容多行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
+    <dimen name="design_snackbar_padding_vertical_2lines">10dp</dimen>
+
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，所有类型统一设定-->
+    <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.85</item>
+    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数，所有类型统一设定-->
+    <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.5</item>
+</resources>
