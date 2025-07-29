@@ -77,6 +77,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
 }
 ```
+**必须启用dataBinding**
+```
+android {
+    buildFeatures {
+        //启用数据绑定，MVVM
+        dataBinding true
+    }
+}
+```
+
+
 ### 三、使用
 
 注意下方只做了基础展示，dialog的都会返回对应的utils对象，registerActivityLifecycleCallbacks方法设置后，activity销毁时会自动把显示在此activity上的dialog一起关闭。
