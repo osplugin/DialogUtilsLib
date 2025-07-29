@@ -112,9 +112,16 @@ public class App extends Application {
     }
 }
 ```
-> //注册全局activity生命周期监听  .registerActivityLifecycleCallbacks(this) 方法在 `DialogFragmentUtilsLib` 中不支持
-> 
-> DialogLibInitSetting.getInstance().onScreenRotation(newConfig); 方法在 `DialogFragmentUtilsLib` 中不支持
+
+ **特别提醒：** 
+``` 
+   /注册全局activity生命周期监听
+                .registerActivityLifecycleCallbacks(this)
+和
+DialogLibInitSetting.getInstance().onScreenRotation(newConfig);
+
+```
+方法在 `DialogFragmentUtilsLib` 中不支持
 
 
 -  **普通dialog** 
@@ -145,8 +152,9 @@ public class App extends Application {
 ``` 
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+        })
 ```
+ 方法在 `DialogFragmentUtilsLib` 中不支持
 
 -  **自定义dialog** 
 
@@ -174,9 +182,9 @@ public class App extends Application {
 ``` 
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+        })
 ```
-
+ 方法在 `DialogFragmentUtilsLib` 中不支持
 
 -  **输入型dialog** 
 
@@ -211,9 +219,9 @@ public class App extends Application {
 和
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+        })
 ```
-
+ 方法在 `DialogFragmentUtilsLib` 中不支持
 
 -  **等待型dialog** 
 
@@ -235,9 +243,9 @@ public class App extends Application {
 ``` 
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+        })
 ```
-
+ 方法在 `DialogFragmentUtilsLib` 中不支持
 
 -  **完全自定义型dialog** 
 ```java
@@ -266,9 +274,9 @@ public class App extends Application {
 ``` 
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+        })
 ```
-
+ 方法在 `DialogFragmentUtilsLib` 中不支持
 
 -  **密码输入型dialog** 
 
@@ -301,9 +309,9 @@ public class App extends Application {
 ``` 
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+        })
 ```
-
+ 方法在 `DialogFragmentUtilsLib` 中不支持
 
 -  **Snackbar提示框**
 
