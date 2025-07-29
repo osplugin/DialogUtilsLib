@@ -14,10 +14,6 @@
             type="String" />
 
         <variable
-            name="message"
-            type="String" />
-
-        <variable
             name="okDesc"
             type="String" />
 
@@ -68,7 +64,6 @@
             android:maxHeight="350dp"
             android:padding="10dp"
             android:scrollbars="vertical"
-            android:text="@{message}"
             android:textColor="@color/dialog_utils_lib_common_content_fg"
             android:textSize="@dimen/dialog_utils_lib_common_content_text_size" />
 

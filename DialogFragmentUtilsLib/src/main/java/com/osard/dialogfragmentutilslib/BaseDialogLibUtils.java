@@ -10,6 +10,8 @@ import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.fragment.app.DialogFragment;
+
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
 import com.osard.dialogfragmentutilslib.utils.DensityUtils;
 
@@ -17,7 +19,7 @@ import com.osard.dialogfragmentutilslib.utils.DensityUtils;
 /**
  * 加载等待框工具类
  */
-public abstract class BaseDialogLibUtils implements DialogLibUtils {
+public abstract class BaseDialogLibUtils extends DialogFragment implements DialogLibUtils {
 
     protected Context context;
 
@@ -27,7 +29,7 @@ public abstract class BaseDialogLibUtils implements DialogLibUtils {
     //临时翻转确定与取消按钮位置
     protected Boolean reverseButton;
 
-    protected Context getContext() {
+    public Context getContext() {
         return context;
     }
 

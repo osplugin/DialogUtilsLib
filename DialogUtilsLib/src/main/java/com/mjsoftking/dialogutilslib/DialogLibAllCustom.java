@@ -20,8 +20,6 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     private final static String TAG = DialogLibAllCustom.class.getSimpleName();
     private final static Map<String, DialogLibAllCustom> MAP = new HashMap<>();
 
-    private Dialog dialog;
-
     /**
      * 创建对象
      */

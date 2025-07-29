@@ -25,7 +25,6 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     private final static String TAG = DialogLibLoading.class.getSimpleName();
     private final static Map<String, DialogLibLoading> MAP = new HashMap<>();
 
-    private Dialog dialog;
     private DialogUtilsLibLoadingDataBinding binding;
 
     /**
@@ -40,6 +39,8 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     private DialogLibLoading() {
     }
 
+    private boolean timeoutClose;
+
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
     private String message;
@@ -47,6 +48,7 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     //显示前触发，可以先调用show显示，根据此事件去做事情
     private OnLoading onLoading;
     private OnActivityLifecycleClose onActivityLifecycleClose;
+    private OnClose onClose;
 
     private void setContext(Context context) {
         this.context = context;
@@ -136,6 +138,14 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置关闭监听
+     */
+    public DialogLibLoading setOnClose(OnClose onClose) {
+        this.onClose = onClose;
+        return this;
+    }
+
+    /**
      * 设置因activity生命周期结束而关闭对话框时，触发的回调
      */
     public DialogLibLoading setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
@@ -185,7 +195,13 @@ public class DialogLibLoading extends BaseDialogLibUtils {
 
             //如果设置了超时关闭，则时间到时关闭，反之需要手动关闭
             if (null != getTimeout()) {
-                new Handler().postDelayed(this::closeDialog, getTimeout());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        timeoutClose = true;
+                        closeDialog();
+                    }
+                }, getTimeout());
             }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
@@ -214,6 +230,10 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         try {
             if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
+
+                if (null != onClose) {
+                    onClose.close(timeoutClose);
+                }
             }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
@@ -234,6 +254,10 @@ public class DialogLibLoading extends BaseDialogLibUtils {
 
     public interface OnLoading {
         void loading();
+    }
+
+    public interface OnClose {
+        void close(boolean timeoutClose);
     }
 
     public interface OnActivityLifecycleClose {

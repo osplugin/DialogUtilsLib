@@ -38,7 +38,6 @@ public class DialogLibInput extends BaseDialogLibUtils {
     private final static String TAG = DialogLibInput.class.getSimpleName();
     private final static Map<String, DialogLibInput> MAP = new HashMap<>();
 
-    private Dialog dialog;
 
     /**
      * 创建对象

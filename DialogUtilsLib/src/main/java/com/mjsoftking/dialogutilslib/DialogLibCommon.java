@@ -26,11 +26,10 @@ public class DialogLibCommon extends BaseDialogLibUtils {
     private final static String TAG = DialogLibCommon.class.getSimpleName();
     private final static Map<String, DialogLibCommon> MAP = new HashMap<>();
 
-    private Dialog dialog;
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
     private String title;
-    private String message;
+    private CharSequence message;
     private String okDesc;
     private String cancelDesc;
     private boolean noShowOk;
@@ -97,7 +96,7 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         return this;
     }
 
-    private String getMessage() {
+    private CharSequence getMessage() {
         if (TextUtils.isEmpty(message)) {
             return "";
         }
@@ -119,6 +118,16 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         this.message = getContext().getString(strId);
         return this;
     }
+
+    /**
+     * 设置提示信息的内容部分，默认为“”(空字符串)
+     */
+    public DialogLibCommon setMessage(CharSequence charSequence) {
+        this.message = charSequence;
+        return this;
+    }
+
+
 
     private String getOkDesc() {
         if (TextUtils.isEmpty(okDesc)) {
@@ -356,7 +365,7 @@ public class DialogLibCommon extends BaseDialogLibUtils {
             binding.messText.setGravity(getMessageGravity());
 
             binding.messText.setMovementMethod(ScrollingMovementMethod.getInstance());
-            binding.setMessage(getMessage());
+            binding.messText.setText(getMessage());
             binding.setOkDesc(getOkDesc());
             binding.setCancelDesc(getCancelDesc());
             binding.setNoShowOk(isNoShowOk());

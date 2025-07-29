@@ -20,6 +20,8 @@ public abstract class BaseDialogLibUtils implements DialogLibUtils {
 
     protected Context context;
 
+    protected Dialog dialog;
+
     protected float landscapeWidthFactor = -1;
     protected float portraitWidthFactor = -1;
 
@@ -28,6 +30,10 @@ public abstract class BaseDialogLibUtils implements DialogLibUtils {
 
     protected Context getContext() {
         return context;
+    }
+
+    public Dialog getDialog() {
+        return dialog;
     }
 
     public void setDialogWidth(String TAG, Dialog dialog) {

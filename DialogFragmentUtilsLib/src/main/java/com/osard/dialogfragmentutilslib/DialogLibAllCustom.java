@@ -1,11 +1,16 @@
 package com.osard.dialogfragmentutilslib;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
 import com.osard.dialogfragmentutilslib.utils.DialogLibCacheList;
@@ -19,8 +24,6 @@ import java.util.Map;
 public class DialogLibAllCustom extends BaseDialogLibUtils {
     private final static String TAG = DialogLibAllCustom.class.getSimpleName();
     private final static Map<String, DialogLibAllCustom> MAP = new HashMap<>();
-
-    private Dialog dialog;
 
     /**
      * 创建对象
@@ -36,9 +39,10 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
 
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
-    private boolean cancelable;
 
     private OnActivityLifecycleClose onActivityLifecycleClose;
+
+    private View customView;
 
     private void setContext(Context context) {
         this.context = context;
@@ -48,9 +52,6 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
         return alias;
     }
 
-    private boolean isCancelable() {
-        return cancelable;
-    }
 
     /**
      * 横屏时dialog占屏幕宽度的百分比系数，0-1之间有效，不含边界
@@ -71,8 +72,8 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     /**
      * 是否允许点击其他位置关闭
      */
-    public DialogLibAllCustom setCancelable(boolean cancelable) {
-        this.cancelable = cancelable;
+    public DialogLibAllCustom setCancelableDialog(boolean cancelable) {
+        setCancelable(cancelable);
         return this;
     }
 
@@ -104,45 +105,26 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     }
 
     /**
-     * 显示自定义视图的提示框
-     * 需要手动控制dialog关闭
+     * 设置自定义视图
      */
-    public DialogLibAllCustom show(View view) {
-        if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibAllCustom obj = MAP.get(getAlias());
-            if (null != obj) {
-                //此时关闭自己，并移除注册，但不解除MAP缓存
-                this.closeDialog(false);
-                if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
-                }
-                return obj;
-            }
-        }
-
-        try {
-            dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
-            dialog.setContentView(view);
-            dialog.setCancelable(isCancelable());
-            dialog.setOnCancelListener(dialog -> closeDialog());
-            dialog.show();
-            setDialogWidth(TAG, dialog);
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-        }
-
-        if (!TextUtils.isEmpty(getAlias())) {
-            MAP.put(getAlias(), this);
-        }
-
-        DialogLibCacheList.getInstance().add(getContext(), this);
+    public DialogLibAllCustom setCustomView(View customView) {
+        this.customView = customView;
         return this;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return customView;
+    }
+
     public void setDialogWidth(Configuration configuration) {
-        setDialogWidth(TAG, dialog, configuration);
+//        setDialogWidth(TAG, dialog, configuration);
     }
 
     public boolean closeDialog() {
@@ -151,8 +133,8 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
 
     private boolean closeDialog(boolean remove) {
         try {
-            if (null != dialog && dialog.isShowing()) {
-                dialog.dismiss();
+            if (isVisible()) {
+                dismiss();
             }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
