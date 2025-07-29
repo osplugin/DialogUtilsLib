@@ -1,31 +1,34 @@
 package com.osard.dialogfragmentutilslib;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibLoadingDataBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-import com.osard.dialogfragmentutilslib.utils.DialogLibCacheList;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * 加载等待框工具类
  */
 public class DialogLibLoading extends BaseDialogLibUtils {
     private final static String TAG = DialogLibLoading.class.getSimpleName();
-    private final static Map<String, DialogLibLoading> MAP = new HashMap<>();
 
-    private Dialog dialog;
     private DialogUtilsLibLoadingDataBinding binding;
 
     /**
@@ -46,7 +49,6 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     private Integer timeout;
     //显示前触发，可以先调用show显示，根据此事件去做事情
     private OnLoading onLoading;
-    private OnActivityLifecycleClose onActivityLifecycleClose;
 
     private void setContext(Context context) {
         this.context = context;
@@ -68,6 +70,9 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     }
 
     private String getAlias() {
+        if (TextUtils.isEmpty(alias)) {
+            alias = UUID.randomUUID().toString();
+        }
         return alias;
     }
 
@@ -135,53 +140,48 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         return this;
     }
 
-    /**
-     * 设置因activity生命周期结束而关闭对话框时，触发的回调
-     */
-    public DialogLibLoading setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
-        this.onActivityLifecycleClose = onActivityLifecycleClose;
-        return this;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
     }
 
-    /**
-     * activity生命周期结束时调用此方法触发相关回调
-     */
-    public void activityLifecycleClose() {
-        if (null != onActivityLifecycleClose) {
-            onActivityLifecycleClose.close();
-        }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_loading_data, null, false);
+        binding.setMessage(getMessage());
+        setCancelable(false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        closeDialog();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setDialogFullScreen(TAG, getDialog(), newConfig);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setDialogFullScreen(TAG, getDialog(), context.getResources().getConfiguration());
     }
 
     /**
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
     public DialogLibLoading show() {
-        if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibLoading obj = MAP.get(getAlias());
-            if (null != obj) {
-                //此时关闭自己，并移除注册，但不解除MAP缓存
-                this.closeDialog(false);
-                if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
-                }
-                return obj;
-            }
-        }
-
         try {
             //show前先触发，可以在此事件开始任务，配合别名，可以避免快速点击时触发2次任务的问题
             getOnLoading().loading();
 
-            dialog = new Dialog(context, R.style.DialogLibUtilsDialogLoadingStyle);
-            binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_loading_data, null, false);
-            binding.setMessage(getMessage());
-            //ContentView
-            dialog.setContentView(binding.getRoot());
-            dialog.setCancelable(false);
-            dialog.setOnCancelListener(dialog -> closeDialog());
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-            setDialogFullScreen(TAG, dialog);
+            show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
 
             //如果设置了超时关闭，则时间到时关闭，反之需要手动关闭
             if (null != getTimeout()) {
@@ -193,42 +193,17 @@ public class DialogLibLoading extends BaseDialogLibUtils {
             }
         }
 
-        if (!TextUtils.isEmpty(getAlias())) {
-            MAP.put(getAlias(), this);
-        }
-
-        DialogLibCacheList.getInstance().add(getContext(), this);
-
         return this;
     }
 
-    public void setDialogWidth(Configuration configuration) {
-        setDialogFullScreen(TAG, dialog, configuration);
-    }
-
     public boolean closeDialog() {
-        return closeDialog(true);
-    }
-
-    private boolean closeDialog(boolean remove) {
         try {
-            if (null != dialog && dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dismiss();
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
             }
         }
-
-        if (!TextUtils.isEmpty(getAlias()) && remove) {
-            MAP.remove(getAlias());
-        }
-
-        if (remove) {
-            DialogLibCacheList.getInstance().remove(getContext(), this);
-        }
-
         return true;
     }
 
@@ -236,7 +211,4 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         void loading();
     }
 
-    public interface OnActivityLifecycleClose {
-        void close();
-    }
 }

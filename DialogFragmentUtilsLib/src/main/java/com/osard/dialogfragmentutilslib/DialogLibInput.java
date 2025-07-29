@@ -1,11 +1,11 @@
 package com.osard.dialogfragmentutilslib;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -16,29 +16,27 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibTipInputBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-import com.osard.dialogfragmentutilslib.utils.DialogLibCacheList;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * 输入型弹窗提示工具类
  */
 public class DialogLibInput extends BaseDialogLibUtils {
     private final static String TAG = DialogLibInput.class.getSimpleName();
-    private final static Map<String, DialogLibInput> MAP = new HashMap<>();
-
-    private Dialog dialog;
 
     /**
      * 创建对象
@@ -64,12 +62,13 @@ public class DialogLibInput extends BaseDialogLibUtils {
     private KeyListener keyListener;
     private Integer inputType;
     private Integer length;
-    private boolean popupKeyboard;
+//    private boolean popupKeyboard;
     private boolean showLookPassword;
 
     private OnBtnOk onBtnOk;
     private OnBtnCancel onBtnCancel;
-    private OnActivityLifecycleClose onActivityLifecycleClose;
+
+    private DialogUtilsLibTipInputBinding binding;
 
     private void setContext(Context context) {
         this.context = context;
@@ -131,12 +130,15 @@ public class DialogLibInput extends BaseDialogLibUtils {
     }
 
     private String getAlias() {
+        if (TextUtils.isEmpty(alias)) {
+            alias = UUID.randomUUID().toString();
+        }
         return alias;
     }
 
-    private boolean isPopupKeyboard() {
-        return popupKeyboard;
-    }
+//    private boolean isPopupKeyboard() {
+//        return popupKeyboard;
+//    }
 
     private String getHint() {
         if (TextUtils.isEmpty(hint)) {
@@ -191,13 +193,13 @@ public class DialogLibInput extends BaseDialogLibUtils {
         return this;
     }
 
-    /**
-     * 是否弹出键盘，默认不弹出，弹出键盘时默认光标定位到输入框位置
-     */
-    public DialogLibInput setPopupKeyboard() {
-        this.popupKeyboard = true;
-        return this;
-    }
+//    /**
+//     * 是否弹出键盘，默认不弹出，弹出键盘时默认光标定位到输入框位置
+//     */
+//    public DialogLibInput setPopupKeyboard() {
+//        this.popupKeyboard = true;
+//        return this;
+//    }
 
     /**
      * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
@@ -344,138 +346,108 @@ public class DialogLibInput extends BaseDialogLibUtils {
         return this;
     }
 
-    /**
-     * 设置因activity生命周期结束而关闭对话框时，触发的回调
-     */
-    public DialogLibInput setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
-        this.onActivityLifecycleClose = onActivityLifecycleClose;
-        return this;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
-    /**
-     * activity生命周期结束时调用此方法触发相关回调
-     */
-    public void activityLifecycleClose() {
-        if (null != onActivityLifecycleClose) {
-            onActivityLifecycleClose.close();
-        }
-    }
-
-    /**
-     * 显示提示信息的对话框，根据链式写法传递参数决定显示
-     */
-    @SuppressLint("UseCompatLoadingForDrawables")
-    public DialogLibInput show() {
-        if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibInput obj = MAP.get(getAlias());
-            if (null != obj) {
-                //此时关闭自己，并移除注册，但不解除MAP缓存
-                this.closeDialog(false);
-                if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
-                }
-                return obj;
-            }
-        }
-
-        try {
-            dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
-
-            DialogUtilsLibTipInputBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip_input, null, false);
-            binding.setReverseButton(this.reverseButton == null ?
-                    DialogLibInitSetting.getInstance().isReverseButton() :
-                    this.reverseButton);
-            binding.setClick(v -> {
-                try {
-                    if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
-                        //ok按钮位置触发
-                        if (getOnBtnOk().ok(binding.getMessage())) {
-                            //关闭对话框
-                            closeDialog();
-                        }
-                    } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip_input, null, false);
+        binding.setReverseButton(this.reverseButton == null ?
+                DialogLibInitSetting.getInstance().isReverseButton() :
+                this.reverseButton);
+        binding.setClick(v -> {
+            try {
+                if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
+                    //ok按钮位置触发
+                    if (getOnBtnOk().ok(binding.getMessage())) {
                         //关闭对话框
                         closeDialog();
-                        //cancel按钮位置触发
-                        getOnBtnCancel().cancel();
                     }
-                    //显示/隐藏密码
-                    else if (v.equals(binding.lookPassword)) {
-                        int index = binding.etContent.getSelectionStart();
-                        Object obj = binding.lookPassword.getTag(R.integer.dialog_utils_lib_password_tag_key);
-                        boolean status = true;
-                        if (obj instanceof Boolean) {
-                            status = (Boolean) obj;
-                        }
-                        if (status) {
-                            //显示文本
-                            binding.etContent.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                            binding.lookPassword.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.dialog_utils_lib_password_show));
-                        } else {
-                            //隐藏文本
-                            binding.etContent.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                            binding.lookPassword.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.dialog_utils_lib_password_hide));
-                        }
-                        binding.lookPassword.setTag(R.integer.dialog_utils_lib_password_tag_key, !status);
-                        if (index >= 0) {
-                            binding.etContent.setSelection(index);
-                        }
+                } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
+                    //关闭对话框
+                    closeDialog();
+                    //cancel按钮位置触发
+                    getOnBtnCancel().cancel();
+                }
+                //显示/隐藏密码
+                else if (v.equals(binding.lookPassword)) {
+                    int index = binding.etContent.getSelectionStart();
+                    Object obj = binding.lookPassword.getTag(R.integer.dialog_utils_lib_password_tag_key);
+                    boolean status = true;
+                    if (obj instanceof Boolean) {
+                        status = (Boolean) obj;
                     }
-                } catch (Exception e) {
-                    if (DialogLibInitSetting.getInstance().isDebug()) {
-                        Log.e(TAG, e.getMessage(), e);
+                    if (status) {
+                        //显示文本
+                        binding.etContent.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        binding.lookPassword.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.dialog_utils_lib_password_show));
+                    } else {
+                        //隐藏文本
+                        binding.etContent.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        binding.lookPassword.setImageDrawable(getContext().getResources().getDrawable(R.mipmap.dialog_utils_lib_password_hide));
+                    }
+                    binding.lookPassword.setTag(R.integer.dialog_utils_lib_password_tag_key, !status);
+                    if (index >= 0) {
+                        binding.etContent.setSelection(index);
                     }
                 }
-            });
-            binding.setTitle(getTitle());
-            binding.setMessage(getMessage());
-            binding.setHint(getHint());
-            binding.setOkDesc(getOkDesc());
-            binding.setCancelDesc(getCancelDesc());
-
-            if (isPopupKeyboard()) {
-                binding.etContent.post(() -> {
-                    binding.etContent.setSelection(binding.etContent.length());
-                    showSoftInput(binding.etContent);
-                });
-            } else {
-                binding.etContent.post(() -> {
-                    binding.etContent.setSelection(binding.etContent.length());
-                });
-            }
-            if (null != getInputType()) {
-                binding.etContent.setInputType(getInputType());
-
-                //是密码输入类型，设置显示/隐藏密码图标才会有效
-                if (isPasswordInputType()) {
-                    binding.setShowLookPassword(isShowLookPassword());
+            } catch (Exception e) {
+                if (DialogLibInitSetting.getInstance().isDebug()) {
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
+        });
+        binding.setTitle(getTitle());
+        binding.setMessage(getMessage());
+        binding.setHint(getHint());
+        binding.setOkDesc(getOkDesc());
+        binding.setCancelDesc(getCancelDesc());
 
-            if (null != getKeyListener()) {
-                binding.etContent.setKeyListener(getKeyListener());
-            }
-            if (null != getLength()) {
-                binding.etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(getLength())});
-            }
+        binding.etContent.post(() -> {
+            binding.etContent.setSelection(binding.etContent.length());
+        });
+        if (null != getInputType()) {
+            binding.etContent.setInputType(getInputType());
 
-            //ContentView
-            dialog.setContentView(binding.getRoot());
-            dialog.setCancelable(false);
-            dialog.setOnCancelListener(dialog -> closeDialog());
-            dialog.show();
-            setDialogWidth(TAG, dialog);
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.e(TAG, e.getMessage(), e);
+            //是密码输入类型，设置显示/隐藏密码图标才会有效
+            if (isPasswordInputType()) {
+                binding.setShowLookPassword(isShowLookPassword());
             }
         }
 
-        if (!TextUtils.isEmpty(getAlias())) {
-            MAP.put(getAlias(), this);
+        if (null != getKeyListener()) {
+            binding.etContent.setKeyListener(getKeyListener());
         }
+        if (null != getLength()) {
+            binding.etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(getLength())});
+        }
+        setCancelable(false);
+        return binding.getRoot();
+    }
 
-        DialogLibCacheList.getInstance().add(getContext(), this);
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        closeDialog();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setDialogWidth(TAG, getDialog(), newConfig);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setDialogWidth(TAG, getDialog(), context.getResources().getConfiguration());
+    }
+
+    public DialogLibInput show() {
+        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
         return this;
     }
 
@@ -509,34 +481,35 @@ public class DialogLibInput extends BaseDialogLibUtils {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
-    public void setDialogWidth(Configuration configuration) {
-        setDialogWidth(TAG, dialog, configuration);
-    }
-
     public boolean closeDialog() {
-        return closeDialog(true);
-    }
-
-    private boolean closeDialog(boolean remove) {
         try {
-            if (null != dialog && dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dismiss();
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
             }
         }
-
-        if (!TextUtils.isEmpty(getAlias()) && remove) {
-            MAP.remove(getAlias());
-        }
-
-        if (remove) {
-            DialogLibCacheList.getInstance().remove(getContext(), this);
-        }
-
         return true;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        // 1. 清除输入框焦点
+        if (binding != null) {
+            binding.etContent.clearFocus();
+            hideKeyboard(getActivity().getCurrentFocus().getWindowToken());
+        }
+        super.onDismiss(dialog);
+    }
+
+    private void hideKeyboard(IBinder windowToken) {
+        if (windowToken == null) return;
+
+        InputMethodManager imm = (InputMethodManager) getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(windowToken, 0);
+        }
     }
 
     public interface OnBtnOk {
@@ -547,7 +520,4 @@ public class DialogLibInput extends BaseDialogLibUtils {
         void cancel();
     }
 
-    public interface OnActivityLifecycleClose {
-        void close();
-    }
 }

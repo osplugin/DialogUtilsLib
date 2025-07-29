@@ -5,7 +5,9 @@ import android.content.res.Configuration;
 
 import androidx.annotation.NonNull;
 
-import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
+import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
+
+//import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
 
 /**
  * 用途：
@@ -24,9 +26,9 @@ public class App extends Application {
                 //设置debug
                 .setDebug(BuildConfig.DEBUG)
                 //设置是否反转确定和取消按钮位置，默认：左确定，右取消；设置后：左取消，右确定
-                .setReverseButton(true)
-                //注册全局activity生命周期监听
-                .registerActivityLifecycleCallbacks(this);
+                .setReverseButton(true);
+//                //注册全局activity生命周期监听
+//                .registerActivityLifecycleCallbacks(this);
 
     }
 
@@ -36,7 +38,7 @@ public class App extends Application {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        DialogLibInitSetting.getInstance().onScreenRotation(newConfig);
+//        DialogLibInitSetting.getInstance().onScreenRotation(newConfig);
 
     }
 

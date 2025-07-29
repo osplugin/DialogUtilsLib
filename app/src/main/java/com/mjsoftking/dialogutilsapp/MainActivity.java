@@ -17,15 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.mjsoftking.dialogutilsapp.databinding.ActivityMainBinding;
 import com.mjsoftking.dialogutilsapp.databinding.PopLayoutBinding;
-import com.mjsoftking.dialogutilslib.DialogLibAllCustom;
-import com.mjsoftking.dialogutilslib.DialogLibCommon;
-import com.mjsoftking.dialogutilslib.DialogLibCustom;
-import com.mjsoftking.dialogutilslib.DialogLibInput;
-import com.mjsoftking.dialogutilslib.DialogLibLoading;
-import com.mjsoftking.dialogutilslib.PopupWindowLib;
-import com.mjsoftking.dialogutilslib.SnackBarLib;
+import com.osard.dialogfragmentutilslib.DialogLibAllCustom;
+import com.osard.dialogfragmentutilslib.DialogLibCommon;
+import com.osard.dialogfragmentutilslib.DialogLibCustom;
+import com.osard.dialogfragmentutilslib.DialogLibInput;
+import com.osard.dialogfragmentutilslib.DialogLibLoading;
+import com.osard.dialogfragmentutilslib.PopupWindowLib;
+import com.osard.dialogfragmentutilslib.SnackBarLib;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,25 +61,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.equals(binding.text1)) {
-            DialogLibCommon.create(this)
-                    .setMessage("普通对话框1")
-                    .setAlias("text1")
-                    .setPortraitWidthFactor(0.85F)
-                    .setLandscapeWidthFactor(0.5F)
-                    .setOnBtnMessage(() -> {
-                        //描述区域点击时触发
-                        Toast.makeText(MainActivity.this, "点击了消息区域", Toast.LENGTH_SHORT).show();
-                    })
-                    .setOnBtnOk(() -> {
-                        Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
-                    })
-                    .setOnBtnCancel(() -> {
-                        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
-                    })
-                    .setOnActivityLifecycleClose(() -> {
-                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-                    })
+//            DialogLibCommon.create(this)
+//                    .setMessage("普通对话框1")
+//                    .setAlias("text1")
+//                    .setPortraitWidthFactor(0.85F)
+//                    .setLandscapeWidthFactor(0.5F)
+//                    .setOnBtnMessage(() -> {
+//                        //描述区域点击时触发
+//                        Toast.makeText(MainActivity.this, "点击了消息区域", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .setOnBtnOk(() -> {
+//                        Toast.makeText(MainActivity.this, "点击了确定按钮", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .setOnBtnCancel(() -> {
+//                        Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .setOnActivityLifecycleClose(() -> {
+//                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .show();
+
+            DialogLibCommon.create(ActivityUtils.getTopActivity())
+                    .setMessage("Fragment普通对话框1")
                     .show();
+
         } else if (v.equals(binding.text2)) {
             ImageView imageView = new ImageView(this);
             imageView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_launcher));
@@ -92,9 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setOnBtnCancel(() -> {
                         Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
                     })
-                    .setOnActivityLifecycleClose(() -> {
-                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-                    })
                     .setAlias("text2")
                     .show(imageView);
         } else if (v.equals(binding.text3)) {
@@ -105,17 +108,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAlias("text3")
                     //todo 设置显示密码隐藏/显示图片，由于输入类型限制不是密码，此处设置无效
                     .setShowLookPassword()
-                    //自动弹出键盘
-                    .setPopupKeyboard()
+//                    //自动弹出键盘
+//                    .setPopupKeyboard()
                     .setOnBtnCancel(() -> {
                         Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
                     })
                     .setOnBtnOk(str -> {
                         Toast.makeText(MainActivity.this, "输入消息为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
-                    })
-                    .setOnActivityLifecycleClose(() -> {
-                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
                     })
                     .show();
         } else if (v.equals(binding.text4)) {
@@ -125,13 +125,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setOnLoading(() -> {
                         Toast.makeText(MainActivity.this, "我是显示对话框前触发的，10秒后自动关闭", Toast.LENGTH_SHORT).show();
                     })
-                    .setOnActivityLifecycleClose(() -> {
-                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-                    })
                     .show();
         } else if (v.equals(binding.text5)) {
             final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
-                    .setCancelable(true)
+                    .setCancelableDialog(false)
                     .setPortraitWidthFactor(0.85F)
                     .setLandscapeWidthFactor(0.5F)
                     .setAlias("text5");
@@ -139,14 +136,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView view = new TextView(this);
             view.setBackgroundResource(R.color.purple_500);
             view.setTextColor(getResources().getColor(R.color.white));
+            view.setPadding(100, 100, 100, 100);
             view.setText("这是一个完全自定义布局的对话框，对话框显示后需要手动关闭");
             view.setOnClickListener(v2 -> {
                 dialog.closeDialog();
             });
 
-            dialog.setOnActivityLifecycleClose(() -> {
-                Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
-            });
             dialog.show(view);
         } else if (v.equals(binding.text6)) {
             DialogLibInput.create(this)
@@ -158,17 +153,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAlias("text6")
                     //设置显示密码隐藏/显示图片
                     .setShowLookPassword()
-                    //自动弹出键盘
-                    .setPopupKeyboard()
+//                    //自动弹出键盘
+//                    .setPopupKeyboard()
                     .setOnBtnCancel(() -> {
                         Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
                     })
                     .setOnBtnOk(str -> {
                         Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
-                    })
-                    .setOnActivityLifecycleClose(() -> {
-                        Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
                     })
                     .show();
         } else if (v.equals(binding.text7)) {

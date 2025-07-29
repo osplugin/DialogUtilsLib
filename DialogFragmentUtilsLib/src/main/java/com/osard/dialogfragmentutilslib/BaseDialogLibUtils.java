@@ -33,14 +33,6 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
         return context;
     }
 
-    public void setDialogWidth(String TAG, Dialog dialog) {
-        setDialogWidth(TAG, dialog, null);
-    }
-
-    public void setDialogFullScreen(String TAG, Dialog dialog) {
-        setDialogFullScreen(TAG, dialog, null);
-    }
-
     /**
      * 宽度
      * <p>

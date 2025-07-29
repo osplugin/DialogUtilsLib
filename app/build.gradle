@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.mjsoftking.dialogutilsapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -37,15 +37,18 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation project(':DialogFragmentUtilsLib')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 //    implementation files('libs/DialogUtilsLib-release.aar')
-    implementation project(path: ':DialogUtilsLib')
+//    implementation project(path: ':DialogUtilsLib')
     implementation 'org.greenrobot:eventbus:3.2.0'
 
     //文档地址：https://gitee.com/mjsoftking/DialogUtilsLib
 //    implementation 'com.gitee.mjsoftking:DialogUtilsLib:1.1.0'
+    //  文档地址，含大量工具类  https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
+    implementation 'com.blankj:utilcodex:1.31.1'
 
 }

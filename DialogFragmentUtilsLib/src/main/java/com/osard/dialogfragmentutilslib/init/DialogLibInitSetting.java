@@ -1,12 +1,9 @@
 package com.osard.dialogfragmentutilslib.init;
 
-import android.app.Application;
-import android.content.res.Configuration;
-
-import androidx.annotation.NonNull;
-
-import com.osard.dialogfragmentutilslib.callback.DialogLibActivityLifecycleCallbacks;
-import com.osard.dialogfragmentutilslib.callback.ScreenRotationCallback;
+import com.osard.dialogfragmentutilslib.BuildConfig;
+import com.osard.dialogfragmentutilslib.DialogLibCommon;
+import com.osard.dialogfragmentutilslib.DialogLibCustom;
+import com.osard.dialogfragmentutilslib.DialogLibInput;
 
 
 /**
@@ -27,18 +24,12 @@ public class DialogLibInitSetting {
     private boolean debug;
     private boolean reverseButton;
 
-    private boolean registerActivityLifecycle;
-
     public boolean isDebug() {
         return debug;
     }
 
     public boolean isReverseButton() {
         return reverseButton;
-    }
-
-    public boolean isRegisterActivityLifecycle() {
-        return registerActivityLifecycle;
     }
 
     /**
@@ -66,26 +57,6 @@ public class DialogLibInitSetting {
     public DialogLibInitSetting setReverseButton(boolean reverseButton) {
         this.reverseButton = reverseButton;
         return this;
-    }
-
-    /**
-     * 注册生命周期监控，当dialog运行的activity销毁时，dialog自动结束，避免引起内存泄漏
-     */
-    public DialogLibInitSetting registerActivityLifecycleCallbacks(Application application) {
-        application.registerActivityLifecycleCallbacks(new DialogLibActivityLifecycleCallbacks());
-        this.registerActivityLifecycle = true;
-        return this;
-    }
-
-    /**
-     * 注册屏幕翻转改变的事件
-     * 加在application的onConfigurationChanged方法下
-     * <p>
-     * 仅针对屏幕横屏、竖屏改变时自动调整已打开的对话框屏幕宽度占比风格。
-     * 仅限于activity
-     */
-    public void onScreenRotation(@NonNull Configuration newConfig) {
-        ScreenRotationCallback.run(newConfig);
     }
 
 }

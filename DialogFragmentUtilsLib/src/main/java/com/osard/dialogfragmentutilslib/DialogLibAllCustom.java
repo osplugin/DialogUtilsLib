@@ -1,6 +1,7 @@
 package com.osard.dialogfragmentutilslib;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,19 +12,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-import com.osard.dialogfragmentutilslib.utils.DialogLibCacheList;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * 全部自定义弹窗提示工具类，需要完全定义dialog的布局
  */
 public class DialogLibAllCustom extends BaseDialogLibUtils {
     private final static String TAG = DialogLibAllCustom.class.getSimpleName();
-    private final static Map<String, DialogLibAllCustom> MAP = new HashMap<>();
 
     /**
      * 创建对象
@@ -40,8 +39,6 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
 
-    private OnActivityLifecycleClose onActivityLifecycleClose;
-
     private View customView;
 
     private void setContext(Context context) {
@@ -49,6 +46,9 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     }
 
     private String getAlias() {
+        if (TextUtils.isEmpty(alias)) {
+            alias = UUID.randomUUID().toString();
+        }
         return alias;
     }
 
@@ -87,31 +87,6 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
         return this;
     }
 
-    /**
-     * 设置因activity生命周期结束而关闭对话框时，触发的回调
-     */
-    public DialogLibAllCustom setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
-        this.onActivityLifecycleClose = onActivityLifecycleClose;
-        return this;
-    }
-
-    /**
-     * activity生命周期结束时调用此方法触发相关回调
-     */
-    public void activityLifecycleClose() {
-        if (null != onActivityLifecycleClose) {
-            onActivityLifecycleClose.close();
-        }
-    }
-
-    /**
-     * 设置自定义视图
-     */
-    public DialogLibAllCustom setCustomView(View customView) {
-        this.customView = customView;
-        return this;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,37 +98,39 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
         return customView;
     }
 
-    public void setDialogWidth(Configuration configuration) {
-//        setDialogWidth(TAG, dialog, configuration);
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        closeDialog();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setDialogWidth(TAG, getDialog(), newConfig);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setDialogWidth(TAG, getDialog(), context.getResources().getConfiguration());
+    }
+
+    public DialogLibAllCustom show(View customView) {
+        this.customView = customView;
+        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        return this;
     }
 
     public boolean closeDialog() {
-        return closeDialog(true);
-    }
-
-    private boolean closeDialog(boolean remove) {
         try {
-            if (isVisible()) {
-                dismiss();
-            }
+            dismiss();
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
             }
         }
-
-        if (!TextUtils.isEmpty(getAlias()) && remove) {
-            MAP.remove(getAlias());
-        }
-
-        if (remove) {
-            DialogLibCacheList.getInstance().remove(getContext(), this);
-        }
-
         return true;
     }
 
-    public interface OnActivityLifecycleClose {
-        void close();
-    }
 }

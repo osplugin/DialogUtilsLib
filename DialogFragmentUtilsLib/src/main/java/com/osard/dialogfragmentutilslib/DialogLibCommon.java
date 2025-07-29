@@ -1,36 +1,39 @@
 package com.osard.dialogfragmentutilslib;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibTipBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-import com.osard.dialogfragmentutilslib.utils.DialogLibCacheList;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * 常规弹窗提示工具类
  */
 public class DialogLibCommon extends BaseDialogLibUtils {
     private final static String TAG = DialogLibCommon.class.getSimpleName();
-    private final static Map<String, DialogLibCommon> MAP = new HashMap<>();
 
-    private Dialog dialog;
+    //    private Dialog dialog;
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
     private String title;
-    private String message;
+    private CharSequence message;
     private String okDesc;
     private String cancelDesc;
     private boolean noShowOk;
@@ -39,7 +42,6 @@ public class DialogLibCommon extends BaseDialogLibUtils {
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
     private OnBtnMessage onBtnMessage;
-    private OnActivityLifecycleClose onActivityLifecycleClose;
     private Integer messageGravity;
 
     private DialogLibCommon() {
@@ -97,7 +99,7 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         return this;
     }
 
-    private String getMessage() {
+    private CharSequence getMessage() {
         if (TextUtils.isEmpty(message)) {
             return "";
         }
@@ -117,6 +119,14 @@ public class DialogLibCommon extends BaseDialogLibUtils {
      */
     public DialogLibCommon setMessage(@StringRes int strId) {
         this.message = getContext().getString(strId);
+        return this;
+    }
+
+    /**
+     * 设置提示信息的内容部分，默认为“”(空字符串)
+     */
+    public DialogLibCommon setMessage(CharSequence CharSequence) {
+        this.message = CharSequence;
         return this;
     }
 
@@ -252,6 +262,9 @@ public class DialogLibCommon extends BaseDialogLibUtils {
     }
 
     private String getAlias() {
+        if (TextUtils.isEmpty(alias)) {
+            alias = UUID.randomUUID().toString();
+        }
         return alias;
     }
 
@@ -291,129 +304,90 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         return this;
     }
 
-    /**
-     * 设置因activity生命周期结束而关闭对话框时，触发的回调
-     */
-    public DialogLibCommon setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
-        this.onActivityLifecycleClose = onActivityLifecycleClose;
-        return this;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
-    /**
-     * activity生命周期结束时调用此方法触发相关回调
-     */
-    public void activityLifecycleClose() {
-        if (null != onActivityLifecycleClose) {
-            onActivityLifecycleClose.close();
-        }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        closeDialog();
     }
 
-    /**
-     * 显示提示信息的对话框，根据链式写法传递参数决定显示
-     */
-    public DialogLibCommon show() {
-        if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibCommon obj = MAP.get(getAlias());
-            if (null != obj) {
-                //此时关闭自己，并移除注册，但不解除MAP缓存
-                this.closeDialog(false);
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setDialogWidth(TAG, getDialog(), newConfig);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setDialogWidth(TAG, getDialog(), context.getResources().getConfiguration());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        DialogUtilsLibTipBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip, null, false);
+        binding.setReverseButton(this.reverseButton == null ?
+                DialogLibInitSetting.getInstance().isReverseButton() :
+                this.reverseButton);
+        binding.setClick(v -> {
+            try {
+                //关闭对话框
+                closeDialog();
+                //任何按钮都会触发
+                getOnBtn().btn();
+                if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
+                    //ok按钮位置触发
+                    getOnBtnOk().ok();
+                } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
+                    //cancel按钮位置触发
+                    getOnBtnCancel().cancel();
+                }
+            } catch (Exception e) {
                 if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
+                    Log.e(TAG, e.getMessage(), e);
                 }
-                return obj;
             }
+        });
+        binding.setTitle(getTitle());
+
+        //消息区域的对齐方式
+        binding.messText.setGravity(getMessageGravity());
+
+        binding.messText.setMovementMethod(ScrollingMovementMethod.getInstance());
+        binding.messText.setText(getMessage());
+        binding.setOkDesc(getOkDesc());
+        binding.setCancelDesc(getCancelDesc());
+        binding.setNoShowOk(isNoShowOk());
+        binding.setNoShowCancel(isNoShowCancel());
+
+        if (null != onBtnMessage) {
+            binding.messText.setOnClickListener(v -> onBtnMessage.btn());
         }
 
-        try {
-            dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
+        setCancelable((isNoShowOk() && isNoShowCancel()));
 
-            DialogUtilsLibTipBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_tip, null, false);
-            binding.setReverseButton(this.reverseButton == null ?
-                    DialogLibInitSetting.getInstance().isReverseButton() :
-                    this.reverseButton);
-            binding.setClick(v -> {
-                try {
-                    //关闭对话框
-                    closeDialog();
-                    //任何按钮都会触发
-                    getOnBtn().btn();
-                    if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
-                        //ok按钮位置触发
-                        getOnBtnOk().ok();
-                    } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
-                        //cancel按钮位置触发
-                        getOnBtnCancel().cancel();
-                    }
-                } catch (Exception e) {
-                    if (DialogLibInitSetting.getInstance().isDebug()) {
-                        Log.e(TAG, e.getMessage(), e);
-                    }
-                }
-            });
-            binding.setTitle(getTitle());
-
-            //消息区域的对齐方式
-            binding.messText.setGravity(getMessageGravity());
-
-            binding.messText.setMovementMethod(ScrollingMovementMethod.getInstance());
-            binding.setMessage(getMessage());
-            binding.setOkDesc(getOkDesc());
-            binding.setCancelDesc(getCancelDesc());
-            binding.setNoShowOk(isNoShowOk());
-            binding.setNoShowCancel(isNoShowCancel());
-
-            if (null != onBtnMessage) {
-                binding.messText.setOnClickListener(v -> onBtnMessage.btn());
-            }
-
-            //ContentView
-            dialog.setContentView(binding.getRoot());
-            //2个按钮都不显示时，则允许点击其他位置关闭
-            dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
-            dialog.setOnCancelListener(dialog -> closeDialog());
-            dialog.show();
-            setDialogWidth(TAG, dialog);
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-        }
-
-        if (!TextUtils.isEmpty(getAlias())) {
-            MAP.put(getAlias(), this);
-        }
-
-        DialogLibCacheList.getInstance().add(getContext(), this);
-        return this;
+        return binding.getRoot();
     }
 
-    public void setDialogWidth(Configuration configuration) {
-        setDialogWidth(TAG, dialog, configuration);
+    public DialogLibCommon show() {
+        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        return this;
     }
 
     public boolean closeDialog() {
-        return closeDialog(true);
-    }
-
-    private boolean closeDialog(boolean remove) {
         try {
-            if (null != dialog && dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dismiss();
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
             }
         }
-
-        if (!TextUtils.isEmpty(getAlias()) && remove) {
-            MAP.remove(getAlias());
-        }
-
-        if (remove) {
-            DialogLibCacheList.getInstance().remove(getContext(), this);
-        }
-
         return true;
     }
 
@@ -433,7 +407,4 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         void btn();
     }
 
-    public interface OnActivityLifecycleClose {
-        void close();
-    }
 }

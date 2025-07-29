@@ -20,4 +20,14 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="FullScreenDialog" parent="Theme.MaterialComponents.Dialog">
+        <!-- 隐藏标题栏 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 全屏窗口 -->
+        <item name="android:windowFullscreen">true</item>
+        <!-- 透明背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 无边框 -->
+        <item name="android:windowIsFloating">false</item>
+    </style>
 </resources>

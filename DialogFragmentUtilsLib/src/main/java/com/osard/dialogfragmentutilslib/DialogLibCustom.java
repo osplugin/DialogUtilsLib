@@ -1,32 +1,31 @@
 package com.osard.dialogfragmentutilslib;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibCustomViewBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-import com.osard.dialogfragmentutilslib.utils.DialogLibCacheList;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * 自定义弹窗提示工具类
  */
 public class DialogLibCustom extends BaseDialogLibUtils {
     private final static String TAG = DialogLibCustom.class.getSimpleName();
-    private final static Map<String, DialogLibCustom> MAP = new HashMap<>();
-
-    private Dialog dialog;
 
     /**
      * 创建对象
@@ -51,7 +50,8 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     private OnCustomBtnOk onCustomBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
-    private OnActivityLifecycleClose onActivityLifecycleClose;
+
+    private View customView;
 
     private void setContext(Context context) {
         this.context = context;
@@ -110,6 +110,9 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     }
 
     private String getAlias() {
+        if (TextUtils.isEmpty(alias)) {
+            alias = UUID.randomUUID().toString();
+        }
         return alias;
     }
 
@@ -243,123 +246,84 @@ public class DialogLibCustom extends BaseDialogLibUtils {
         return this;
     }
 
-    /**
-     * 设置因activity生命周期结束而关闭对话框时，触发的回调
-     */
-    public DialogLibCustom setOnActivityLifecycleClose(OnActivityLifecycleClose onActivityLifecycleClose) {
-        this.onActivityLifecycleClose = onActivityLifecycleClose;
-        return this;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
-    /**
-     * activity生命周期结束时调用此方法触发相关回调
-     */
-    public void activityLifecycleClose() {
-        if (null != onActivityLifecycleClose) {
-            onActivityLifecycleClose.close();
-        }
-    }
-
-    /**
-     * 显示自定义视图的提示框
-     * 需要手动控制dialog关闭
-     */
-    public DialogLibCustom show(View view) {
-        if (!TextUtils.isEmpty(getAlias())) {
-            DialogLibCustom obj = MAP.get(getAlias());
-            if (null != obj) {
-                //此时关闭自己，并移除注册，但不解除MAP缓存
-                this.closeDialog(false);
-                if (DialogLibInitSetting.getInstance().isDebug()) {
-                    Log.w(TAG, String.format("别名('%s')限制，仅能同时显示一个同别名对话框", getAlias()));
-                }
-                return obj;
-            }
-        }
-
-        try {
-            dialog = new Dialog(context, R.style.DialogLibUtilsDialogStyle);
-            //ContentView
-            DialogUtilsLibCustomViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_custom_view, null, false);
-            binding.setReverseButton(this.reverseButton == null ?
-                    DialogLibInitSetting.getInstance().isReverseButton() :
-                    this.reverseButton);
-            binding.contentGroup.removeAllViews();
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            view.setLayoutParams(params);
-            binding.contentGroup.addView(view);
-            binding.setOkDesc(getOkDesc());
-            binding.setCancelDesc(getCancelDesc());
-            binding.setNoShowOk(isNoShowOk());
-            binding.setNoShowCancel(isNoShowCancel());
-            binding.setClick(v -> {
-                try {
-                    //任何按钮都会触发
-                    getOnBtn().btn();
-                    if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
-                        //ok按钮位置触发
-                        if (getOnCustomBtnOk().ok()) {
-                            closeDialog();
-                        }
-                    } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //ContentView
+        DialogUtilsLibCustomViewBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_utils_lib_custom_view, null, false);
+        binding.setReverseButton(this.reverseButton == null ?
+                DialogLibInitSetting.getInstance().isReverseButton() :
+                this.reverseButton);
+        binding.contentGroup.removeAllViews();
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        customView.setLayoutParams(params);
+        binding.contentGroup.addView(customView);
+        binding.setOkDesc(getOkDesc());
+        binding.setCancelDesc(getCancelDesc());
+        binding.setNoShowOk(isNoShowOk());
+        binding.setNoShowCancel(isNoShowCancel());
+        setCancelable((isNoShowOk() && isNoShowCancel()));
+        binding.setClick(v -> {
+            try {
+                //任何按钮都会触发
+                getOnBtn().btn();
+                if (v.equals(binding.btnOk1) || v.equals(binding.btnOk2)) {
+                    //ok按钮位置触发
+                    if (getOnCustomBtnOk().ok()) {
                         closeDialog();
-                        //cancel按钮位置触发
-                        getOnBtnCancel().cancel();
                     }
-                } catch (Exception e) {
-                    if (DialogLibInitSetting.getInstance().isDebug()) {
-                        Log.e(TAG, e.getMessage(), e);
-                    }
+                } else if (v.equals(binding.btnCancel1) || v.equals(binding.btnCancel2)) {
+                    closeDialog();
+                    //cancel按钮位置触发
+                    getOnBtnCancel().cancel();
                 }
-            });
-            binding.setTitle(getTitle());
-            dialog.setContentView(binding.getRoot());
-            //2个按钮都不显示时，则允许点击其他位置关闭
-            dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
-            dialog.setOnCancelListener(dialog -> closeDialog());
-            dialog.show();
-            setDialogWidth(TAG, dialog);
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.e(TAG, e.getMessage(), e);
+            } catch (Exception e) {
+                if (DialogLibInitSetting.getInstance().isDebug()) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
             }
-        }
-
-        if (!TextUtils.isEmpty(getAlias())) {
-            MAP.put(getAlias(), this);
-        }
-
-        DialogLibCacheList.getInstance().add(getContext(), this);
-        return this;
+        });
+        binding.setTitle(getTitle());
+        return binding.getRoot();
     }
 
-    public void setDialogWidth(Configuration configuration) {
-        setDialogWidth(TAG, dialog, configuration);
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        closeDialog();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setDialogWidth(TAG, getDialog(), newConfig);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setDialogWidth(TAG, getDialog(), context.getResources().getConfiguration());
+    }
+
+    public DialogLibCustom show(View customView) {
+        this.customView = customView;
+        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        return this;
     }
 
     public boolean closeDialog() {
-        return closeDialog(true);
-    }
-
-    private boolean closeDialog(boolean remove) {
         try {
-            if (null != dialog && dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dismiss();
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
             }
         }
-
-        if (!TextUtils.isEmpty(getAlias()) && remove) {
-            MAP.remove(getAlias());
-        }
-
-        if (remove) {
-            DialogLibCacheList.getInstance().remove(getContext(), this);
-        }
-
         return true;
     }
 
@@ -375,7 +339,4 @@ public class DialogLibCustom extends BaseDialogLibUtils {
         void btn();
     }
 
-    public interface OnActivityLifecycleClose {
-        void close();
-    }
 }
