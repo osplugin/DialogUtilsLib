@@ -1,10 +1,15 @@
 # DialogUtilsApp
 [![License](https://img.shields.io/badge/License%20-Apache%202-337ab7.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
 ### 更新记录
 
+#### 1.3.0版本
+- 新增 `DialogFragmentUtilsLib` 类型组件，继承自 `DialogFragment`；
+  - 不能和`DialogUtilsLib`同时引用，使用方式与原本基本一致，部分方法因不支持已删除，切换需要小幅度调整；
+  - `DialogFragmentUtilsLib` 的 `context` 必须是`FragmentActivity`类型的`activity`才可使用。
+- `Common`版`dialog`的`message`均调整为`CharSequence`类型，支持更强的自定义效果显示。
 #### 1.2.5版本
 - 新增PopupWindowLib工具，PopupWindowLib是PopupWindow的封装
 - gradle升级到7.1.3。
@@ -92,7 +97,7 @@ public class App extends Application {
                 //设置是否反转确定和取消按钮位置，默认：左确定，右取消；设置后：左取消，右确定
                 .setReverseButton(true)
                 //注册全局activity生命周期监听
-                .registerActivityLifecycleCallbacks(this);
+                .registerActivityLifecycleCallbacks(this); 
 
     }
 
@@ -107,6 +112,10 @@ public class App extends Application {
     }
 }
 ```
+> //注册全局activity生命周期监听  .registerActivityLifecycleCallbacks(this) 方法在 `DialogFragmentUtilsLib` 中不支持
+> 
+> DialogLibInitSetting.getInstance().onScreenRotation(newConfig); 方法在 `DialogFragmentUtilsLib` 中不支持
+
 
 -  **普通dialog** 
 
@@ -132,6 +141,13 @@ public class App extends Application {
         .show();
 ```
 
+ **特别提醒：** 
+``` 
+   .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+```
+
 -  **自定义dialog** 
 
 ```java
@@ -153,6 +169,14 @@ public class App extends Application {
         .setAlias("text2")
         .show(imageView);
 ```
+
+ **特别提醒：** 
+``` 
+   .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+```
+
 
 -  **输入型dialog** 
 
@@ -179,6 +203,18 @@ public class App extends Application {
         .show();
 ```
 
+
+ **特别提醒：** 
+``` 
+//自动弹出键盘
+        .setPopupKeyboard()
+和
+   .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+```
+
+
 -  **等待型dialog** 
 
 ```java
@@ -194,6 +230,14 @@ public class App extends Application {
         })
         .show();
 ```
+
+ **特别提醒：** 
+``` 
+   .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+```
+
 
 -  **完全自定义型dialog** 
 ```java
@@ -217,6 +261,15 @@ public class App extends Application {
         
         
 ```
+
+ **特别提醒：** 
+``` 
+   .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+```
+
+
 -  **密码输入型dialog** 
 
 ```java
@@ -243,6 +296,15 @@ public class App extends Application {
         })
         .show();
 ```
+
+ **特别提醒：** 
+``` 
+   .setOnActivityLifecycleClose(() -> {
+            Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
+        }) 方法在 `DialogFragmentUtilsLib` 中不支持
+```
+
+
 -  **Snackbar提示框**
 
 ```java
