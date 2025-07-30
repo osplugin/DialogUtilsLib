@@ -203,9 +203,7 @@ public class DialogLibLoading extends BaseDialogLibUtils {
 
     public boolean closeDialog() {
         try {
-            if (isVisible()) {
-                dismiss();
-            }
+            dismiss();
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
