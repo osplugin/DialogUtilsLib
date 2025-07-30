@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-
-import java.util.UUID;
 
 /**
  * 全部自定义弹窗提示工具类，需要完全定义dialog的布局
@@ -36,22 +34,13 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     private DialogLibAllCustom() {
     }
 
-    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
-    private String alias;
-
     private View customView;
+
+    private OnDismissListener onDismissListener;
 
     private void setContext(Context context) {
         this.context = context;
     }
-
-    private String getAlias() {
-        if (TextUtils.isEmpty(alias)) {
-            alias = UUID.randomUUID().toString();
-        }
-        return alias;
-    }
-
 
     /**
      * 横屏时dialog占屏幕宽度的百分比系数，0-1之间有效，不含边界
@@ -78,6 +67,14 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibAllCustom setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
+    }
+
+    /**
      * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
      * <p>
      * null、空字符串 无效
@@ -90,6 +87,15 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    /**
+     * 设置对话框是否可取消，不建议直接使用，会破坏链式结构
+     */
+    @Deprecated
+    @Override
+    public void setCancelable(boolean cancelable) {
+        super.setCancelable(cancelable);
     }
 
     @Nullable
@@ -116,9 +122,21 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
         setDialogWidth(TAG, getDialog(), context.getResources().getConfiguration());
     }
 
+    @Override
+    protected void onDismissDialog() {
+        if (null != onDismissListener) {
+            onDismissListener.dismiss();
+        }
+    }
+
     public DialogLibAllCustom show(View customView) {
+        if (MAP.containsKey(getAlias())) {
+            MAP.get(getAlias()).closeDuplicateAliasDialog();
+        }
+        MAP.put(getAlias(), this);
         this.customView = customView;
-        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+        show(fragmentManager, getAlias());
         return this;
     }
 
@@ -131,6 +149,10 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
             }
         }
         return true;
+    }
+
+    public interface OnDismissListener {
+        void dismiss();
     }
 
 }

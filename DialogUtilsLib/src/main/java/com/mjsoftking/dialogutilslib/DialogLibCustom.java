@@ -51,9 +51,18 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
     private OnActivityLifecycleClose onActivityLifecycleClose;
+    private OnDismissListener onDismissListener;
 
     private void setContext(Context context) {
         this.context = context;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibCustom setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
 
     private String getTitle() {
@@ -316,6 +325,11 @@ public class DialogLibCustom extends BaseDialogLibUtils {
             //2个按钮都不显示时，则允许点击其他位置关闭
             dialog.setCancelable((isNoShowOk() && isNoShowCancel()));
             dialog.setOnCancelListener(dialog -> closeDialog());
+            dialog.setOnDismissListener(dialog -> {
+                if (null != onDismissListener) {
+                    onDismissListener.dismiss();
+                }
+            });
             dialog.show();
             setDialogWidth(TAG, dialog);
         } catch (Exception e) {
@@ -376,5 +390,9 @@ public class DialogLibCustom extends BaseDialogLibUtils {
 
     public interface OnActivityLifecycleClose {
         void close();
+    }
+
+    public interface OnDismissListener {
+        void dismiss();
     }
 }

@@ -49,6 +49,7 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     private OnLoading onLoading;
     private OnActivityLifecycleClose onActivityLifecycleClose;
     private OnClose onClose;
+    private OnDismissListener onDismissListener;
 
     private void setContext(Context context) {
         this.context = context;
@@ -79,6 +80,14 @@ public class DialogLibLoading extends BaseDialogLibUtils {
             };
         }
         return onLoading;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibLoading setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
 
     /**
@@ -190,6 +199,11 @@ public class DialogLibLoading extends BaseDialogLibUtils {
             dialog.setCancelable(false);
             dialog.setOnCancelListener(dialog -> closeDialog());
             dialog.setCanceledOnTouchOutside(false);
+            dialog.setOnDismissListener(dialog -> {
+                if (null != onDismissListener) {
+                    onDismissListener.dismiss();
+                }
+            });
             dialog.show();
             setDialogFullScreen(TAG, dialog);
 
@@ -262,5 +276,9 @@ public class DialogLibLoading extends BaseDialogLibUtils {
 
     public interface OnActivityLifecycleClose {
         void close();
+    }
+
+    public interface OnDismissListener {
+        void dismiss();
     }
 }

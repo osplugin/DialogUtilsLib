@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -26,11 +25,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibTipInputBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-
-import java.util.UUID;
 
 /**
  * 输入型弹窗提示工具类
@@ -50,8 +48,6 @@ public class DialogLibInput extends BaseDialogLibUtils {
     private DialogLibInput() {
     }
 
-    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
-    private String alias;
     private String title;
     private String message;
     private String hint;
@@ -62,11 +58,12 @@ public class DialogLibInput extends BaseDialogLibUtils {
     private KeyListener keyListener;
     private Integer inputType;
     private Integer length;
-//    private boolean popupKeyboard;
+    //    private boolean popupKeyboard;
     private boolean showLookPassword;
 
     private OnBtnOk onBtnOk;
     private OnBtnCancel onBtnCancel;
+    private OnDismissListener onDismissListener;
 
     private DialogUtilsLibTipInputBinding binding;
 
@@ -129,13 +126,6 @@ public class DialogLibInput extends BaseDialogLibUtils {
         return length;
     }
 
-    private String getAlias() {
-        if (TextUtils.isEmpty(alias)) {
-            alias = UUID.randomUUID().toString();
-        }
-        return alias;
-    }
-
 //    private boolean isPopupKeyboard() {
 //        return popupKeyboard;
 //    }
@@ -149,6 +139,14 @@ public class DialogLibInput extends BaseDialogLibUtils {
 
     private boolean isShowLookPassword() {
         return showLookPassword;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibInput setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
 
     /**
@@ -351,6 +349,15 @@ public class DialogLibInput extends BaseDialogLibUtils {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * 设置对话框是否可取消，不建议直接使用，会破坏链式结构
+     */
+    @Deprecated
+    @Override
+    public void setCancelable(boolean cancelable) {
+        super.setCancelable(cancelable);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -447,7 +454,13 @@ public class DialogLibInput extends BaseDialogLibUtils {
     }
 
     public DialogLibInput show() {
-        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        if (MAP.containsKey(getAlias())) {
+            MAP.get(getAlias()).closeDuplicateAliasDialog();
+        }
+        MAP.put(getAlias(), this);
+        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+        show(fragmentManager, getAlias());
+
         return this;
     }
 
@@ -493,22 +506,9 @@ public class DialogLibInput extends BaseDialogLibUtils {
     }
 
     @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        // 1. 清除输入框焦点
-        if (binding != null) {
-            binding.etContent.clearFocus();
-            hideKeyboard(getActivity().getCurrentFocus().getWindowToken());
-        }
-        super.onDismiss(dialog);
-    }
-
-    private void hideKeyboard(IBinder windowToken) {
-        if (windowToken == null) return;
-
-        InputMethodManager imm = (InputMethodManager) getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(windowToken, 0);
+    protected void onDismissDialog() {
+        if (null != onDismissListener) {
+            onDismissListener.dismiss();
         }
     }
 
@@ -520,4 +520,7 @@ public class DialogLibInput extends BaseDialogLibUtils {
         void cancel();
     }
 
+    public interface OnDismissListener {
+        void dismiss();
+    }
 }

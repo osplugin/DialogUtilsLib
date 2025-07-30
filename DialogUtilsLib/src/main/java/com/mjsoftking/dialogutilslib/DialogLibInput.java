@@ -69,6 +69,7 @@ public class DialogLibInput extends BaseDialogLibUtils {
     private OnBtnOk onBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnActivityLifecycleClose onActivityLifecycleClose;
+    private OnDismissListener onDismissListener;
 
     private void setContext(Context context) {
         this.context = context;
@@ -146,6 +147,14 @@ public class DialogLibInput extends BaseDialogLibUtils {
 
     private boolean isShowLookPassword() {
         return showLookPassword;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibInput setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
     }
 
     /**
@@ -462,6 +471,11 @@ public class DialogLibInput extends BaseDialogLibUtils {
             dialog.setContentView(binding.getRoot());
             dialog.setCancelable(false);
             dialog.setOnCancelListener(dialog -> closeDialog());
+            dialog.setOnDismissListener(dialog -> {
+                if (null != onDismissListener) {
+                    onDismissListener.dismiss();
+                }
+            });
             dialog.show();
             setDialogWidth(TAG, dialog);
         } catch (Exception e) {
@@ -548,5 +562,9 @@ public class DialogLibInput extends BaseDialogLibUtils {
 
     public interface OnActivityLifecycleClose {
         void close();
+    }
+
+    public interface OnDismissListener {
+        void dismiss();
     }
 }

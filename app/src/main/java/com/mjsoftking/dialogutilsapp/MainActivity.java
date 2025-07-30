@@ -82,7 +82,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    .show();
 
             DialogLibCommon.create(ActivityUtils.getTopActivity())
+                    .setAlias("text1")
                     .setMessage("Fragment普通对话框1")
+                    .setOnDismissListener(() -> Toast.makeText(MainActivity.this, "对话框关闭时触发", Toast.LENGTH_SHORT).show())
                     .show();
 
         } else if (v.equals(binding.text2)) {
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setOnBtnCancel(() -> {
                         Toast.makeText(MainActivity.this, "点击了取消按钮", Toast.LENGTH_SHORT).show();
                     })
+                    .setOnDismissListener(() -> Toast.makeText(MainActivity.this, "对话框关闭时触发", Toast.LENGTH_SHORT).show())
                     .setAlias("text2")
                     .show(imageView);
         } else if (v.equals(binding.text3)) {
@@ -117,20 +120,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "输入消息为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
                     })
+                    .setOnDismissListener(() -> Toast.makeText(MainActivity.this, "对话框关闭时触发", Toast.LENGTH_SHORT).show())
                     .show();
         } else if (v.equals(binding.text4)) {
             DialogLibLoading.create(this)
                     .setTimeoutClose(10 * 1000)
                     .setAlias("text4")
-                    .setOnLoading(() -> {
-                        Toast.makeText(MainActivity.this, "我是显示对话框前触发的，10秒后自动关闭", Toast.LENGTH_SHORT).show();
-                    })
+                    .setOnDismissListener(() -> Toast.makeText(MainActivity.this, "对话框关闭时触发", Toast.LENGTH_SHORT).show())
+//                    .setOnLoading(() -> {
+//                        Toast.makeText(MainActivity.this, "我是显示对话框前触发的，10秒后自动关闭", Toast.LENGTH_SHORT).show();
+//                    })
                     .show();
         } else if (v.equals(binding.text5)) {
             final DialogLibAllCustom dialog = DialogLibAllCustom.create(this)
                     .setCancelableDialog(false)
                     .setPortraitWidthFactor(0.85F)
                     .setLandscapeWidthFactor(0.5F)
+                    .setOnDismissListener(() -> Toast.makeText(MainActivity.this, "对话框关闭时触发", Toast.LENGTH_SHORT).show())
                     .setAlias("text5");
 
             TextView view = new TextView(this);
@@ -162,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "输入密码为：" + str, Toast.LENGTH_SHORT).show();
                         return true;
                     })
+                    .setOnDismissListener(() -> Toast.makeText(MainActivity.this, "对话框关闭时触发", Toast.LENGTH_SHORT).show())
                     .show();
         } else if (v.equals(binding.text7)) {
             SnackBarLib.make(binding.coordinator,

@@ -17,11 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibTipBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-
-import java.util.UUID;
 
 /**
  * 常规弹窗提示工具类
@@ -30,8 +29,6 @@ public class DialogLibCommon extends BaseDialogLibUtils {
     private final static String TAG = DialogLibCommon.class.getSimpleName();
 
     //    private Dialog dialog;
-    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
-    private String alias;
     private String title;
     private CharSequence message;
     private String okDesc;
@@ -43,6 +40,7 @@ public class DialogLibCommon extends BaseDialogLibUtils {
     private OnBtn onBtn;
     private OnBtnMessage onBtnMessage;
     private Integer messageGravity;
+    private OnDismissListener onDismissListener;
 
     private DialogLibCommon() {
     }
@@ -80,6 +78,14 @@ public class DialogLibCommon extends BaseDialogLibUtils {
      */
     public DialogLibCommon setPortraitWidthFactor(float portraitWidthFactor) {
         this.portraitWidthFactor = portraitWidthFactor;
+        return this;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibCommon setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
         return this;
     }
 
@@ -261,13 +267,6 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         return this;
     }
 
-    private String getAlias() {
-        if (TextUtils.isEmpty(alias)) {
-            alias = UUID.randomUUID().toString();
-        }
-        return alias;
-    }
-
     /**
      * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
      * <p>
@@ -309,6 +308,14 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * 设置对话框是否可取消，不建议直接使用，会破坏链式结构
+     */
+    @Deprecated
+    @Override
+    public void setCancelable(boolean cancelable) {
+        super.setCancelable(cancelable);
+    }
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
@@ -375,8 +382,20 @@ public class DialogLibCommon extends BaseDialogLibUtils {
         return binding.getRoot();
     }
 
+    @Override
+    protected void onDismissDialog() {
+        if (null != onDismissListener) {
+            onDismissListener.dismiss();
+        }
+    }
+
     public DialogLibCommon show() {
-        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        if (MAP.containsKey(getAlias())) {
+            MAP.get(getAlias()).closeDuplicateAliasDialog();
+        }
+        MAP.put(getAlias(), this);
+        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+        show(fragmentManager, getAlias());
         return this;
     }
 
@@ -405,6 +424,10 @@ public class DialogLibCommon extends BaseDialogLibUtils {
 
     public interface OnBtnMessage {
         void btn();
+    }
+
+    public interface OnDismissListener {
+        void dismiss();
     }
 
 }

@@ -15,11 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibCustomViewBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-
-import java.util.UUID;
 
 /**
  * 自定义弹窗提示工具类
@@ -39,8 +38,7 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     private DialogLibCustom() {
     }
 
-    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
-    private String alias;
+
     private String title;
     private String okDesc;
     private String cancelDesc;
@@ -50,6 +48,7 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     private OnCustomBtnOk onCustomBtnOk;
     private OnBtnCancel onBtnCancel;
     private OnBtn onBtn;
+    private OnDismissListener onDismissListener;
 
     private View customView;
 
@@ -109,13 +108,6 @@ public class DialogLibCustom extends BaseDialogLibUtils {
         return onCustomBtnOk;
     }
 
-    private String getAlias() {
-        if (TextUtils.isEmpty(alias)) {
-            alias = UUID.randomUUID().toString();
-        }
-        return alias;
-    }
-
     /**
      * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
      * <p>
@@ -140,6 +132,14 @@ public class DialogLibCustom extends BaseDialogLibUtils {
      */
     public DialogLibCustom setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibCustom setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
         return this;
     }
 
@@ -251,6 +251,15 @@ public class DialogLibCustom extends BaseDialogLibUtils {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * 设置对话框是否可取消，不建议直接使用，会破坏链式结构
+     */
+    @Deprecated
+    @Override
+    public void setCancelable(boolean cancelable) {
+        super.setCancelable(cancelable);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -310,9 +319,21 @@ public class DialogLibCustom extends BaseDialogLibUtils {
         setDialogWidth(TAG, getDialog(), context.getResources().getConfiguration());
     }
 
+    @Override
+    protected void onDismissDialog() {
+        if (null != onDismissListener) {
+            onDismissListener.dismiss();
+        }
+    }
+
     public DialogLibCustom show(View customView) {
+        if (MAP.containsKey(getAlias())) {
+            MAP.get(getAlias()).closeDuplicateAliasDialog();
+        }
+        MAP.put(getAlias(), this);
         this.customView = customView;
-        show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
+        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+        show(fragmentManager, getAlias());
         return this;
     }
 
@@ -339,4 +360,7 @@ public class DialogLibCustom extends BaseDialogLibUtils {
         void btn();
     }
 
+    public interface OnDismissListener {
+        void dismiss();
+    }
 }

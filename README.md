@@ -5,6 +5,11 @@
 
 ### 更新记录
 
+#### 1.3.1版本
+- `dialog`新增关闭监听，用于处理特殊任务；
+- 优化`DialogFragmentUtilsLib`根据别名检查是否已打开，避免重复打开。
+- `alias` 别名字段，在需要同时存在的`dialog`下不能重复，反之只会显示最后打开的`dialog`。
+
 #### 1.3.0版本
 - 新增 `DialogFragmentUtilsLib` 类型组件，继承自 `DialogFragment`；
   - 不能和`DialogUtilsLib`同时引用，使用方式与原本基本一致，部分方法因不支持已删除，切换需要小幅度调整；
@@ -255,6 +260,10 @@ DialogLibInitSetting.getInstance().onScreenRotation(newConfig);
 
  **特别提醒：** 
 ``` 
+   .setOnLoading(() -> {
+                        Toast.makeText(MainActivity.this, "我是显示对话框前触发的，10秒后自动关闭", Toast.LENGTH_SHORT).show();
+                    })
+   和
    .setOnActivityLifecycleClose(() -> {
             Toast.makeText(MainActivity.this, "activity销毁而关闭", Toast.LENGTH_SHORT).show();
         })

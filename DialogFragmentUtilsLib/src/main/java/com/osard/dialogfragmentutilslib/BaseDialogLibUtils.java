@@ -2,6 +2,7 @@ package com.osard.dialogfragmentutilslib;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.util.Log;
@@ -10,10 +11,15 @@ import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
 import com.osard.dialogfragmentutilslib.utils.DensityUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -21,16 +27,27 @@ import com.osard.dialogfragmentutilslib.utils.DensityUtils;
  */
 public abstract class BaseDialogLibUtils extends DialogFragment implements DialogLibUtils {
 
+    protected final static Map<String, BaseDialogLibUtils> MAP = new HashMap<>();
+
     protected Context context;
+
+    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
+    protected String alias = UUID.randomUUID().toString();
 
     protected float landscapeWidthFactor = -1;
     protected float portraitWidthFactor = -1;
 
     //临时翻转确定与取消按钮位置
     protected Boolean reverseButton;
+    protected boolean duplicateAliasClose = false;
 
+    @NonNull
     public Context getContext() {
         return context;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 
     /**
@@ -153,5 +170,20 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
         return portraitWidthFactor;
     }
 
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (!duplicateAliasClose) {
+            onDismissDialog();
+            MAP.remove(getAlias());
+        }
+    }
 
+    protected void onDismissDialog() {
+    }
+
+    public void closeDuplicateAliasDialog() {
+        duplicateAliasClose = true;
+        closeDialog();
+    }
 }

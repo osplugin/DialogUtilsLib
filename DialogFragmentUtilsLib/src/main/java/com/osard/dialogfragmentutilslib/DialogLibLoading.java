@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,11 +18,10 @@ import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibLoadingDataBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
-
-import java.util.UUID;
 
 /**
  * 加载等待框工具类
@@ -30,6 +30,8 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     private final static String TAG = DialogLibLoading.class.getSimpleName();
 
     private DialogUtilsLibLoadingDataBinding binding;
+    private final Handler handler;
+    private final Runnable timeoutRunnable = this::closeDialog;
 
     /**
      * 创建对象
@@ -41,14 +43,12 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     }
 
     private DialogLibLoading() {
+        handler = new Handler(Looper.getMainLooper());
     }
 
-    //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
-    private String alias;
     private String message;
     private Integer timeout;
-    //显示前触发，可以先调用show显示，根据此事件去做事情
-    private OnLoading onLoading;
+    private OnDismissListener onDismissListener;
 
     private void setContext(Context context) {
         this.context = context;
@@ -69,28 +69,14 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         return timeout;
     }
 
-    private String getAlias() {
-        if (TextUtils.isEmpty(alias)) {
-            alias = UUID.randomUUID().toString();
-        }
-        return alias;
-    }
-
-    private OnLoading getOnLoading() {
-        if (null == onLoading) {
-            onLoading = () -> {
-            };
-        }
-        return onLoading;
-    }
-
     /**
-     * 显示前触发，可以先调用show显示，根据此事件去做事情
+     * 设置dialog关闭时触发的回调
      */
-    public DialogLibLoading setOnLoading(OnLoading onLoading) {
-        this.onLoading = onLoading;
+    public DialogLibLoading setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
         return this;
     }
+
 
     /**
      * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
@@ -155,6 +141,15 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         return binding.getRoot();
     }
 
+    /**
+     * 设置对话框是否可取消，不建议直接使用，会破坏链式结构
+     */
+    @Deprecated
+    @Override
+    public void setCancelable(boolean cancelable) {
+        super.setCancelable(cancelable);
+    }
+
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
@@ -173,19 +168,29 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         setDialogFullScreen(TAG, getDialog(), context.getResources().getConfiguration());
     }
 
+    @Override
+    protected void onDismissDialog() {
+        if (null != onDismissListener) {
+            onDismissListener.dismiss();
+        }
+    }
+
     /**
      * 显示提示信息的对话框，根据链式写法传递参数决定显示
      */
     public DialogLibLoading show() {
         try {
-            //show前先触发，可以在此事件开始任务，配合别名，可以避免快速点击时触发2次任务的问题
-            getOnLoading().loading();
+            if (MAP.containsKey(getAlias())) {
+                MAP.get(getAlias()).closeDuplicateAliasDialog();
+            }
+            MAP.put(getAlias(), this);
 
-            show(((FragmentActivity) context).getSupportFragmentManager(), getAlias());
-
+            FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+            handler.removeCallbacks(timeoutRunnable);
+            show(fragmentManager, getAlias());
             //如果设置了超时关闭，则时间到时关闭，反之需要手动关闭
             if (null != getTimeout()) {
-                new Handler().postDelayed(this::closeDialog, getTimeout());
+                handler.postDelayed(timeoutRunnable, getTimeout());
             }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
@@ -198,17 +203,19 @@ public class DialogLibLoading extends BaseDialogLibUtils {
 
     public boolean closeDialog() {
         try {
-            dismiss();
+            if (isVisible()) {
+                dismiss();
+            }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
             }
         }
+        handler.removeCallbacks(timeoutRunnable);
         return true;
     }
 
-    public interface OnLoading {
-        void loading();
+    public interface OnDismissListener {
+        void dismiss();
     }
-
 }

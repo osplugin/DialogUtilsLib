@@ -40,6 +40,10 @@ public class PopupWindowLib {
     private PopupWindowLib() {
     }
 
+    public PopupWindow getPopupWindow() {
+        return popupWindow;
+    }
+
     /**
      * 设置内容布局视图
      *

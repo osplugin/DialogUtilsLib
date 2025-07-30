@@ -35,6 +35,7 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     private String alias;
     private boolean cancelable;
+    private OnDismissListener onDismissListener;
 
     private OnActivityLifecycleClose onActivityLifecycleClose;
 
@@ -71,6 +72,14 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
      */
     public DialogLibAllCustom setCancelable(boolean cancelable) {
         this.cancelable = cancelable;
+        return this;
+    }
+
+    /**
+     * 设置dialog关闭时触发的回调
+     */
+    public DialogLibAllCustom setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
         return this;
     }
 
@@ -123,6 +132,11 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
             dialog.setContentView(view);
             dialog.setCancelable(isCancelable());
             dialog.setOnCancelListener(dialog -> closeDialog());
+            dialog.setOnDismissListener(dialog -> {
+                if (null != onDismissListener) {
+                    onDismissListener.dismiss();
+                }
+            });
             dialog.show();
             setDialogWidth(TAG, dialog);
         } catch (Exception e) {
@@ -171,5 +185,9 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
 
     public interface OnActivityLifecycleClose {
         void close();
+    }
+
+    public interface OnDismissListener {
+        void dismiss();
     }
 }
