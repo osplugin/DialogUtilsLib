@@ -3,40 +3,6 @@
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
 
-### 更新记录
-
-#### 1.3.1版本
-- `dialog`新增关闭监听，用于处理特殊任务；
-- 优化`DialogFragmentUtilsLib`根据别名检查是否已打开，避免重复打开。
-- `alias` 别名字段，在需要同时存在的`dialog`下不能重复，反之只会显示最后打开的`dialog`。
-
-#### 1.3.0版本
-- 新增 `DialogFragmentUtilsLib` 类型组件，继承自 `DialogFragment`；
-  - 不能和`DialogUtilsLib`同时引用，使用方式与原本基本一致，部分方法因不支持已删除，切换需要小幅度调整；
-  - `DialogFragmentUtilsLib` 的 `context` 必须是`FragmentActivity`类型的`activity`才可使用。
-- `Common`版`dialog`的`message`均调整为`CharSequence`类型，支持更强的自定义效果显示。
-#### 1.2.5版本
-- 新增PopupWindowLib工具，PopupWindowLib是PopupWindow的封装
-- gradle升级到7.1.3。
-
-#### 1.2.4版本
-- DialogLibCommon、DialogLibCustom、DialogLibInput支持单次更改按钮翻转，设置后无视全局设置，以当前翻转设置为准
-
-#### 1.2.3版本
-- 对比1.2.2版本修改设置反转按钮时需要传递boolean变量，适配某些需要动态左右手切换的项目，设置后的下次对话框创建时生效。
-
-#### 1.2.2版本
-- 对话框设置增加单独设置横竖屏宽度比，具体看示例。
-- 设置按钮反转方法移除传递boolean变量。
-- gradle升级到7.0.4。
-- 重新优化继承关系，接口回调未做调整，对比先前版本并无调用时的代码变化。
-- DialogLibCommon、DialogLibCustom、DialogLibInput这3种对话框的统一布局设定新增设置反转按钮位置，原按钮位置为“左确定，右取消”（默认），设置反转后为“左取消，右确定”。 
-- 反转后操作与原操作完全一致，无需额外代码设置。
-- 支持设置翻转屏幕不重建activity时，dialog跟随设置的横竖屏宽度比自动改变宽度大小（除SnackBarLib外全部）。
-- 若未设置翻转屏幕不重建activity且注册了全局activity生命周期，则翻转屏幕将自动关闭已打开的dialog（除SnackBarLib外全部）。
-- 支持设置因activity生命周期结束而关闭对话框时，触发回调监听（除SnackBarLib外全部）。
-- 其他错误修正。
-
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可参考文档覆盖属性
 
@@ -498,59 +464,84 @@ snackbar_lib_bg.xml   SnackBarLib默认使用的背景
 
 </resources>
 ```
--  **dimens下字体大小资源** 
+-  **dimens下资源** 
 
 ```html
 <resources>
 
-    <!--标题字体大小，适用于 DialogLibCommon-->
-    <dimen name="dialog_utils_lib_common_title_text_size">14sp</dimen>
-    <!--确定 字体大小，适用于 DialogLibCommon-->
-    <dimen name="dialog_utils_lib_common_ok_text_size">14sp</dimen>
-    <!--取消 字体大小，，适用于 DialogLibCommon-->
-    <dimen name="dialog_utils_lib_common_cancel_text_size">14sp</dimen>
-    <!--内容 字体大小，适用于 DialogLibCommon-->
-    <dimen name="dialog_utils_lib_common_content_text_size">14sp</dimen>
+  <!--标题内边距，适用于 DialogLibCommon、DialogLibInput、DialogLibCustom-->
+  <dimen name="dialog_utils_lib_all_title_padding">10dp</dimen>
+  <!--内容内边距，适用于 DialogLibCommon、DialogLibInput、DialogLibCustom-->
+  <dimen name="dialog_utils_lib_all_content_padding">10dp</dimen>
+  <!--按钮内边距，适用于 DialogLibCommon、DialogLibInput、DialogLibCustom-->
+  <dimen name="dialog_utils_lib_all_button_padding">10dp</dimen>
+
+  <!--标题字体大小，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_title_text_size">14sp</dimen>
+  <!--确定 字体大小，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_ok_text_size">14sp</dimen>
+  <!--取消 字体大小，，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_cancel_text_size">14sp</dimen>
+  <!--内容 字体大小，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_content_text_size">14sp</dimen>
+  <!--标题内边距，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_title_padding">@dimen/dialog_utils_lib_all_title_padding</dimen>
+  <!--内容内边距，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_content_padding">@dimen/dialog_utils_lib_all_content_padding</dimen>
+  <!--按钮内边距，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_common_button_padding">@dimen/dialog_utils_lib_all_button_padding</dimen>
 
 
-    <!--标题字体大小，适用于 DialogLibInput-->
-    <dimen name="dialog_utils_lib_input_title_text_size">14sp</dimen>
-    <!--确定 字体大小，适用于 DialogLibInput-->
-    <dimen name="dialog_utils_lib_input_ok_text_size">14sp</dimen>
-    <!--取消 字体大小，适用于 DialogLibInput-->
-    <dimen name="dialog_utils_lib_input_cancel_text_size">14sp</dimen>
-    <!--输入框 字体大小，适用于 DialogLibInput-->
-    <dimen name="dialog_utils_lib_input_text_size">14sp</dimen>
+  <!--标题字体大小，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_title_text_size">14sp</dimen>
+  <!--确定 字体大小，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_ok_text_size">14sp</dimen>
+  <!--取消 字体大小，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_cancel_text_size">14sp</dimen>
+  <!--输入框 字体大小，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_text_size">14sp</dimen>
+  <!--标题内边距，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_title_padding">@dimen/dialog_utils_lib_all_title_padding</dimen>
+  <!--内容内边距，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_content_padding">@dimen/dialog_utils_lib_all_content_padding</dimen>
+  <!--按钮内边距，适用于 DialogLibInput-->
+  <dimen name="dialog_utils_lib_input_button_padding">@dimen/dialog_utils_lib_all_button_padding</dimen>
 
 
-    <!--标题字体大小，适用于 DialogLibCustom-->
-    <dimen name="dialog_utils_lib_custom_title_text_size">14sp</dimen>
-    <!--确定 字体大小，适用于 DialogLibCustom-->
-    <dimen name="dialog_utils_lib_custom_ok_text_size">14sp</dimen>
-    <!--取消 字体大小，适用于 DialogLibCustom-->
-    <dimen name="dialog_utils_lib_custom_cancel_text_size">14sp</dimen>
+
+  <!--标题字体大小，适用于 DialogLibCustom-->
+  <dimen name="dialog_utils_lib_custom_title_text_size">14sp</dimen>
+  <!--确定 字体大小，适用于 DialogLibCustom-->
+  <dimen name="dialog_utils_lib_custom_ok_text_size">14sp</dimen>
+  <!--取消 字体大小，适用于 DialogLibCustom-->
+  <dimen name="dialog_utils_lib_custom_cancel_text_size">14sp</dimen>
+  <!--标题内边距，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_custom_title_padding">@dimen/dialog_utils_lib_all_title_padding</dimen>
+  <!--内容内边距，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_custom_content_padding">@dimen/dialog_utils_lib_all_content_padding</dimen>
+  <!--按钮内边距，适用于 DialogLibCommon-->
+  <dimen name="dialog_utils_lib_custom_button_padding">@dimen/dialog_utils_lib_all_button_padding</dimen>
 
 
-    <!--加载框 字体大小，适用于 DialogLibLoading 提示内容区域-->
-    <dimen name="dialog_utils_lib_loading_text_size">14sp</dimen>
+  <!--加载框 字体大小，适用于 DialogLibLoading 提示内容区域-->
+  <dimen name="dialog_utils_lib_loading_text_size">14sp</dimen>
 
 
-    <!--snackbar的文本 字体大小，适用于 SnackBarLib-->
-    <dimen name="snackbar_lib_content_size">14sp</dimen>
-    <!--snackbar的 action 字体大小，适用于 SnackBarLib-->
-    <dimen name="snackbar_lib_action_size">14sp</dimen>
-    <!--snackbar的 image 的宽高，正方形，适用于 SnackBarLib-->
-    <dimen name="snackbar_lib_img_w_h">30dp</dimen>
-    <!--snackbar的 内容单行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
-    <dimen name="design_snackbar_padding_vertical">10dp</dimen>
-    <!--snackbar的 内容多行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
-    <dimen name="design_snackbar_padding_vertical_2lines">10dp</dimen>
+  <!--snackbar的文本 字体大小，适用于 SnackBarLib-->
+  <dimen name="snackbar_lib_content_size">14sp</dimen>
+  <!--snackbar的 action 字体大小，适用于 SnackBarLib-->
+  <dimen name="snackbar_lib_action_size">14sp</dimen>
+  <!--snackbar的 image 的宽高，正方形，适用于 SnackBarLib-->
+  <dimen name="snackbar_lib_img_w_h">30dp</dimen>
+  <!--snackbar的 内容单行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
+  <dimen name="design_snackbar_padding_vertical">10dp</dimen>
+  <!--snackbar的 内容多行时 的 top和bottom的内边距，修改系统默认的超大边距，适用于 SnackBarLib-->
+  <dimen name="design_snackbar_padding_vertical_2lines">10dp</dimen>
 
-
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，所有类型统一设定-->
-    <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.85</item>
-    <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数，所有类型统一设定-->
-    <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.5</item>
+  <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，竖屏时的系数，所有类型统一设定-->
+  <item name="dialog_utils_lib_portrait_width_factor" format="float" type="dimen">0.85</item>
+  <!--dialog 宽度占屏幕宽度的百分比，取值0-1之间，不包含边界，横屏时的系数，所有类型统一设定-->
+  <item name="dialog_utils_lib_landscape_width_factor" format="float" type="dimen">0.65</item>
 </resources>
 ```
 - **strings下资源定义，注意：如果你的项目存在多语言，则必须覆盖** 
