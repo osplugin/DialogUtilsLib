@@ -7,7 +7,10 @@ on:
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
-    
+
+    permissions:
+      contents: write  # 必须添加这个权限
+      
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -34,7 +37,7 @@ jobs:
     - name: Upload AARs to Release (DialogFragmentUtilsLib)
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: DialogFragmentUtilsLib/build/outputs/aar/DialogFragmentUtilsLib-release.aar
@@ -44,7 +47,7 @@ jobs:
     - name: Upload AARs to Release (DialogUtilsLib)
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: DialogUtilsLib/build/outputs/aar/DialogUtilsLib-release.aar
