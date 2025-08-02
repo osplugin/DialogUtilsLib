@@ -2,52 +2,64 @@ name: Publish to JitPack on Release
 
 on:
   release:
-    types: [published] # 只在发布正式Release时触发
+    types: [published]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
-    # 可选：排除预发布版本
     if: ${{ !github.event.release.prerelease }}
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # JitPack需要完整的git历史记录
+          fetch-depth: 0
 
       - name: Verify Release Tag
-        id: verify-tag
         run: |
-          # 检查tag名称是否符合语义化版本规范
-          if [[ ! ${{ github.event.release.tag_name }} =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+)?$ ]]; then
-            echo "::error::Tag name ${{ github.event.release.tag_name }} does not follow semantic versioning"
+          if [[ ! "${{ github.event.release.tag_name }}" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid version tag: ${{ github.event.release.tag_name }}"
             exit 1
           fi
-          echo "Valid tag: ${{ github.event.release.tag_name }}"
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
 
       - name: Trigger JitPack build
         env:
           JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
         run: |
-          # 提取版本号（去掉可能的v前缀）
-          VERSION=${GITHUB_REF#refs/tags/}
-          VERSION=${VERSION#v} # 去掉v前缀
+          VERSION=${{ github.event.release.tag_name }}
+          echo "Triggering build for version: $VERSION"
           
-          echo "Triggering JitPack build for version $VERSION"
+          # 调试：显示仓库信息
+          echo "Repository: ${{ github.repository }}"
+          echo "Owner: ${{ github.repository_owner }}"
           
-          # 使用JitPack API触发构建
-          curl -X POST "https://jitpack.io/api/build" \
+          RESPONSE=$(curl -v -X POST "https://jitpack.io/api/build" \
             -H "Content-Type: application/json" \
             -d "{
               \"groupId\": \"com.github.${{ github.repository_owner }}\",
               \"artifactId\": \"${{ github.event.repository.name }}\",
               \"version\": \"$VERSION\"
             }" \
-            -u "${{ github.repository_owner }}:$JITPACK_TOKEN"
+            -u "${{ github.repository_owner }}:$JITPACK_TOKEN")
+          
+          echo "API Response: $RESPONSE"
+          if [[ -z "$RESPONSE" || $RESPONSE != *"status"* ]]; then
+            echo "::error::JitPack API request failed"
+            exit 1
+          fi
 
-      - name: Verify JitPack Build
+      - name: Verify Build Status
         run: |
-          echo "Check build status at:"
+          VERSION=${{ github.event.release.tag_name }}
+          echo "Check build progress at:"
           echo "https://jitpack.io/#${{ github.repository }}/$VERSION"
+          echo "If not started, manually click 'Build' on JitPack page"
