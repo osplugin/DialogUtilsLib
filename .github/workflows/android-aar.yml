@@ -11,6 +11,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    # 添加执行权限
+    - name: Make gradlew executable
+      run: chmod +x gradlew
       
     - name: Set up JDK
       uses: actions/setup-java@v3
