@@ -1,0 +1,48 @@
+name: Build AARs and Upload to Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v2
+      
+    - name: Build all AARs
+      run: |
+        ./gradlew clean
+        ./gradlew :DialogFragmentUtilsLib:assembleRelease
+        ./gradlew :DialogUtilsLib:assembleRelease
+        
+    - name: Upload AARs to Release (DialogFragmentUtilsLib)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: DialogFragmentUtilsLib/build/outputs/aar/DialogFragmentUtilsLib-release.aar
+        asset_name: DialogFragmentUtilsLib-release.aar
+        asset_content_type: application/octet-stream  # 使用通用二进制类型
+    
+    - name: Upload AARs to Release (DialogUtilsLib)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: DialogUtilsLib/build/outputs/aar/DialogUtilsLib-release.aar
+        asset_name: DialogUtilsLib-release.aar
+        asset_content_type: application/octet-stream
