@@ -7,10 +7,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
-    # 可选：排除预发布版本
-    if: ${{ !github.event.release.prerelease }}
-    
+    permissions:
+      contents: read # 必须的基础权限
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,39 +17,47 @@ jobs:
           fetch-depth: 0 # JitPack需要完整的git历史记录
 
       - name: Verify Release Tag
-        id: verify-tag
         run: |
-          # 检查tag名称是否符合语义化版本规范
-          if [[ ! ${{ github.event.release.tag_name }} =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+)?$ ]]; then
-            echo "::error::Tag name ${{ github.event.release.tag_name }} does not follow semantic versioning"
+          # 严格校验Tag格式（支持v前缀和纯数字版本）
+          if [[ ! "${{ github.event.release.tag_name }}" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid tag format. Must be like 1.0.0 or v1.0.0"
             exit 1
           fi
-          echo "Valid tag: ${{ github.event.release.tag_name }}"
 
-      - name: Trigger JitPack build
+      - name: Trigger JitPack Build
         env:
-          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }} # GitHub PAT with repo scope
         run: |
-          # 提取版本号（保留原始格式）
+          # 保留原始Tag格式（不修改v前缀）
           VERSION=${{ github.event.release.tag_name }}
-          
-          echo "Triggering JitPack build for version $VERSION"
-          
-          # 使用JitPack API触发构建
-          RESPONSE=$(curl -X POST \
-            "https://jitpack.io/api/builds/com.github.${{ github.repository_owner }}/${{ github.event.repository.name }}/$VERSION" \
-            -H "Authorization: Bearer $JITPACK_TOKEN")
-          
-          echo "API Response: $RESPONSE"
-          
-          if [[ -z "$RESPONSE" || $RESPONSE == *"error"* ]]; then
-            echo "::error::Failed to trigger JitPack build"
+          OWNER=${{ github.repository_owner }}
+          REPO=${{ github.event.repository.name }}
+
+          echo "Triggering build for: com.github.$OWNER/$REPO@$VERSION"
+
+          # JitPack官方GET API
+          API_URL="https://jitpack.io/api/builds/com.github.$OWNER/$REPO/$VERSION"
+
+          # 带认证的GET请求
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            -H "Authorization: Bearer $JITPACK_TOKEN" \
+            "$API_URL")
+
+          # 提取HTTP状态码和响应体
+          HTTP_STATUS=$(echo "$RESPONSE" | grep HTTP_STATUS: | cut -d':' -f2)
+          BODY=$(echo "$RESPONSE" | sed '/HTTP_STATUS:/d')
+
+          echo "API Response: $BODY"
+          echo "HTTP Status: $HTTP_STATUS"
+
+          if [[ "$HTTP_STATUS" != "200" ]]; then
+            echo "::error::JitPack API failed with status $HTTP_STATUS"
             exit 1
           fi
 
-      - name: Verify JitPack Build
+      - name: Monitor Build Status
         run: |
           VERSION=${{ github.event.release.tag_name }}
-          echo "Check build status at:"
+          echo "Monitor build progress at:"
           echo "https://jitpack.io/#${{ github.repository }}/$VERSION"
-          echo "If build fails, you can retry manually at the above URL"
+          echo "Note: Building may take 3-5 minutes"
