@@ -1,7 +1,7 @@
 # DialogUtilsApp
 [![License](https://img.shields.io/badge/License%20-Apache%202-337ab7.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
-[![](https://jitpack.io/v/com.gitee.osard/DialogUtilsLib.svg)](https://jitpack.io/#com.gitee.osard/DialogUtilsLib)
+[![](https://jitpack.io/v/com.github.osplugin/DialogUtilsLib.svg)](https://jitpack.io/#com.github.osplugin/DialogUtilsLib)
 
 ### 一、介绍
 替换系统dialog风格后的通用提示框工具类，可以覆盖lib下的定义资源，改变现有的颜色风格，需要改变布局风格，可参考文档覆盖属性
@@ -44,8 +44,8 @@ dependencies {
     ...
     
     def dialog_version = 'x.x.x' //使用最新版本，下方lib二选一，不可同时使用，高SDK版本编译建议使用DialogFragmentUtilsLib，生命周期处理更好
-    implementation "com.gitee.osard.DialogUtilsLib:DialogUtilsLib:$dialog_version"  
-    implementation "com.gitee.osard.DialogUtilsLib:DialogFragmentUtilsLib:$dialog_version"
+    implementation "com.github.osplugin.DialogUtilsLib:DialogUtilsLib:$dialog_version"  
+    implementation "com.github.osplugin.DialogUtilsLib:DialogFragmentUtilsLib:$dialog_version"
 
     //资源依赖
     implementation 'com.google.android.material:material:1.3.0'
