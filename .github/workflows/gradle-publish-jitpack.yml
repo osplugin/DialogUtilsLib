@@ -17,19 +17,6 @@ jobs:
         with:
           fetch-depth: 0 # JitPack需要完整的git历史记录
 
-      # 添加执行权限
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-      
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-
       - name: Verify Release Tag
         id: verify-tag
         run: |
@@ -39,9 +26,6 @@ jobs:
             exit 1
           fi
           echo "Valid tag: ${{ github.event.release.tag_name }}"
-
-      - name: Build with Gradle
-        run: ./gradlew build
 
       - name: Trigger JitPack build
         env:
