@@ -1,0 +1,56 @@
+name: Publish to JitPack on Release
+
+on:
+  release:
+    types: [published] # 只在发布正式Release时触发
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    # 可选：排除预发布版本
+    if: ${{ !github.event.release.prerelease }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # JitPack需要完整的git历史记录
+
+      - name: Verify Release Tag
+        id: verify-tag
+        run: |
+          # 检查tag名称是否符合语义化版本规范
+          if [[ ! ${{ github.event.release.tag_name }} =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+)?$ ]]; then
+            echo "::error::Tag name ${{ github.event.release.tag_name }} does not follow semantic versioning"
+            exit 1
+          fi
+          echo "Valid tag: ${{ github.event.release.tag_name }}"
+
+      - name: Trigger JitPack build
+        env:
+          JITPACK_TOKEN: ${{ secrets.JITPACK_TOKEN }}
+        run: |
+          # 提取版本号（保留原始格式）
+          VERSION=${{ github.event.release.tag_name }}
+          
+          echo "Triggering JitPack build for version $VERSION"
+          
+          # 使用JitPack API触发构建
+          RESPONSE=$(curl -X POST \
+            "https://jitpack.io/api/builds/com.github.${{ github.repository_owner }}/${{ github.event.repository.name }}/$VERSION" \
+            -H "Authorization: Bearer $JITPACK_TOKEN")
+          
+          echo "API Response: $RESPONSE"
+          
+          if [[ -z "$RESPONSE" || $RESPONSE == *"error"* ]]; then
+            echo "::error::Failed to trigger JitPack build"
+            exit 1
+          fi
+
+      - name: Verify JitPack Build
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          echo "Check build status at:"
+          echo "https://jitpack.io/#${{ github.repository }}/$VERSION"
+          echo "If build fails, you can retry manually at the above URL"
