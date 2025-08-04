@@ -4,52 +4,56 @@ on:
   release:
     types: [published]
 
+env:
+  LIB1_NAME: DialogFragmentUtilsLib
+  LIB2_NAME: DialogUtilsLib
+
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
 
     permissions:
       contents: write  # 必须添加这个权限
-      
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
 
-    # 添加执行权限
-    - name: Make gradlew executable
-      run: chmod +x gradlew
-      
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-        
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
-      
-    - name: Build all AARs
-      run: |
-        ./gradlew clean
-        ./gradlew :DialogFragmentUtilsLib:assembleRelease
-        ./gradlew :DialogUtilsLib:assembleRelease
-        
-    - name: Upload AARs to Release (DialogFragmentUtilsLib)
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: DialogFragmentUtilsLib/build/outputs/aar/DialogFragmentUtilsLib-release.aar
-        asset_name: DialogFragmentUtilsLib-release.aar
-        asset_content_type: application/octet-stream  # 使用通用二进制类型
-    
-    - name: Upload AARs to Release (DialogUtilsLib)
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: DialogUtilsLib/build/outputs/aar/DialogUtilsLib-release.aar
-        asset_name: DialogUtilsLib-release.aar
-        asset_content_type: application/octet-stream
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 添加执行权限
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Build all AARs
+        run: |
+          ./gradlew clean
+          ./gradlew :${{ env.LIB1_NAME }}:assembleRelease
+          ./gradlew :${{ env.LIB2_NAME }}:assembleRelease
+
+      - name: Upload AARs to Release (${{ env.LIB1_NAME }})
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ env.LIB1_NAME }}/build/outputs/aar/${{ env.LIB1_NAME }}-release.aar
+          asset_name: ${{ env.LIB1_NAME }}-release.aar
+          asset_content_type: application/octet-stream
+
+      - name: Upload AARs to Release (${{ env.LIB2_NAME }})
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ env.LIB2_NAME }}/build/outputs/aar/${{ env.LIB2_NAME }}-release.aar
+          asset_name: ${{ env.LIB2_NAME }}-release.aar
+          asset_content_type: application/octet-stream
