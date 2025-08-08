@@ -458,8 +458,7 @@ public class DialogLibInput extends BaseDialogLibUtils {
             MAP.get(getAlias()).closeDuplicateAliasDialog();
         }
         MAP.put(getAlias(), this);
-        FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
-        show(fragmentManager, getAlias());
+        handler.post(showDialogRunnable);
 
         return this;
     }
@@ -496,7 +495,13 @@ public class DialogLibInput extends BaseDialogLibUtils {
 
     public boolean closeDialog() {
         try {
-            dismiss();
+            FragmentActivity activity = (FragmentActivity) getContext();
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            if (isAdded() && !fragmentManager.isStateSaved()) {
+                dismiss(); // 优先用严格模式
+            } else {
+                dismissAllowingStateLoss(); // 保底方案
+            }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);

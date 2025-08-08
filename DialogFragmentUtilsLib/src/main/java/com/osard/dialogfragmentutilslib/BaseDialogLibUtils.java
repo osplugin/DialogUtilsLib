@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -13,6 +15,8 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
 import com.osard.dialogfragmentutilslib.utils.DensityUtils;
@@ -40,6 +44,20 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
     //临时翻转确定与取消按钮位置
     protected Boolean reverseButton;
     protected boolean duplicateAliasClose = false;
+
+    protected Handler handler = new Handler(Looper.getMainLooper());
+    protected Runnable showDialogRunnable = new Runnable() {
+        @Override
+        public void run() {
+            FragmentActivity activity = (FragmentActivity) getContext();
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            if (!fragmentManager.isStateSaved()) {
+                show(fragmentManager, getAlias());
+            } else if (!activity.isFinishing() && !activity.isDestroyed()) {
+                handler.postDelayed(this, 100);
+            }
+        }
+    };
 
     @NonNull
     public Context getContext() {

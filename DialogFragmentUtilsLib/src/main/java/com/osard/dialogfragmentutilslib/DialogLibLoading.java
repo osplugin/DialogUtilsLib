@@ -185,9 +185,8 @@ public class DialogLibLoading extends BaseDialogLibUtils {
             }
             MAP.put(getAlias(), this);
 
-            FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
             handler.removeCallbacks(timeoutRunnable);
-            show(fragmentManager, getAlias());
+            handler.post(showDialogRunnable);
             //如果设置了超时关闭，则时间到时关闭，反之需要手动关闭
             if (null != getTimeout()) {
                 handler.postDelayed(timeoutRunnable, getTimeout());
@@ -203,7 +202,13 @@ public class DialogLibLoading extends BaseDialogLibUtils {
 
     public boolean closeDialog() {
         try {
-            dismiss();
+            FragmentActivity activity = (FragmentActivity) getContext();
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            if (isAdded() && !fragmentManager.isStateSaved()) {
+                dismiss(); // 优先用严格模式
+            } else {
+                dismissAllowingStateLoss(); // 保底方案
+            }
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "关闭对话框异常", e);
