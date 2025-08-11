@@ -4,17 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
-import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
 
 /**
  * 全部自定义弹窗提示工具类，需要完全定义dialog的布局
@@ -140,20 +135,7 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     }
 
     public boolean closeDialog() {
-        try {
-            FragmentActivity activity = (FragmentActivity) getContext();
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            if (isAdded() && !fragmentManager.isStateSaved()) {
-                dismiss(); // 优先用严格模式
-            } else {
-                dismissAllowingStateLoss(); // 保底方案
-            }
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "关闭对话框异常", e);
-            }
-        }
-        return true;
+        return closeDialogWithRetry(TAG, 0);
     }
 
     public interface OnDismissListener {

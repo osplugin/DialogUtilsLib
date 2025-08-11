@@ -17,8 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibLoadingDataBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
@@ -201,19 +199,7 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     }
 
     public boolean closeDialog() {
-        try {
-            FragmentActivity activity = (FragmentActivity) getContext();
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            if (isAdded() && !fragmentManager.isStateSaved()) {
-                dismiss(); // 优先用严格模式
-            } else {
-                dismissAllowingStateLoss(); // 保底方案
-            }
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "关闭对话框异常", e);
-            }
-        }
+        closeDialogWithRetry(TAG, 0);
         handler.removeCallbacks(timeoutRunnable);
         return true;
     }

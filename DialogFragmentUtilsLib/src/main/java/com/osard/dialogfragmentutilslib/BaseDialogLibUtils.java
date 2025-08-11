@@ -54,10 +54,13 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
             if (!fragmentManager.isStateSaved()) {
                 show(fragmentManager, getAlias());
             } else if (!activity.isFinishing() && !activity.isDestroyed()) {
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, RETRY_DELAY_MS);
             }
         }
     };
+
+    private static final int MAX_CLOSE_RETRY_COUNT = 30;
+    private static final long RETRY_DELAY_MS = 100;
 
     @NonNull
     public Context getContext() {
@@ -203,5 +206,61 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
     public void closeDuplicateAliasDialog() {
         duplicateAliasClose = true;
         closeDialog();
+    }
+
+    /**
+     * 延迟关闭方法，避免出现还未添加就关闭导致无法关闭的情况，最大延迟3秒
+     * @param TAG
+     * @param retryCount
+     * @return
+     */
+    protected boolean closeDialogWithRetry(String TAG, int retryCount) {
+        try {
+            FragmentActivity activity = (FragmentActivity) getContext();
+            if (activity.isFinishing() || activity.isDestroyed()) {
+                return false;
+            }
+
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+            // 情况1：已添加且状态未保存 - 直接关闭
+            if (isAdded() && !fragmentManager.isStateSaved()) {
+                dismiss(); // 优先用严格模式
+                return true;
+            }
+            // 情况2：未添加但还可以重试 - 延迟重试
+            else if (retryCount < MAX_CLOSE_RETRY_COUNT) {
+                handler.postDelayed(() -> {
+                    closeDialogWithRetry(TAG, retryCount + 1);
+                }, RETRY_DELAY_MS);
+                return true;
+            }
+            // 情况3：已达最大重试次数或状态已保存 - 使用保底方案
+            else {
+                dismissAllowingStateLoss(); // 保底方案
+                return true;
+            }
+        } catch (Exception e) {
+            if (DialogLibInitSetting.getInstance().isDebug()) {
+                Log.w(TAG, "关闭对话框异常(重试次数: " + retryCount + ")", e);
+            }
+
+            // 异常情况下也尝试重试
+            if (retryCount < MAX_CLOSE_RETRY_COUNT) {
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    closeDialogWithRetry(TAG, retryCount + 1);
+                }, RETRY_DELAY_MS);
+            } else {
+                try {
+                    dismissAllowingStateLoss(); // 最终保底
+                } catch (Exception finalE) {
+                    if (DialogLibInitSetting.getInstance().isDebug()) {
+                        Log.w(TAG, "最终关闭对话框失败", finalE);
+                    }
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

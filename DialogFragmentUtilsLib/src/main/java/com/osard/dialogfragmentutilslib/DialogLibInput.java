@@ -24,8 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.databinding.DialogUtilsLibTipInputBinding;
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
@@ -494,20 +492,7 @@ public class DialogLibInput extends BaseDialogLibUtils {
     }
 
     public boolean closeDialog() {
-        try {
-            FragmentActivity activity = (FragmentActivity) getContext();
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            if (isAdded() && !fragmentManager.isStateSaved()) {
-                dismiss(); // 优先用严格模式
-            } else {
-                dismissAllowingStateLoss(); // 保底方案
-            }
-        } catch (Exception e) {
-            if (DialogLibInitSetting.getInstance().isDebug()) {
-                Log.w(TAG, "关闭对话框异常", e);
-            }
-        }
-        return true;
+        return closeDialogWithRetry(TAG, 0);
     }
 
     @Override
