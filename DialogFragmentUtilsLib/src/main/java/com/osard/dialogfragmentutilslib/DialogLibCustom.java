@@ -117,6 +117,14 @@ public class DialogLibCustom extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public DialogLibCustom setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
+
+    /**
      * 设置自定义视图触发ok按钮时的响应
      * 接口返回true关闭对话框，反之不关闭
      */

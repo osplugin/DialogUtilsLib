@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import com.mjsoftking.dialogutilslib.init.DialogLibInitSetting;
 import com.mjsoftking.dialogutilslib.utils.DensityUtils;
+import com.mjsoftking.dialogutilslib.utils.TouchCallbackWrapper;
 
 /**
  * 加载等待框工具类
@@ -27,6 +28,8 @@ public abstract class BaseDialogLibUtils implements DialogLibUtils {
 
     //临时翻转确定与取消按钮位置
     protected Boolean reverseButton;
+
+    protected Runnable onActiveListener;
 
     protected Context getContext() {
         return context;
@@ -73,6 +76,12 @@ public abstract class BaseDialogLibUtils implements DialogLibUtils {
                 p.width = (int) (DensityUtils.dipToPX(getContext(), configuration.screenWidthDp) * dialogWidthFactor(configuration));
             }
             dialog.getWindow().setAttributes(p);
+
+            if (window.getCallback() instanceof TouchCallbackWrapper) {
+                return; // 已安装
+            }
+            Window.Callback origin = window.getCallback();
+            window.setCallback(new TouchCallbackWrapper(origin, onActiveListener));
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.w(TAG, "设置对话框宽度异常", e);

@@ -74,6 +74,14 @@ public class DialogLibCommon extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public DialogLibCommon setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
+
+    /**
      * 横屏时dialog占屏幕宽度的百分比系数，0-1之间有效，不含边界
      */
     public DialogLibCommon setLandscapeWidthFactor(float landscapeWidthFactor) {

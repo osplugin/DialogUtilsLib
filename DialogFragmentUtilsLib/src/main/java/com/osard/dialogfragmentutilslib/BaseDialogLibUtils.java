@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.osard.dialogfragmentutilslib.init.DialogLibInitSetting;
 import com.osard.dialogfragmentutilslib.utils.DensityUtils;
+import com.osard.dialogfragmentutilslib.utils.TouchCallbackWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,8 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
 
     //别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象
     protected String alias = UUID.randomUUID().toString();
+
+    protected Runnable onActiveListener;
 
     protected float landscapeWidthFactor = -1;
     protected float portraitWidthFactor = -1;
@@ -70,6 +73,23 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
     public String getAlias() {
         return alias;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog == null) return;
+        Window window = dialog.getWindow();
+        if (window == null) return;
+
+        if (window.getCallback() instanceof TouchCallbackWrapper) {
+            return; // 已安装
+        }
+
+        Window.Callback origin = window.getCallback();
+        window.setCallback(new TouchCallbackWrapper(origin, onActiveListener));
+    }
+
 
     /**
      * 宽度
@@ -210,6 +230,7 @@ public abstract class BaseDialogLibUtils extends DialogFragment implements Dialo
 
     /**
      * 延迟关闭方法，避免出现还未添加就关闭导致无法关闭的情况，最大延迟3秒
+     *
      * @param TAG
      * @param retryCount
      * @return

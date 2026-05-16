@@ -148,6 +148,14 @@ public class DialogLibInput extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public DialogLibInput setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
+
+    /**
      * 显示查看/隐藏密码图标组件
      * <p>
      * 建议在使用密码输入时启用

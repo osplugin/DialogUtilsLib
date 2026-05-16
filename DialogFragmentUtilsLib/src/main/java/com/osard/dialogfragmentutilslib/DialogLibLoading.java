@@ -75,6 +75,13 @@ public class DialogLibLoading extends BaseDialogLibUtils {
         return this;
     }
 
+    /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public DialogLibLoading setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
 
     /**
      * 别名，同一个别名的对话框同一时间只能弹出一个，在show时如果存在未关闭的对话框则直接返回原本对象

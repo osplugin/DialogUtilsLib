@@ -109,6 +109,14 @@ public class DialogLibLoading extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public DialogLibLoading setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
+
+    /**
      * 设置提示信息的内容部分，
      * dialog未显示时，默认为“数据处理中...”
      * dialog显示时，则刷新显示的内容

@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
@@ -25,6 +26,7 @@ public class PopupWindowLib {
     private boolean mFocusable;
     private long mAutoCloseTime;
     private PopupWindow.OnDismissListener onDismissListener;
+    private Runnable onActiveListener;
 
     //自动关闭的Handler和处理对象
     private Handler autoCloseHandler;
@@ -120,6 +122,14 @@ public class PopupWindowLib {
     }
 
     /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public PopupWindowLib setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
+
+    /**
      * 在锚点视图左下角的弹出窗口中显示内容视图。
      *
      * @param anchor  锚点视图
@@ -174,6 +184,15 @@ public class PopupWindowLib {
                 popupWindow.setAttachedInDecor(mAttachedInDecor);
             }
             popupWindow.setFocusable(mFocusable);
+            popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN && null != onActiveListener) {
+                        onActiveListener.run();
+                    }
+                    return false; // 返回 false，不影响 PopupWindow 正常点击
+                }
+            });
         } catch (Exception e) {
             if (DialogLibInitSetting.getInstance().isDebug()) {
                 Log.e(TAG, "创建PopupWindow时出现错误", e);

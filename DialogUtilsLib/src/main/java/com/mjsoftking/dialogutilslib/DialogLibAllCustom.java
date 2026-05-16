@@ -68,6 +68,14 @@ public class DialogLibAllCustom extends BaseDialogLibUtils {
     }
 
     /**
+     * 设置活跃监听，对话框在用户按下操作时触发，包括对话框空白区域
+     */
+    public DialogLibAllCustom setOnActiveListener(Runnable onActiveListener) {
+        this.onActiveListener = onActiveListener;
+        return this;
+    }
+
+    /**
      * 是否允许点击其他位置关闭
      */
     public DialogLibAllCustom setCancelable(boolean cancelable) {
